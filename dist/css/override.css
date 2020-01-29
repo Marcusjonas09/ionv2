@@ -1,0 +1,193 @@
+.loading-modal-message {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.8) url("../img/loader.gif") 50% 50% no-repeat;
+}
+
+body.loading-modal {
+  overflow: hidden;
+}
+
+body.loading-modal .loading-modal-message {
+  display: block;
+}
+
+.login-page {
+  background-color: #286230;
+}
+
+.login-box {
+  box-shadow: -4px 4px 5px #888888;
+}
+
+.login-box-msg {
+  font-size: 21px;
+  text-shadow: -1px 1px #d7bc02;
+}
+
+.login-app {
+  color: #858877 !important;
+  text-shadow: none !important;
+  font-size: 14px !important;
+  text-transform: uppercase !important;
+}
+
+.content-header > .switch {
+  float: right;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 7px 5px;
+  position: absolute;
+  top: 6px;
+  right: 10px;
+}
+
+sup {
+  color: #ffb0b0;
+}
+
+.note {
+  padding-top: 5px;
+  font-size: 13px;
+}
+
+.box {
+  padding-bottom: 10px !important;
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.bg-danger {
+  background-color: #ffbdbd !important;
+}
+
+.control-value {
+  padding-top: 8px !important;
+}
+
+.table-small {
+  font-size: 12px;
+}
+
+#dashboard .box-header-mod {
+  height: 40px !important;
+}
+
+#dashboard .clock-countdown {
+  width: 100%;
+}
+
+#dashboard .clock-countdown thead td {
+  padding: 10px;
+  font-size: 20px;
+  text-align: left;
+}
+
+#dashboard .clock-countdown th {
+  font-weight: bold;
+  font-size: 36px;
+  padding: 10px;
+  text-align: center;
+}
+
+#dashboard .clock-countdown td {
+  padding: 10px;
+  text-align: center;
+}
+
+#dashboard .important-dates {
+  margin: 0;
+  padding: 0;
+}
+
+#dashboard .important-dates td {
+  padding: 10px;
+}
+
+#dashboard li {
+  padding-bottom: 10px;
+}
+
+.timeline-item {
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  background: #fff;
+  color: #444;
+  margin: 0 15px 5px 0;
+  padding: 0;
+  position: relative;
+}
+
+.timeline-item > .time {
+  color: #999;
+  float: right;
+  padding: 10px;
+  font-size: 12px;
+}
+
+.timeline-item > .timeline-header {
+  margin: 0;
+  color: #555;
+  border-bottom: 1px solid #f4f4f4;
+  padding: 10px;
+  font-size: 16px;
+  line-height: 1.1;
+}
+
+.timeline-item > .timeline-body {
+  padding: 10px;
+}
+
+.timeline-item > .timeline-footer {
+  padding: 10px;
+}
+
+.data-table,
+.table {
+  font-size: 12px;
+}
+
+.profile-user-img-over {
+  width: 200px !important;
+}
+
+.data-table thead th {
+  white-space: nowrap;
+}
+
+.form-value {
+  padding-top: 7px;
+  margin-bottom: 0;
+}
+
+.box-time {
+  font-size: 14px !important;
+}
+
+.table-filter td {
+  padding: 0 10px 0 10px !important;
+}
+
+.dt-schedules dd {
+  padding-left: 25px !important;
+}
