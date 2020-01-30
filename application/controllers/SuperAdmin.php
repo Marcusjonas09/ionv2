@@ -109,12 +109,17 @@ class SuperAdmin extends CI_Controller
     // =======================================================================================
 
     // =======================================================================================
-    // STUDENT FUNCTIONALITIES
+    // STUDENTS
     // =======================================================================================
 
-    public function student()
+    public function students($success_msg = null, $fail_msg = null)
     {
-        $data['students'] = $this->Account_model->fetchStudents();
+        $data['students'] = $this->SuperAdmin_model->fetch_all_student();
+        // print_r($data);
+        // die();
+        $data['success_msg'] = $success_msg;
+        $data['fail_msg'] = $fail_msg;
+
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
@@ -126,44 +131,196 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
-    public function add_student()
+    public function add_student($message = null)
     {
+        // $data['colleges'] = $this->SuperAdmin_model->fetch_all_college();
+        $data['programs'] = $this->SuperAdmin_model->fetch_all_program();
+        $data['colleges'] = $this->SuperAdmin_model->fetch_all_college();
+        $data['curricula'] = $this->SuperAdmin_model->fetch_all_curricula();
+        $data['specs'] = $this->SuperAdmin_model->fetch_all_specializations();
+        $data['message'] = $message;
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_student/add_student');
+        $this->load->view('content_super_admin/manage_student/add_student', $data);
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
-    public function view_student()
+    public function edit_student($id, $success_msg = null, $fail_msg = null)
     {
+        $data['departments'] = $this->SuperAdmin_model->fetch_all_department();
+        $data['student'] = $this->SuperAdmin_model->fetch_student($id);
+        $data['success_msg'] = $success_msg;
+        $data['fail_msg'] = $fail_msg;
+
+        // print_r($data);
+        // die();
+
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_students/view_student');
+        $this->load->view('content_super_admin/manage_student/edit_student', $data);
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
-    public function edit_student()
+    public function edit_student_function()
     {
-        $this->load->view('includes_super_admin/superadmin_header');
-        $this->load->view('includes_super_admin/superadmin_topnav');
-        $this->load->view('includes_super_admin/superadmin_sidebar');
+        $this->form_validation->set_rules('acc_number', 'Student Code', 'required|strip_tags');
+        $id = $this->input->post('program_id');
+        if ($this->form_validation->run() == FALSE) {
+            $this->edit_program($id);
+        } else {
+            $program = array(
+                'program_code' => $this->input->post('program_code'),
+                'program_description' => $this->input->post('program_description'),
+                'assigned_department' => $this->input->post('assigned_department')
+            );
 
-        $this->load->view('content_super_admin/manage_students/edit_student');
-
-        $this->load->view('includes_super_admin/superadmin_contentFooter');
-        $this->load->view('includes_super_admin/superadmin_rightnav');
-        $this->load->view('includes_super_admin/superadmin_footer');
+            $this->SuperAdmin_model->edit_program($id, $program);
+            $this->edit_program($id, "Record successfully edited!");
+        }
     }
+
+    // public function add_program_csv()
+    // {
+    //     if (isset($_POST["import"])) {
+    //         $message = $this->SuperAdmin_model->add_program_csv($_FILES['csv_file']);
+    //     } else {
+    //         $message = '
+    //     <div class="alert alert-success alert-dismissible">
+    //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //         <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+    //         <p>Please select a file!</p>
+    //     </div>
+    //     ';
+    //     }
+    //     $this->add_program($message);
+    // }
+
+    public function create_student()
+    {
+        // echo '<pre>';
+        // print_r($_POST);
+        // echo '</pre>';
+        // die();
+        $this->form_validation->set_rules('acc_number', 'Student number', 'required|strip_tags|is_unique[accounts_tbl.acc_number]');
+        $this->form_validation->set_rules('acc_fname', 'First Name', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_mname', 'Middle Name', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_lname', 'Last Name', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_program', 'Program designation', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_college', 'College designation', 'required|strip_tags');
+        $this->form_validation->set_rules('curriculum_code', 'Curriculum code', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_citizenship', 'Citizenship', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_access_level', 'Access level', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_citizenship', 'Citizenship', 'required|strip_tags');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->add_student();
+        } else {
+            $program = array(
+                'acc_number' => $this->input->post('acc_number'),
+                'acc_fname' => $this->input->post('acc_fname'),
+                'acc_mname' => $this->input->post('acc_mname'),
+                'acc_lname' => $this->input->post('acc_lname'),
+                'acc_program' => $this->input->post('acc_program'),
+                'acc_college' => $this->input->post('acc_college'),
+                'curriculum_code' => $this->input->post('curriculum_code'),
+                'acc_citizenship' => $this->input->post('acc_citizenship'),
+                'acc_status' => $this->input->post('acc_status'),
+                'acc_access_level' => $this->input->post('acc_access_level')
+            );
+
+            $this->SuperAdmin_model->create_student($program);
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Success!</h4>
+            <p>Record successfully added!</p>
+        </div>
+        ';
+            $this->add_student($message);
+        }
+    }
+
+    // public function delete_program($id)
+    // {
+
+    //     if (!$this->SuperAdmin_model->delete_program($id)) {
+    //         $this->SuperAdmin_model->delete_program($id);
+    //         $this->program("Record successfully deleted!", null);
+    //     } else {
+    //         $this->program(null, "Failed to delete Record!");
+    //     }
+    // }
+
+    // =======================================================================================
+    // END OF STUDENTS
+    // =======================================================================================
+
+    // =======================================================================================
+    // STUDENT FUNCTIONALITIES
+    // =======================================================================================
+
+    // public function student()
+    // {
+    //     $data['students'] = $this->Account_model->fetchStudents();
+    //     $this->load->view('includes_super_admin/superadmin_header');
+    //     $this->load->view('includes_super_admin/superadmin_topnav');
+    //     $this->load->view('includes_super_admin/superadmin_sidebar');
+
+    //     $this->load->view('content_super_admin/manage_student/all_students', $data);
+
+    //     $this->load->view('includes_super_admin/superadmin_contentFooter');
+    //     $this->load->view('includes_super_admin/superadmin_rightnav');
+    //     $this->load->view('includes_super_admin/superadmin_footer');
+    // }
+
+    // public function add_student()
+    // {
+    //     $this->load->view('includes_super_admin/superadmin_header');
+    //     $this->load->view('includes_super_admin/superadmin_topnav');
+    //     $this->load->view('includes_super_admin/superadmin_sidebar');
+
+    //     $this->load->view('content_super_admin/manage_student/add_student');
+
+    //     $this->load->view('includes_super_admin/superadmin_contentFooter');
+    //     $this->load->view('includes_super_admin/superadmin_rightnav');
+    //     $this->load->view('includes_super_admin/superadmin_footer');
+    // }
+
+    // public function view_student()
+    // {
+    //     $this->load->view('includes_super_admin/superadmin_header');
+    //     $this->load->view('includes_super_admin/superadmin_topnav');
+    //     $this->load->view('includes_super_admin/superadmin_sidebar');
+
+    //     $this->load->view('content_super_admin/manage_students/view_student');
+
+    //     $this->load->view('includes_super_admin/superadmin_contentFooter');
+    //     $this->load->view('includes_super_admin/superadmin_rightnav');
+    //     $this->load->view('includes_super_admin/superadmin_footer');
+    // }
+
+    // public function edit_student()
+    // {
+    //     $this->load->view('includes_super_admin/superadmin_header');
+    //     $this->load->view('includes_super_admin/superadmin_topnav');
+    //     $this->load->view('includes_super_admin/superadmin_sidebar');
+
+    //     $this->load->view('content_super_admin/manage_students/edit_student');
+
+    //     $this->load->view('includes_super_admin/superadmin_contentFooter');
+    //     $this->load->view('includes_super_admin/superadmin_rightnav');
+    //     $this->load->view('includes_super_admin/superadmin_footer');
+    // }
 
     // =======================================================================================
     // END OF STUDENT FUNCTIONALITIES
@@ -896,188 +1053,188 @@ class SuperAdmin extends CI_Controller
     // STUDENTS FUNCTIONALITIES
     // =======================================================================================
 
-    public function students()
-    {
-        $this->load->view('includes_super_admin/superadmin_header');
-        $this->load->view('includes_super_admin/superadmin_topnav');
-        $this->load->view('includes_super_admin/superadmin_sidebar');
-
-        $this->load->view('content_super_admin/manage_students/manage_students');
-
-        $this->load->view('includes_super_admin/superadmin_contentFooter');
-        $this->load->view('includes_super_admin/superadmin_rightnav');
-        $this->load->view('includes_super_admin/superadmin_footer');
-    }
-
-    // public function add_student()
+    // public function students()
     // {
     //     $this->load->view('includes_super_admin/superadmin_header');
     //     $this->load->view('includes_super_admin/superadmin_topnav');
     //     $this->load->view('includes_super_admin/superadmin_sidebar');
 
-    //     $this->load->view('content_super_admin/manage_students/add_student');
+    //     $this->load->view('content_super_admin/manage_students/manage_students');
 
     //     $this->load->view('includes_super_admin/superadmin_contentFooter');
     //     $this->load->view('includes_super_admin/superadmin_rightnav');
     //     $this->load->view('includes_super_admin/superadmin_footer');
     // }
 
-    public function course_card()
-    {
-        $this->load->view('includes_super_admin/superadmin_header');
-        $this->load->view('includes_super_admin/superadmin_topnav');
-        $this->load->view('includes_super_admin/superadmin_sidebar');
+    // // public function add_student()
+    // // {
+    // //     $this->load->view('includes_super_admin/superadmin_header');
+    // //     $this->load->view('includes_super_admin/superadmin_topnav');
+    // //     $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_students/course_card');
+    // //     $this->load->view('content_super_admin/manage_students/add_student');
 
-        $this->load->view('includes_super_admin/superadmin_contentFooter');
-        $this->load->view('includes_super_admin/superadmin_rightnav');
-        $this->load->view('includes_super_admin/superadmin_footer');
-    }
+    // //     $this->load->view('includes_super_admin/superadmin_contentFooter');
+    // //     $this->load->view('includes_super_admin/superadmin_rightnav');
+    // //     $this->load->view('includes_super_admin/superadmin_footer');
+    // // }
 
-    public function balance()
-    {
-        $this->load->view('includes_super_admin/superadmin_header');
-        $this->load->view('includes_super_admin/superadmin_topnav');
-        $this->load->view('includes_super_admin/superadmin_sidebar');
+    // public function course_card()
+    // {
+    //     $this->load->view('includes_super_admin/superadmin_header');
+    //     $this->load->view('includes_super_admin/superadmin_topnav');
+    //     $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_students/balance');
+    //     $this->load->view('content_super_admin/manage_students/course_card');
 
-        $this->load->view('includes_super_admin/superadmin_contentFooter');
-        $this->load->view('includes_super_admin/superadmin_rightnav');
-        $this->load->view('includes_super_admin/superadmin_footer');
-    }
+    //     $this->load->view('includes_super_admin/superadmin_contentFooter');
+    //     $this->load->view('includes_super_admin/superadmin_rightnav');
+    //     $this->load->view('includes_super_admin/superadmin_footer');
+    // }
 
-    public function payment()
-    {
-        $this->load->view('includes_super_admin/superadmin_header');
-        $this->load->view('includes_super_admin/superadmin_topnav');
-        $this->load->view('includes_super_admin/superadmin_sidebar');
+    // public function balance()
+    // {
+    //     $this->load->view('includes_super_admin/superadmin_header');
+    //     $this->load->view('includes_super_admin/superadmin_topnav');
+    //     $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_students/payment');
+    //     $this->load->view('content_super_admin/manage_students/balance');
 
-        $this->load->view('includes_super_admin/superadmin_contentFooter');
-        $this->load->view('includes_super_admin/superadmin_rightnav');
-        $this->load->view('includes_super_admin/superadmin_footer');
-    }
+    //     $this->load->view('includes_super_admin/superadmin_contentFooter');
+    //     $this->load->view('includes_super_admin/superadmin_rightnav');
+    //     $this->load->view('includes_super_admin/superadmin_footer');
+    // }
 
-    public function create_student()
-    {
-        $this->form_validation->set_rules('acc_number', 'Student number', 'required|strip_tags');
-        $this->form_validation->set_rules('acc_fname', 'First Name', 'required|strip_tags');
-        $this->form_validation->set_rules('acc_mname', 'Middle Name', 'required|strip_tags');
-        $this->form_validation->set_rules('acc_lname', 'Last Name', 'required|strip_tags');
-        $this->form_validation->set_rules('acc_citizenship', 'Citizenship', 'required|strip_tags');
-        $this->form_validation->set_rules('acc_program', 'Program', 'required|strip_tags');
-        $this->form_validation->set_rules('acc_college', 'College', 'required|strip_tags');
-        $this->form_validation->set_rules('curriculum_code', 'Curriculum', 'required|strip_tags');
+    // public function payment()
+    // {
+    //     $this->load->view('includes_super_admin/superadmin_header');
+    //     $this->load->view('includes_super_admin/superadmin_topnav');
+    //     $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        if ($this->form_validation->run() == FALSE) {
-            $this->add_student();
-        } else {
-            $data = array(
-                'acc_number' => $this->input->post('acc_number'),
-                'acc_fname' => $this->input->post('acc_fname'),
-                'acc_mname' => $this->input->post('acc_mname'),
-                'acc_lname' => $this->input->post('acc_lname'),
-                'acc_username' => $this->input->post('acc_number'),
-                'acc_password' => sha1('stud'),
-                'acc_citizenship' => $this->input->post('acc_citizenship'),
-                'acc_program' => $this->input->post('acc_program'),
-                'acc_college' => $this->input->post('acc_college'),
-                'acc_access_level' => 3,
-                'curriculum_code' => $this->input->post('curriculum_code')
-            );
+    //     $this->load->view('content_super_admin/manage_students/payment');
 
-            $this->SuperAdmin_model->create_student($data);
-            redirect('SuperAdmin/add_student');
-        }
-    }
+    //     $this->load->view('includes_super_admin/superadmin_contentFooter');
+    //     $this->load->view('includes_super_admin/superadmin_rightnav');
+    //     $this->load->view('includes_super_admin/superadmin_footer');
+    // }
 
-    public function submit_course_card()
-    {
-        $this->form_validation->set_rules('cc_course', 'Course Code', 'required|strip_tags');
-        $this->form_validation->set_rules('cc_section', 'Section', 'required|strip_tags');
-        $this->form_validation->set_rules('cc_midterm', 'Midterm Grade', 'required|strip_tags');
-        $this->form_validation->set_rules('cc_final', 'Final Grade', 'required|strip_tags');
-        $this->form_validation->set_rules('cc_year', 'School Year', 'required|strip_tags');
-        $this->form_validation->set_rules('cc_term', 'School Term', 'required|strip_tags');
-        $this->form_validation->set_rules('cc_stud_number', 'Student Number', 'required|strip_tags');
-        $this->form_validation->set_rules('cc_status', 'Course Status', 'required|strip_tags');
+    // public function create_student()
+    // {
+    //     $this->form_validation->set_rules('acc_number', 'Student number', 'required|strip_tags');
+    //     $this->form_validation->set_rules('acc_fname', 'First Name', 'required|strip_tags');
+    //     $this->form_validation->set_rules('acc_mname', 'Middle Name', 'required|strip_tags');
+    //     $this->form_validation->set_rules('acc_lname', 'Last Name', 'required|strip_tags');
+    //     $this->form_validation->set_rules('acc_citizenship', 'Citizenship', 'required|strip_tags');
+    //     $this->form_validation->set_rules('acc_program', 'Program', 'required|strip_tags');
+    //     $this->form_validation->set_rules('acc_college', 'College', 'required|strip_tags');
+    //     $this->form_validation->set_rules('curriculum_code', 'Curriculum', 'required|strip_tags');
 
-        if ($this->form_validation->run() == FALSE) {
-            $this->course_card();
-        } else {
-            $data = array(
-                'cc_course' => $this->input->post('cc_course'),
-                'cc_section' => $this->input->post('cc_section'),
-                'cc_midterm' => $this->input->post('cc_midterm'),
-                'cc_final' => $this->input->post('cc_final'),
-                'cc_year' => $this->input->post('cc_year'),
-                'cc_term' => $this->input->post('cc_term'),
-                'cc_stud_number' => $this->input->post('cc_stud_number'),
-                'cc_status' => $this->input->post('cc_status'),
-                'cc_is_enrolled' => 1
-            );
+    //     if ($this->form_validation->run() == FALSE) {
+    //         $this->add_student();
+    //     } else {
+    //         $data = array(
+    //             'acc_number' => $this->input->post('acc_number'),
+    //             'acc_fname' => $this->input->post('acc_fname'),
+    //             'acc_mname' => $this->input->post('acc_mname'),
+    //             'acc_lname' => $this->input->post('acc_lname'),
+    //             'acc_username' => $this->input->post('acc_number'),
+    //             'acc_password' => sha1('stud'),
+    //             'acc_citizenship' => $this->input->post('acc_citizenship'),
+    //             'acc_program' => $this->input->post('acc_program'),
+    //             'acc_college' => $this->input->post('acc_college'),
+    //             'acc_access_level' => 3,
+    //             'curriculum_code' => $this->input->post('curriculum_code')
+    //         );
 
-            $this->SuperAdmin_model->submit_course_card($data);
-            redirect('SuperAdmin/course_card');
-        }
-    }
+    //         $this->SuperAdmin_model->create_student($data);
+    //         redirect('SuperAdmin/add_student');
+    //     }
+    // }
 
-    public function submit_balance()
-    {
-        $this->form_validation->set_rules('bal_term', 'School Term', 'required|strip_tags');
-        $this->form_validation->set_rules('bal_year', 'School Year', 'required|strip_tags');
-        $this->form_validation->set_rules('bal_status', 'Status', 'required|strip_tags');
-        $this->form_validation->set_rules('bal_stud_number', 'Student Number', 'required|strip_tags');
-        $this->form_validation->set_rules('bal_beginning', 'Beginning Balance', 'required|strip_tags');
-        $this->form_validation->set_rules('bal_total_assessment', 'Total Assessment', 'required|strip_tags');
+    // public function submit_course_card()
+    // {
+    //     $this->form_validation->set_rules('cc_course', 'Course Code', 'required|strip_tags');
+    //     $this->form_validation->set_rules('cc_section', 'Section', 'required|strip_tags');
+    //     $this->form_validation->set_rules('cc_midterm', 'Midterm Grade', 'required|strip_tags');
+    //     $this->form_validation->set_rules('cc_final', 'Final Grade', 'required|strip_tags');
+    //     $this->form_validation->set_rules('cc_year', 'School Year', 'required|strip_tags');
+    //     $this->form_validation->set_rules('cc_term', 'School Term', 'required|strip_tags');
+    //     $this->form_validation->set_rules('cc_stud_number', 'Student Number', 'required|strip_tags');
+    //     $this->form_validation->set_rules('cc_status', 'Course Status', 'required|strip_tags');
 
-        if ($this->form_validation->run() == FALSE) {
-            $this->balance();
-        } else {
-            $data = array(
-                'bal_term' => $this->input->post('bal_term'),
-                'bal_year' => $this->input->post('bal_year'),
-                'bal_status' => $this->input->post('bal_status'),
-                'bal_stud_number' => $this->input->post('bal_stud_number'),
-                'bal_beginning' => $this->input->post('bal_beginning'),
-                'bal_total_assessment' => $this->input->post('bal_total_assessment')
-            );
+    //     if ($this->form_validation->run() == FALSE) {
+    //         $this->course_card();
+    //     } else {
+    //         $data = array(
+    //             'cc_course' => $this->input->post('cc_course'),
+    //             'cc_section' => $this->input->post('cc_section'),
+    //             'cc_midterm' => $this->input->post('cc_midterm'),
+    //             'cc_final' => $this->input->post('cc_final'),
+    //             'cc_year' => $this->input->post('cc_year'),
+    //             'cc_term' => $this->input->post('cc_term'),
+    //             'cc_stud_number' => $this->input->post('cc_stud_number'),
+    //             'cc_status' => $this->input->post('cc_status'),
+    //             'cc_is_enrolled' => 1
+    //         );
 
-            $this->SuperAdmin_model->submit_balance($data);
-            redirect('SuperAdmin/balance');
-        }
-    }
+    //         $this->SuperAdmin_model->submit_course_card($data);
+    //         redirect('SuperAdmin/course_card');
+    //     }
+    // }
 
-    public function submit_payment()
-    {
-        $this->form_validation->set_rules('pay_stud_number', 'Student Number', 'required|strip_tags');
-        $this->form_validation->set_rules('payment', 'Payment', 'required|strip_tags');
-        $this->form_validation->set_rules('pay_term', 'School Term', 'required|strip_tags');
-        $this->form_validation->set_rules('pay_year', 'School Year', 'required|strip_tags');
-        $this->form_validation->set_rules('or_number', 'OR Number', 'required|strip_tags');
-        $this->form_validation->set_rules('pay_date', 'Payment Date', 'required|strip_tags');
-        $this->form_validation->set_rules('pay_type', 'Payment Type', 'required|strip_tags');
+    // public function submit_balance()
+    // {
+    //     $this->form_validation->set_rules('bal_term', 'School Term', 'required|strip_tags');
+    //     $this->form_validation->set_rules('bal_year', 'School Year', 'required|strip_tags');
+    //     $this->form_validation->set_rules('bal_status', 'Status', 'required|strip_tags');
+    //     $this->form_validation->set_rules('bal_stud_number', 'Student Number', 'required|strip_tags');
+    //     $this->form_validation->set_rules('bal_beginning', 'Beginning Balance', 'required|strip_tags');
+    //     $this->form_validation->set_rules('bal_total_assessment', 'Total Assessment', 'required|strip_tags');
 
-        if ($this->form_validation->run() == FALSE) {
-            $this->payment();
-        } else {
-            $data = array(
-                'pay_stud_number' => $this->input->post('pay_stud_number'),
-                'payment' => $this->input->post('payment'),
-                'pay_term' => $this->input->post('pay_term'),
-                'pay_year' => $this->input->post('pay_year'),
-                'or_number' => $this->input->post('or_number'),
-                'pay_date' => $this->input->post('pay_date'),
-                'pay_type' => $this->input->post('pay_type')
-            );
+    //     if ($this->form_validation->run() == FALSE) {
+    //         $this->balance();
+    //     } else {
+    //         $data = array(
+    //             'bal_term' => $this->input->post('bal_term'),
+    //             'bal_year' => $this->input->post('bal_year'),
+    //             'bal_status' => $this->input->post('bal_status'),
+    //             'bal_stud_number' => $this->input->post('bal_stud_number'),
+    //             'bal_beginning' => $this->input->post('bal_beginning'),
+    //             'bal_total_assessment' => $this->input->post('bal_total_assessment')
+    //         );
 
-            $this->SuperAdmin_model->submit_payment($data);
-            redirect('SuperAdmin/payment');
-        }
-    }
+    //         $this->SuperAdmin_model->submit_balance($data);
+    //         redirect('SuperAdmin/balance');
+    //     }
+    // }
+
+    // public function submit_payment()
+    // {
+    //     $this->form_validation->set_rules('pay_stud_number', 'Student Number', 'required|strip_tags');
+    //     $this->form_validation->set_rules('payment', 'Payment', 'required|strip_tags');
+    //     $this->form_validation->set_rules('pay_term', 'School Term', 'required|strip_tags');
+    //     $this->form_validation->set_rules('pay_year', 'School Year', 'required|strip_tags');
+    //     $this->form_validation->set_rules('or_number', 'OR Number', 'required|strip_tags');
+    //     $this->form_validation->set_rules('pay_date', 'Payment Date', 'required|strip_tags');
+    //     $this->form_validation->set_rules('pay_type', 'Payment Type', 'required|strip_tags');
+
+    //     if ($this->form_validation->run() == FALSE) {
+    //         $this->payment();
+    //     } else {
+    //         $data = array(
+    //             'pay_stud_number' => $this->input->post('pay_stud_number'),
+    //             'payment' => $this->input->post('payment'),
+    //             'pay_term' => $this->input->post('pay_term'),
+    //             'pay_year' => $this->input->post('pay_year'),
+    //             'or_number' => $this->input->post('or_number'),
+    //             'pay_date' => $this->input->post('pay_date'),
+    //             'pay_type' => $this->input->post('pay_type')
+    //         );
+
+    //         $this->SuperAdmin_model->submit_payment($data);
+    //         redirect('SuperAdmin/payment');
+    //     }
+    // }
 
     // =======================================================================================
     // END OF STUDENT FUNCTIONALITIES
@@ -1294,19 +1451,25 @@ class SuperAdmin extends CI_Controller
 
     public function add_prereq_to_course()
     {
-        $prereq = array(
-            'root_course' => $this->input->post('root_course'),
-            'prereq_code' => $this->input->post('prereq_code'),
-            'prereq_title' => $this->input->post('prereq_title'),
-            'prereq_units' => $this->input->post('prereq_units')
-        );
-
-        // print_r($_POST);
-        // print_r($prereq);
-        // die();
+        $this->form_validation->set_rules('prereq_code', 'Prereq Code', 'required|strip_tags|is_unique[prereq_tbl.prereq_code]');
         $id = $this->input->post('course_id');
-        $this->SuperAdmin_model->add_prereq_to_course($prereq);
-        $this->edit_course($id, "Record successfully edited!");
+        if ($this->form_validation->run() == FALSE) {
+            $this->edit_course($id);
+        } else {
+            $prereq = array(
+                'root_course' => $this->input->post('root_course'),
+                'prereq_code' => $this->input->post('prereq_code'),
+                'prereq_title' => $this->input->post('prereq_title'),
+                'prereq_units' => $this->input->post('prereq_units')
+            );
+
+            // print_r($_POST);
+            // print_r($prereq);
+            // die();
+
+            $this->SuperAdmin_model->add_prereq_to_course($prereq);
+            $this->edit_course($id, "Record successfully edited!");
+        }
     }
 
     public function add_course_csv()
@@ -1327,7 +1490,7 @@ class SuperAdmin extends CI_Controller
 
     public function create_course()
     {
-        $this->form_validation->set_rules('course_code', 'Course Code', 'required|strip_tags|is_unique[courses_tbl.course_code]');
+        $this->form_validation->set_rules('course_code', 'Course Code', 'required|strip_tags|is_unique[courses_tbl_v2.course_code]');
         $this->form_validation->set_rules('course_title', 'Course Title', 'required|strip_tags');
         $this->form_validation->set_rules('course_units', 'Course Units', 'required|strip_tags');
         $this->form_validation->set_rules('laboratory_code', 'Laboratory Code', 'required|strip_tags');

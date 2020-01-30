@@ -11,39 +11,42 @@
     <section class="content container-fluid">
         <div class="container-fluid" style="padding:0px;">
             <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        <strong>Students</strong>
+                    </h3>
+                    <a class="btn btn-success pull-right" href="<?= base_url() ?>SuperAdmin/add_student">Add New Entry</a>
+                </div>
                 <div class="box-body">
                     <table class="datatables table table-striped" data-page-length='10'>
                         <thead class="bg-success text-center" style="background-color:#00a65a; color:white;">
-                            <th class="text-center col-md-1">Student No</th>
-                            <th class="text-center col-md-3">Full Name</th>
+                            <th class="text-center col-md-1">#</th>
+                            <th class="text-center col-md-2">Student No</th>
+                            <th class="text-center col-md-4">Full Name</th>
                             <th class="text-center col-md-1">Program</th>
-                            <th class="text-center col-md-2">College</th>
                             <th class="text-center col-md-2">Curriculum</th>
                             <th class="text-center col-md-2">Action</th>
                         </thead>
                         <tbody>
-                            <?php foreach ($students as $student) : ?>
+                            <?php $i = 1;
+                            foreach ($students as $student) : ?>
                                 <tr>
+                                    <td class="text-center"><?= $i++ ?></td>
                                     <td class="text-center"><?= $student->acc_number ?></td>
                                     <td><?= $student->acc_lname . ', ' . $student->acc_fname . ' ' . $student->acc_mname ?></td>
                                     <td class="text-center"><?= $student->acc_program ?></td>
-                                    <td class="text-center"><?= $student->acc_college ?></td>
                                     <td class="text-center"><?= $student->curriculum_code ?></td>
-                                    <td>
-                                        <button class="btn btn-primary"><i class="fa fa-eye"></i></button>
-                                        <button class="btn btn-warning"><i class="fa fa-pencil"></i></button>
+                                    <td class="text-center">
+                                        <a href="<?= base_url() ?>SuperAdmin/edit_student/<?= $student->acc_id ?>" class="btn btn-primary"><i class="fa fa-eye"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
-                <div class="box-footer">
-                    <a class="btn btn-success pull-right" href="<?= base_url() ?>Superadmin/add_student">Add New Entry</a>
-                </div>
             </div>
 
-            
+
 
         </div>
     </section>

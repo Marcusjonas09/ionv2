@@ -5,6 +5,105 @@ class SuperAdmin_model extends CI_Model
 {
 
     // =======================================================================================
+    // END OF STUDENTS
+    // =======================================================================================
+
+    public function fetch_all_student()
+    {
+        $this->db->select('*');
+        $this->db->where(array('acc_access_level' => 3));
+        $this->db->from('accounts_tbl');
+        $this->db->order_by('acc_lname', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function fetch_student_count()
+    {
+        $this->db->select('*');
+        $this->db->where(array('acc_access_level' => 3));
+        $this->db->from('accounts_tbl');
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    public function fetch_student($id)
+    {
+        $this->db->select('*');
+        $this->db->where(array('acc_id' => $id));
+        $this->db->from('accounts_tbl');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    // public function add_program_csv($data)
+    // {
+    //     if ($data['name']) {
+    //         $filename = explode(".", $data['name']);
+    //         if (end($filename) == "csv") {
+    //             $handle = fopen($data['tmp_name'], "r");
+    //             while ($data = fgetcsv($handle)) {
+    //                 $code = strip_tags($data[0]);
+    //                 $description = strip_tags($data[1]);
+    //                 $assigned_college = strip_tags($data[2]);
+    //                 $data = array(
+    //                     'program_code' => $code,
+    //                     'program_description' => $description,
+    //                     'assigned_college' => $assigned_college
+    //                 );
+
+    //                 $this->db->insert('programs_tbl', $data);
+    //             }
+    //             fclose($handle);
+    //             $message = '
+    //     <div class="alert alert-success alert-dismissible">
+    //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //         <h4><i class="icon fa fa-warning"></i>Success!</h4>
+    //         <p>Import complete!</p>
+    //     </div>
+    //     ';
+    //         } else {
+    //             $message = '
+    //     <div class="alert alert-warning alert-dismissible">
+    //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //         <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+    //         <p>Please Select CSV File only</p>
+    //     </div>
+    //     ';
+    //         }
+    //     } else {
+    //         $message = '
+    //     <div class="alert alert-warning alert-dismissible">
+    //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //         <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+    //         <p>Please Select File</p>
+    //     </div>
+    //     ';
+    //     }
+    //     return $message;
+    // }
+
+    public function create_student($student)
+    {
+        $this->db->insert('accounts_tbl', $student);
+    }
+
+    // public function edit_program($id, $content)
+    // {
+    //     $this->db->where('program_id', $id);
+    //     $this->db->update('programs_tbl', $content);
+    // }
+
+    // public function delete_program($id)
+    // {
+    //     $this->db->delete('programs_tbl', array('program_id' => $id));
+    // }
+
+    // =======================================================================================
+    // END OF STUDENTS
+    // =======================================================================================
+
+    // =======================================================================================
     // COLLEGE
     // =======================================================================================
 
@@ -864,31 +963,31 @@ class SuperAdmin_model extends CI_Model
     // STUDENT MANAGEMENT FUNCTIONS
     // =======================================================================================
 
-    public function create_student($data)
-    {
-        $this->db->insert('accounts_tbl', $data);
-    }
+    // public function create_student($data)
+    // {
+    //     $this->db->insert('accounts_tbl', $data);
+    // }
 
-    public function edit_student($acc_number, $data)
-    {
-        $this->db->where('acc_id', $acc_number);
-        $this->db->update('accounts_tbl', $data);
-    }
+    // public function edit_student($acc_number, $data)
+    // {
+    //     $this->db->where('acc_id', $acc_number);
+    //     $this->db->update('accounts_tbl', $data);
+    // }
 
-    public function submit_course_card($data)
-    {
-        $this->db->insert('course_card_tbl', $data);
-    }
+    // public function submit_course_card($data)
+    // {
+    //     $this->db->insert('course_card_tbl', $data);
+    // }
 
-    public function submit_balance($data)
-    {
-        $this->db->insert('balance_tbl', $data);
-    }
+    // public function submit_balance($data)
+    // {
+    //     $this->db->insert('balance_tbl', $data);
+    // }
 
-    public function submit_payment($data)
-    {
-        $this->db->insert('payments_tbl', $data);
-    }
+    // public function submit_payment($data)
+    // {
+    //     $this->db->insert('payments_tbl', $data);
+    // }
 
     // =======================================================================================
     // END OF STUDENT MANAGEMENT FUNCTIONS
