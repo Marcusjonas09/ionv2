@@ -39,7 +39,9 @@
                             <label for="curr_code">Department:</label>
                             <select class="form-control js-example-basic-single" name="assigned_department" id="assigned_department">
                                 <?php foreach ($departments as $department) : ?>
-                                    <option value="<?= $department->department_code ?>"><?= $department->department_code . ' - ' . $department->department_description ?></option>
+                                    <option <?php if ($department->department_code == $curriculum->laboratory_code) {
+                                                echo "selected";
+                                            } ?> value="<?= $department->department_code ?>"><?= $department->department_code . ' - ' . $department->department_description ?></option>
                                 <?php endforeach; ?>
                             </select>
                             <input type="hidden" name="curriculum_code_id" value="<?= $curriculum->curriculum_code_id ?>">

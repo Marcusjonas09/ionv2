@@ -23,7 +23,7 @@
                 <?php echo $success_msg; ?>
             </div>
         <?php endif; ?>
-        <div class="container-fluid col-md-9" style="padding-right:0px;">
+        <div class="container-fluid col-md-9" style="padding-left:0px; padding-right:0px;">
             <form action="<?= base_url() ?>SuperAdmin/edit_college_function" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">

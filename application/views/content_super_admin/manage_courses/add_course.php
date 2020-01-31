@@ -19,7 +19,7 @@
         <?php if (isset($message)) : ?>
             <?php echo $message; ?>
         <?php endif; ?>
-        <div class="container-fluid col-md-9" style="padding-right:0px;">
+        <div class="container-fluid col-md-9" style="padding-left:0px; padding-right:0px;">
             <form action="<?= base_url() ?>SuperAdmin/create_course" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
@@ -38,6 +38,7 @@
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Laboratory Code:</label>
                                 <select class="form-control js-example-basic-single" name="laboratory_code" id="laboratory_code">
+                                    <option value="">none</option>
                                     <?php foreach ($laboratories as $laboratory) : ?>
                                         <option value="<?= $laboratory->laboratory_code ?>"><?= $laboratory->laboratory_code . ' - ' . $laboratory->laboratory_title ?></option>
                                     <?php endforeach; ?>
@@ -65,7 +66,7 @@
                 </div>
             </form>
         </div>
-        <div class="container-fluid col-md-3">
+        <div class="container-fluid col-md-3" style="padding-right:0px;">
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Insert Multiple Entry</strong></h3>

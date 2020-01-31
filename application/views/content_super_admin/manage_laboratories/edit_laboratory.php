@@ -8,7 +8,7 @@
     </section>
 
     <!-- Main content -->
-    <section class="content container-fluid">
+    <section class="content container-fluid" style="padding-left:0px; padding-right:0px;">
         <?php if (validation_errors()) : ?>
             <div class="alert alert-warning alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>

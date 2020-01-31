@@ -19,7 +19,7 @@
         <?php if (isset($message)) : ?>
             <?php echo $message; ?>
         <?php endif; ?>
-        <div class="container-fluid col-md-9" style="padding-right:0px;">
+        <div class="container-fluid col-md-9" style="padding-left:0px; padding-right:0px;">
             <form action="<?= base_url() ?>SuperAdmin/create_section" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">

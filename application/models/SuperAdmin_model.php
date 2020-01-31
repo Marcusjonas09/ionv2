@@ -590,10 +590,10 @@ class SuperAdmin_model extends CI_Model
         return $query->num_rows();
     }
 
-    public function fetch_curriculum($id)
+    public function fetch_curriculum($curriculum_code)
     {
         $this->db->select('*');
-        $this->db->where(array('curriculum_code_id' => $id));
+        $this->db->where(array('curriculum_code' => $curriculum_code));
         $this->db->from('curriculum_code_tbl');
         $query = $this->db->get();
         return $query->row();
@@ -628,11 +628,11 @@ class SuperAdmin_model extends CI_Model
     public function fetch_single_curriculum($curriculum_code)
     {
         $this->db->select('*');
-        $this->db->where(array('courses_tbl.curriculum_code' => $curriculum_code));
+        $this->db->where(array('curriculum_tbl.curriculum_code' => $curriculum_code));
         $this->db->from('curriculum_tbl');
-        $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_id = curriculum_tbl.laboratory_id');
-        $this->db->join('courses_tbl', 'courses_tbl.course_id = curriculum_tbl.course_id');
-        $this->db->order_by('courses_tbl.course_code', 'ASC');
+        $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = curriculum_tbl.laboratory_code', 'left');
+        $this->db->join('courses_tbl_v2', 'courses_tbl_v2.course_code = curriculum_tbl.course_code', 'left');
+        $this->db->order_by('courses_tbl_v2.course_code', 'ASC');
         $query = $this->db->get();
         return $query->result();
     }
@@ -838,23 +838,41 @@ class SuperAdmin_model extends CI_Model
             $filename = explode(".", $data['name']);
             if (end($filename) == "csv") {
                 $handle = fopen($data['tmp_name'], "r");
+                $line_errors = 0;
+                $records_imported = 0;
                 while ($data = fgetcsv($handle)) {
-                    $code = strip_tags($data[0]);
-                    // mysqli_query($connect, $query);
-                    $data = array(
-                        'section_code' => $code,
-                    );
+                    if (count($data) == 1) {
+                        $code = strip_tags($data[0]);
+                        // mysqli_query($connect, $query);
+                        $data = array(
+                            'section_code' => $code,
+                        );
 
-                    $this->db->insert('sections_tbl', $data);
+                        $this->db->insert('sections_tbl', $data);
+                        $records_imported++;
+                    } else {
+                        $line_errors++;
+                    }
                 }
                 fclose($handle);
-                $message = '
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h4><i class="icon fa fa-warning"></i>Success!</h4>
-            <p>Import complete!</p>
-        </div>
-        ';
+                if ($line_errors > 0) {
+                    $message = '
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Error!</h4>
+                        <p>' . $line_errors . ' records were not imported!</p>
+                    </div>
+                    ';
+                } else {
+                    $message = '
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Success!</h4>
+                        <p>Import complete!</p>
+                        <p>' . $records_imported . ' records imported!</p>
+                    </div>
+                    ';
+                }
             } else {
                 $message = '
         <div class="alert alert-warning alert-dismissible">
@@ -931,26 +949,44 @@ class SuperAdmin_model extends CI_Model
             $filename = explode(".", $data['name']);
             if (end($filename) == "csv") {
                 $handle = fopen($data['tmp_name'], "r");
+                $line_errors = 0;
+                $records_imported = 0;
                 while ($data = fgetcsv($handle)) {
-                    $code = strip_tags($data[0]);
-                    $title = strip_tags($data[1]);
-                    $units = strip_tags($data[2]);
-                    $data = array(
-                        'laboratory_code' => $code,
-                        'laboratory_title' => $title,
-                        'laboratory_units' => $units
-                    );
+                    if (count($data) == 3) {
+                        $code = (!empty(strip_tags($data[0])) ? strip_tags($data[0]) : "");
+                        $title = strip_tags($data[1]);
+                        $units = (!empty(strip_tags($data[2])) ? strip_tags($data[2]) : "");
+                        $data = array(
+                            'laboratory_code' => $code,
+                            'laboratory_title' => $title,
+                            'laboratory_units' => $units
+                        );
 
-                    $this->db->insert('laboratory_tbl', $data);
+                        $this->db->insert('laboratory_tbl', $data);
+                        $records_imported++;
+                    } else {
+                        $line_errors++;
+                    }
                 }
                 fclose($handle);
-                $message = '
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h4><i class="icon fa fa-warning"></i>Success!</h4>
-            <p>Import complete!</p>
-        </div>
-        ';
+                if ($line_errors > 0) {
+                    $message = '
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Error!</h4>
+                        <p>' . $line_errors . ' records were not imported!</p>
+                    </div>
+                    ';
+                } else {
+                    $message = '
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Success!</h4>
+                        <p>Import complete!</p>
+                        <p>' . $records_imported . ' records imported!</p>
+                    </div>
+                    ';
+                }
             } else {
                 $message = '
         <div class="alert alert-warning alert-dismissible">

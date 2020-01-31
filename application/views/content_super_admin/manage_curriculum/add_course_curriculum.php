@@ -42,18 +42,20 @@
                     <div class="box-body">
                         <div class="form-group col-md-6">
                             <label for="">Course Code</label>
-                            <select id="course_id" name="course_id" class="form-control js-example-basic-single">
+                            <select id="course_code" name="course_code" class="form-control js-example-basic-single">
+                                <option value="0">none</option>
                                 <?php foreach ($courses as $course) : ?>
-                                    <option value="<?= $course->course_id ?>"><?= $course->course_code . " - " . $course->course_title ?></option>
+                                    <option value="<?= $course->course_code ?>"><?= $course->course_code . " - " . $course->course_title ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
 
                         <div class="form-group col-md-6">
                             <label for="">Laboratory Code</label>
-                            <select id="laboratory_id" name="laboratory_id" class="form-control js-example-basic-single">
+                            <select id="laboratory_code" name="laboratory_code" class="form-control js-example-basic-single">
+                                <option value="0">none</option>
                                 <?php foreach ($laboratories as $laboratory) : ?>
-                                    <option value="<?= $laboratory->laboratory_id ?>"><?= $laboratory->laboratory_code . " - " . $laboratory->laboratory_title ?></option>
+                                    <option value="<?= $laboratory->laboratory_code ?>"><?= $laboratory->laboratory_code . " - " . $laboratory->laboratory_title ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -79,7 +81,7 @@
                             </select>
                         </div>
 
-                        <input type="hidden" name="curriculum_code_id" id="curriculum_code_id" value="<?= $curriculum_code->curriculum_code_id ?>" />
+                        <input type="hidden" name="curriculum_code" id="curriculum_code" value="<?= $curriculum_code->curriculum_code ?>" />
                     </div>
                     <div class="box-footer">
                         <input class="btn btn-success pull-right" type="submit" value="Add Course" />
@@ -120,7 +122,7 @@
                             <th class="text-center">UNITS</th>
                             <th class="text-center">LABORATORY</th>
                             <th class="text-center">UNITS</th>
-                            <th class="text-center">PREREQUISITE</th>
+                            <!-- <th class="text-center">PREREQUISITE</th> -->
                             <th class="text-center">ACTION</th>
                         </thead>
 
@@ -134,16 +136,16 @@
                                 </tr>
 
                                 <?php foreach ($curriculum as $cur) : ?>
-                                    <?php if ($cur->Year == $y && $cur->Term == $t) : ?>
+                                    <?php if ($cur->year == $y && $cur->term == $t) : ?>
                                         <tr>
                                             <td><?= $cur->course_code ?></td>
                                             <td><?= $cur->course_title ?></td>
                                             <td class="text-center"><?= $cur->course_units ?></td>
                                             <td><?= $cur->laboratory_code ?></td>
                                             <td class="text-center"><?= $cur->laboratory_units ?></td>
-                                            <td><?= $cur->pr_requisite ?></td>
+                                            <!-- <td><?= $cur->pr_requisite ?></td> -->
                                             <td>
-                                                <button class="btn btn-danger" onclick="delete_course_from_curriculum(<?= $cur->curriculum_id ?>,<?= $curriculum_code->curriculum_code_id ?>)"><i class="fa fa-minus"></i></button>
+                                                <button class="btn btn-danger" onclick="delete_course_from_curriculum(<?= $cur->curriculum_id ?>,<?= $cur->curriculum_code ?>)"><i class="fa fa-minus"></i></button>
                                             </td>
                                         </tr>
                                     <?php endif; ?>

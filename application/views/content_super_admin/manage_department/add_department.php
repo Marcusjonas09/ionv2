@@ -8,7 +8,7 @@
     </section>
 
     <!-- Main content -->
-    <section class="content container-fluid">
+    <section class="content container-fluid" style="padding-left:0px; padding-right:0px;">
         <?php if (validation_errors()) : ?>
             <div class="alert alert-warning alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -23,7 +23,7 @@
             <form action="<?= base_url() ?>SuperAdmin/create_department" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><strong>Create department</strong></h3>
+                        <h1 class="box-title"><strong>Create department</strong></h1>
                     </div>
                     <div class="box-body">
                         <div class="form-group col-md-4">
@@ -37,6 +37,7 @@
                         <div class="form-group col-md-4">
                             <label for="curr_code">College:</label>
                             <select class="form-control js-example-basic-single" name="assigned_college" id="assigned_college">
+                                <option value="">none</option>
                                 <?php foreach ($colleges as $college) : ?>
                                     <option value="<?= $college->college_code ?>"><?= $college->college_code . ' - ' . $college->college_description ?></option>
                                 <?php endforeach; ?>

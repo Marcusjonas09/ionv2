@@ -16,12 +16,8 @@
                 <?php echo validation_errors(); ?>
             </div>
         <?php endif; ?>
-        <?php if (isset($success_msg)) : ?>
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h4><i class="icon fa fa-warning"></i>Success!</h4>
-                <?php echo $success_msg; ?>
-            </div>
+        <?php if (isset($message)) : ?>
+            <?php echo $message; ?>
         <?php endif; ?>
         <div class="container-fluid col-md-9" style="padding-right:0px;">
             <form action="<?= base_url() ?>SuperAdmin/create_curriculum" method="post">
@@ -37,6 +33,7 @@
                         <div class="form-group col-md-6">
                             <label for="curr_code">Department:</label>
                             <select class="form-control js-example-basic-single" name="assigned_department" id="assigned_department">
+                                <option value="">none</option>
                                 <?php foreach ($departments as $department) : ?>
                                     <option value="<?= $department->department_code ?>"><?= $department->department_code . ' - ' . $department->department_description ?></option>
                                 <?php endforeach; ?>

@@ -883,10 +883,11 @@ class SuperAdmin extends CI_Controller
         $data['success_msg'] = $success_msg;
         $data['fail_msg'] = $fail_msg;
         $data['curriculum_code'] = $this->SuperAdmin_model->fetch_curriculum($id);
+
         $data['courses'] = $this->Academics_model->fetch_all_courses();
         $data['laboratories'] = $this->Academics_model->fetch_all_laboratories();
         $data['curriculum'] = $this->SuperAdmin_model->fetch_single_curriculum($data['curriculum_code']->curriculum_code);
-
+        // $this->dd($data['curriculum_code']->curriculum_code);
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
@@ -898,10 +899,10 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
-    public function add_curriculum($success_msg = null)
+    public function add_curriculum($message = null)
     {
         $data['departments'] = $this->SuperAdmin_model->fetch_all_department();
-        $data['success_msg'] = $success_msg;
+        $data['message'] = $message;
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
@@ -915,19 +916,19 @@ class SuperAdmin extends CI_Controller
 
     public function add_course_to_curriculum()
     {
-        $this->form_validation->set_rules('course_id', 'Course Code', 'required|strip_tags');
-        $this->form_validation->set_rules('laboratory_id', 'Laboratory Code', 'required|strip_tags');
-        $this->form_validation->set_rules('curriculum_code_id', 'Curriculum Code', 'required|strip_tags');
+        $this->form_validation->set_rules('course_code', 'Course Code', 'required|strip_tags');
+        $this->form_validation->set_rules('laboratory_code', 'Laboratory Code', 'required|strip_tags');
+        $this->form_validation->set_rules('curriculum_code', 'Curriculum Code', 'required|strip_tags');
         $this->form_validation->set_rules('year', 'Year', 'required|strip_tags');
         $this->form_validation->set_rules('term', 'Term', 'required|strip_tags');
-        $id = $this->input->post('curriculum_code_id');
+        $id = $this->input->post('curriculum_code');
         if ($this->form_validation->run() == FALSE) {
             $this->add_course_curriculum($id);
         } else {
             $curriculum = array(
-                'course_id' => $this->input->post('course_id'),
-                'laboratory_id' => $this->input->post('laboratory_id'),
-                'curriculum_code_id' => $this->input->post('curriculum_code_id'),
+                'course_code' => $this->input->post('course_code'),
+                'laboratory_code' => $this->input->post('laboratory_code'),
+                'curriculum_code' => $this->input->post('curriculum_code'),
                 'year' => $this->input->post('year'),
                 'term' => $this->input->post('term')
             );
@@ -977,13 +978,13 @@ class SuperAdmin extends CI_Controller
         }
     }
 
-    public function delete_course_from_curriculum($id, $curr_id)
+    public function delete_course_from_curriculum($id, $curr_code)
     {
         if (!$this->SuperAdmin_model->delete_course_from_curriculum($id)) {
             $this->SuperAdmin_model->delete_course_from_curriculum($id);
-            $this->add_course_curriculum($curr_id, "Record successfully deleted!");
+            $this->add_course_curriculum($curr_code, "Record successfully deleted!");
         } else {
-            $this->add_course_curriculum($curr_id, null, "Failed to delete Record!");
+            $this->add_course_curriculum($curr_code, null, "Failed to delete Record!");
         }
     }
 
@@ -1833,4 +1834,12 @@ class SuperAdmin extends CI_Controller
     // =======================================================================================
     // END OF SCHOOL PARAMETERS
     // =======================================================================================
+
+    public function dd($data)
+    {
+        echo "<pre>";
+        print_r($data);
+        echo "<pre>";
+        die();
+    }
 }
