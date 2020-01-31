@@ -139,30 +139,49 @@ class SuperAdmin_model extends CI_Model
             $filename = explode(".", $data['name']);
             if (end($filename) == "csv") {
                 $handle = fopen($data['tmp_name'], "r");
+                $line_errors = 0;
+                $records_imported = 0;
                 while ($data = fgetcsv($handle)) {
-                    $code = strip_tags($data[0]);
-                    $description = strip_tags($data[1]);
-                    // mysqli_query($connect, $query);
-                    $data = array(
-                        'college_code' => $code,
-                        'college_description' => $description
-                    );
+                    if (count($data) == 2) {
+                        $code = (!empty(strip_tags($data[0])) ? strip_tags($data[0]) : "");
+                        $description = (!empty(strip_tags($data[1])) ? strip_tags($data[1]) : "");
 
-                    $this->db->insert('college_tbl', $data);
+                        $data = array(
+                            'college_code' => $code,
+                            'college_description' => $description
+                        );
+
+                        $this->db->insert('college_tbl', $data);
+                        $records_imported++;
+                    } else {
+                        $line_errors++;
+                    }
                 }
                 fclose($handle);
-                $message = '
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h4><i class="icon fa fa-warning"></i>Success!</h4>
-            <p>Import complete!</p>
-        </div>
-        ';
+                if ($line_errors > 0) {
+                    $message = '
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Error!</h4>
+                        <p>' . $line_errors . ' records were not imported!</p>
+                    </div>
+                    ';
+                } else {
+                    $message = '
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Success!</h4>
+                        <p>Import complete!</p>
+                        <p>' . $records_imported . ' records imported!</p>
+                    </div>
+                    ';
+                }
             } else {
                 $message = '
         <div class="alert alert-warning alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Please Select CSV File only</p>
             <p>Please Select CSV File only</p>
         </div>
         ';
@@ -240,26 +259,44 @@ class SuperAdmin_model extends CI_Model
             $filename = explode(".", $data['name']);
             if (end($filename) == "csv") {
                 $handle = fopen($data['tmp_name'], "r");
+                $line_errors = 0;
+                $records_imported = 0;
                 while ($data = fgetcsv($handle)) {
-                    $code = strip_tags($data[0]);
-                    $description = strip_tags($data[1]);
-                    $assigned_college = strip_tags($data[2]);
-                    $data = array(
-                        'department_code' => $code,
-                        'department_description' => $description,
-                        'assigned_college' => $assigned_college
-                    );
+                    if (count($data) == 3) {
+                        $code = strip_tags($data[0]);
+                        $description = strip_tags($data[1]);
+                        $assigned_college = strip_tags($data[2]);
+                        $data = array(
+                            'department_code' => $code,
+                            'department_description' => $description,
+                            'assigned_college' => $assigned_college
+                        );
 
-                    $this->db->insert('department_tbl', $data);
+                        $this->db->insert('department_tbl', $data);
+                        $records_imported++;
+                    } else {
+                        $line_errors++;
+                    }
                 }
                 fclose($handle);
-                $message = '
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h4><i class="icon fa fa-warning"></i>Success!</h4>
-            <p>Import complete!</p>
-        </div>
-        ';
+                if ($line_errors > 0) {
+                    $message = '
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Error!</h4>
+                        <p>' . $line_errors . ' records were not imported!</p>
+                    </div>
+                    ';
+                } else {
+                    $message = '
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Success!</h4>
+                        <p>Import complete!</p>
+                        <p>' . $records_imported . ' records imported!</p>
+                    </div>
+                    ';
+                }
             } else {
                 $message = '
         <div class="alert alert-warning alert-dismissible">
@@ -338,26 +375,44 @@ class SuperAdmin_model extends CI_Model
             $filename = explode(".", $data['name']);
             if (end($filename) == "csv") {
                 $handle = fopen($data['tmp_name'], "r");
+                $line_errors = 0;
+                $records_imported = 0;
                 while ($data = fgetcsv($handle)) {
-                    $code = strip_tags($data[0]);
-                    $description = strip_tags($data[1]);
-                    $assigned_college = strip_tags($data[2]);
-                    $data = array(
-                        'program_code' => $code,
-                        'program_description' => $description,
-                        'assigned_college' => $assigned_college
-                    );
+                    if (count($data) == 3) {
+                        $code = (!empty(strip_tags($data[0])) ? strip_tags($data[0]) : "");
+                        $description = (!empty(strip_tags($data[1])) ? strip_tags($data[1]) : "");
+                        $assigned_department = (!empty(strip_tags($data[2])) ? strip_tags($data[2]) : "");
+                        $data = array(
+                            'program_code' => $code,
+                            'program_description' => $description,
+                            'assigned_department' => $assigned_department
+                        );
 
-                    $this->db->insert('programs_tbl', $data);
+                        $this->db->insert('programs_tbl', $data);
+                        $records_imported++;
+                    } else {
+                        $line_errors++;
+                    }
                 }
                 fclose($handle);
-                $message = '
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h4><i class="icon fa fa-warning"></i>Success!</h4>
-            <p>Import complete!</p>
-        </div>
-        ';
+                if ($line_errors > 0) {
+                    $message = '
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Error!</h4>
+                        <p>' . $line_errors . ' records were not imported!</p>
+                    </div>
+                    ';
+                } else {
+                    $message = '
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Success!</h4>
+                        <p>Import complete!</p>
+                        <p>' . $records_imported . ' records imported!</p>
+                    </div>
+                    ';
+                }
             } else {
                 $message = '
         <div class="alert alert-warning alert-dismissible">
@@ -435,26 +490,44 @@ class SuperAdmin_model extends CI_Model
             $filename = explode(".", $data['name']);
             if (end($filename) == "csv") {
                 $handle = fopen($data['tmp_name'], "r");
+                $line_errors = 0;
+                $records_imported = 0;
                 while ($data = fgetcsv($handle)) {
-                    $code = strip_tags($data[0]);
-                    $description = strip_tags($data[1]);
-                    $assigned_program = strip_tags($data[2]);
-                    $data = array(
-                        'specialization_code' => $code,
-                        'specialization_description' => $description,
-                        'assigned_program' => $assigned_program
-                    );
+                    if (count($data) == 3) {
+                        $code = strip_tags($data[0]);
+                        $description = strip_tags($data[1]);
+                        $assigned_program = strip_tags($data[2]);
+                        $data = array(
+                            'specialization_code' => $code,
+                            'specialization_description' => $description,
+                            'assigned_program' => $assigned_program
+                        );
 
-                    $this->db->insert('specialization_tbl', $data);
+                        $this->db->insert('specialization_tbl', $data);
+                        $records_imported++;
+                    } else {
+                        $line_errors++;
+                    }
                 }
                 fclose($handle);
-                $message = '
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h4><i class="icon fa fa-warning"></i>Success!</h4>
-            <p>Import complete!</p>
-        </div>
-        ';
+                if ($line_errors > 0) {
+                    $message = '
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Error!</h4>
+                        <p>' . $line_errors . ' records were not imported!</p>
+                    </div>
+                    ';
+                } else {
+                    $message = '
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Success!</h4>
+                        <p>Import complete!</p>
+                        <p>' . $records_imported . ' records imported!</p>
+                    </div>
+                    ';
+                }
             } else {
                 $message = '
         <div class="alert alert-warning alert-dismissible">
@@ -642,35 +715,55 @@ class SuperAdmin_model extends CI_Model
             $filename = explode(".", $data['name']);
             if (end($filename) == "csv") {
                 $handle = fopen($data['tmp_name'], "r");
+                $line_errors = 0;
+                $records_imported = 0;
                 while ($data = fgetcsv($handle)) {
-                    $code = strip_tags($data[0]);
-                    $title = strip_tags($data[1]);
-                    $units = strip_tags($data[2]);
-                    $lab = strip_tags($data[3]);
-                    $department = strip_tags($data[4]);
-                    $data = array(
-                        'course_code' => $code,
-                        'course_title' => $title,
-                        'course_units' => $units,
-                        'laboratory_code' => $lab,
-                        'department_code' => $department
-                    );
+                    if (count($data) == 5) {
+                        $code = (!empty(strip_tags($data[0])) ? strip_tags($data[0]) : "");
+                        $title = (!empty(strip_tags($data[1])) ? strip_tags($data[1]) : "");
+                        $units = (!empty(strip_tags($data[2])) ? strip_tags($data[2]) : "");
+                        $lab = (!empty(strip_tags($data[3])) ? strip_tags($data[3]) : "");
+                        $department = (!empty(strip_tags($data[4])) ? strip_tags($data[4]) : "");
 
-                    $this->db->insert('courses_tbl_v2', $data);
+                        $data = array(
+                            'course_code' => $code,
+                            'course_title' => $title,
+                            'course_units' => $units,
+                            'laboratory_code' => $lab,
+                            'department_code' => $department
+                        );
+
+                        $this->db->insert('courses_tbl_v2', $data);
+                        $records_imported++;
+                    } else {
+                        $line_errors++;
+                    }
                 }
                 fclose($handle);
-                $message = '
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h4><i class="icon fa fa-warning"></i>Success!</h4>
-            <p>Import complete!</p>
-        </div>
-        ';
+                if ($line_errors > 0) {
+                    $message = '
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Error!</h4>
+                        <p>' . $line_errors . ' records were not imported!</p>
+                    </div>
+                    ';
+                } else {
+                    $message = '
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Success!</h4>
+                        <p>Import complete!</p>
+                        <p>' . $records_imported . ' records imported!</p>
+                    </div>
+                    ';
+                }
             } else {
                 $message = '
         <div class="alert alert-warning alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Please Select CSV File only</p>
             <p>Please Select CSV File only</p>
         </div>
         ';
