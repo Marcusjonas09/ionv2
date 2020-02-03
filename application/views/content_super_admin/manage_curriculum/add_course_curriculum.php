@@ -33,6 +33,10 @@
             </div>
         <?php endif; ?>
 
+        <?php if (isset($message)) : ?>
+            <?php echo $message; ?>
+        <?php endif; ?>
+
         <div class="container-fluid col-md-9" style="padding-right:0px;">
             <form action="<?= base_url() ?>SuperAdmin/add_course_to_curriculum" method="post">
                 <div class="box box-success">
@@ -94,25 +98,25 @@
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Insert Multiple Entry</strong></h3>
                 </div>
-                <div class="box-body">
-                    <form action="" method="post" enctype="multipart/form-data">
+                <form action="<?= base_url() ?>SuperAdmin/add_curriculum_csv" method="post" enctype="multipart/form-data">
+                    <div class="box-body">
                         <div class="form-group">
                             <label>Upload CSV file</label>
-                            <input class="form-control btn btn-default" type="file" name="facultycsv" />
+                            <input class="form-control btn btn-default" type="file" name="csv_file" />
+                            <input type="hidden" name="curriculum_code" value="<?= $curriculum_code->curriculum_code ?>">
                         </div>
-                    </form>
-                </div>
-                <div class="box-footer">
-                    <input class="btn btn-success pull-right" type="submit" value="Import" />
-                </div>
+
+                    </div>
+                    <div class="box-footer">
+                        <input class="btn btn-success pull-right" type="submit" name="import" value="Import" />
+                    </div>
+                </form>
             </div>
         </div>
 
         <div class="container-fluid col-md-12" style="padding-right:0px;">
-            <!-- <form action="<?= base_url() ?>SuperAdmin/create_curriculum" method="post"> -->
             <div class="box box-success">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><strong><?= $curriculum_code->curriculum_code ?></strong></h3>
                 </div>
                 <div class="box-body">
                     <table class="table table-bordered table-responsive">
@@ -122,7 +126,6 @@
                             <th class="text-center">UNITS</th>
                             <th class="text-center">LABORATORY</th>
                             <th class="text-center">UNITS</th>
-                            <!-- <th class="text-center">PREREQUISITE</th> -->
                             <th class="text-center">ACTION</th>
                         </thead>
 
@@ -143,9 +146,8 @@
                                             <td class="text-center"><?= $cur->course_units ?></td>
                                             <td><?= $cur->laboratory_code ?></td>
                                             <td class="text-center"><?= $cur->laboratory_units ?></td>
-                                            <!-- <td><?= $cur->pr_requisite ?></td> -->
                                             <td>
-                                                <button class="btn btn-danger" onclick="delete_course_from_curriculum(<?= $cur->curriculum_id ?>,<?= $cur->curriculum_code ?>)"><i class="fa fa-minus"></i></button>
+                                                <button class="btn btn-danger" onclick="delete_course_from_curriculum('<?= $cur->curriculum_id ?>','<?= $curriculum_code->curriculum_code ?>')"><i class="fa fa-minus"></i></button>
                                             </td>
                                         </tr>
                                     <?php endif; ?>
@@ -155,7 +157,6 @@
                     </table>
                 </div>
             </div>
-            <!-- </form> -->
         </div>
 
 

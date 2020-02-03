@@ -878,27 +878,6 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
-    public function add_course_curriculum($id, $success_msg = null, $fail_msg = null)
-    {
-        $data['success_msg'] = $success_msg;
-        $data['fail_msg'] = $fail_msg;
-        $data['curriculum_code'] = $this->SuperAdmin_model->fetch_curriculum($id);
-
-        $data['courses'] = $this->Academics_model->fetch_all_courses();
-        $data['laboratories'] = $this->Academics_model->fetch_all_laboratories();
-        $data['curriculum'] = $this->SuperAdmin_model->fetch_single_curriculum($data['curriculum_code']->curriculum_code);
-        // $this->dd($data['curriculum_code']->curriculum_code);
-        $this->load->view('includes_super_admin/superadmin_header');
-        $this->load->view('includes_super_admin/superadmin_topnav');
-        $this->load->view('includes_super_admin/superadmin_sidebar');
-
-        $this->load->view('content_super_admin/manage_curriculum/add_course_curriculum', $data);
-
-        $this->load->view('includes_super_admin/superadmin_contentFooter');
-        $this->load->view('includes_super_admin/superadmin_rightnav');
-        $this->load->view('includes_super_admin/superadmin_footer');
-    }
-
     public function add_curriculum($message = null)
     {
         $data['departments'] = $this->SuperAdmin_model->fetch_all_department();
@@ -914,6 +893,28 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
+    public function add_course_curriculum($curriculum_code, $success_msg = null, $fail_msg = null, $message = null)
+    {
+        $data['message'] = $message;
+        $data['success_msg'] = $success_msg;
+        $data['fail_msg'] = $fail_msg;
+        $data['curriculum_code'] = $this->SuperAdmin_model->fetch_curriculum($curriculum_code);
+
+        $data['courses'] = $this->Academics_model->fetch_all_courses();
+        $data['laboratories'] = $this->Academics_model->fetch_all_laboratories();
+        $data['curriculum'] = $this->SuperAdmin_model->fetch_single_curriculum($curriculum_code);
+        // $this->dd($data['curriculum']);
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_curriculum/add_course_curriculum', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
     public function add_course_to_curriculum()
     {
         $this->form_validation->set_rules('course_code', 'Course Code', 'required|strip_tags');
@@ -921,9 +922,9 @@ class SuperAdmin extends CI_Controller
         $this->form_validation->set_rules('curriculum_code', 'Curriculum Code', 'required|strip_tags');
         $this->form_validation->set_rules('year', 'Year', 'required|strip_tags');
         $this->form_validation->set_rules('term', 'Term', 'required|strip_tags');
-        $id = $this->input->post('curriculum_code');
+        $curriculum_code = $this->input->post('curriculum_code');
         if ($this->form_validation->run() == FALSE) {
-            $this->add_course_curriculum($id);
+            $this->add_course_curriculum($curriculum_code);
         } else {
             $curriculum = array(
                 'course_code' => $this->input->post('course_code'),
@@ -934,8 +935,24 @@ class SuperAdmin extends CI_Controller
             );
 
             $this->SuperAdmin_model->add_course_to_curriculum($curriculum);
-            $this->add_course_curriculum($id, "Record successfully edited!");
+            $this->add_course_curriculum($curriculum_code, "Record successfully edited!");
         }
+    }
+
+    public function add_curriculum_csv()
+    {
+        if (isset($_POST["import"])) {
+            $message = $this->SuperAdmin_model->add_curriculum_csv($_FILES['csv_file'], $_POST['curriculum_code']);
+        } else {
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Please select a file!</p>
+        </div>
+        ';
+        }
+        $this->add_course_curriculum($_POST['curriculum_code'], null, null, $message);
     }
 
     public function edit_curriculum($id, $success_msg = null, $fail_msg = null)

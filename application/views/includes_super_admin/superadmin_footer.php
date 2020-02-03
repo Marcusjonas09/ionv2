@@ -26,8 +26,9 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 <script type="text/javascript">
+    var baselink = "<?= base_url() ?>";
+
     function delete_program(id) {
-        var baselink = "<?= base_url() ?>";
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -44,7 +45,6 @@
     }
 
     function delete_college(id) {
-        var baselink = "<?= base_url() ?>";
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -61,7 +61,6 @@
     }
 
     function delete_course(id) {
-        var baselink = "<?= base_url() ?>";
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -78,7 +77,6 @@
     }
 
     function delete_laboratory(id) {
-        var baselink = "<?= base_url() ?>";
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -95,7 +93,6 @@
     }
 
     function delete_section(id) {
-        var baselink = "<?= base_url() ?>";
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -112,7 +109,6 @@
     }
 
     function delete_department(id) {
-        var baselink = "<?= base_url() ?>";
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -129,7 +125,6 @@
     }
 
     function delete_specialization(id) {
-        var baselink = "<?= base_url() ?>";
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -146,7 +141,6 @@
     }
 
     function delete_curriculum(id) {
-        var baselink = "<?= base_url() ?>";
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -162,8 +156,7 @@
         })
     }
 
-    function delete_course_from_curriculum(id, curr_id) {
-        var baselink = "<?= base_url() ?>";
+    function delete_course_from_curriculum(curriculum_id, curriculum_code) {
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -174,13 +167,12 @@
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.value) {
-                window.location.replace(baselink + "SuperAdmin/delete_course_from_curriculum/" + id + "/" + curr_id)
+                window.location.replace(baselink + "SuperAdmin/delete_course_from_curriculum/" + curriculum_id + "/" + curriculum_code)
             }
         })
     }
 
     function delete_prereq_from_course(id, course_id) {
-        var baselink = "<?= base_url() ?>";
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",

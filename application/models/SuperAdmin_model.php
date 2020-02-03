@@ -599,6 +599,76 @@ class SuperAdmin_model extends CI_Model
         return $query->row();
     }
 
+    public function add_curriculum_csv($data, $curriculum)
+    {
+        if ($data['name']) {
+            $filename = explode(".", $data['name']);
+            if (end($filename) == "csv") {
+                $handle = fopen($data['tmp_name'], "r");
+                $line_errors = 0;
+                $records_imported = 0;
+                while ($data = fgetcsv($handle)) {
+                    if (count($data) == 4) {
+                        $course_code = strip_tags($data[0]);
+                        $laboratory_code = strip_tags($data[1]);
+                        $year = strip_tags($data[2]);
+                        $term = strip_tags($data[3]);
+                        $curriculum_code = $curriculum;
+
+                        $data = array(
+                            'course_code' => $course_code,
+                            'laboratory_code' => $laboratory_code,
+                            'curriculum_code' => $curriculum_code,
+                            'year' => $year,
+                            'term' => $term
+                        );
+
+                        $this->db->insert('curriculum_tbl', $data);
+                        $records_imported++;
+                    } else {
+                        $line_errors++;
+                    }
+                }
+                fclose($handle);
+                if ($line_errors > 0) {
+                    $message = '
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Error!</h4>
+                        <p>' . $line_errors . ' records were not imported!</p>
+                    </div>
+                    ';
+                } else {
+                    $message = '
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Success!</h4>
+                        <p>Import complete!</p>
+                        <p>' . $records_imported . ' records imported!</p>
+                    </div>
+                    ';
+                }
+            } else {
+                $message = '
+        <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Please Select CSV File only</p>
+        </div>
+        ';
+            }
+        } else {
+            $message = '
+        <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Please Select File</p>
+        </div>
+        ';
+        }
+        return $message;
+    }
+
     public function create_curriculum($curriculum)
     {
         $this->db->insert('curriculum_code_tbl', $curriculum);
