@@ -54,7 +54,7 @@
                                     </td>
                                     <td class="text-center">
                                         <a href="<?= base_url() ?>SuperAdmin/add_course_curriculum/<?= $curriculum->curriculum_code ?>" class="btn btn-primary"><i class="fa fa-eye"></i></a>
-                                        <a href="<?= base_url() ?>SuperAdmin/edit_curriculum/<?= $curriculum->curriculum_code_id ?>" class="btn btn-warning"><i class="fa fa-pencil"></i></a>
+                                        <a href="<?= base_url() ?>SuperAdmin/edit_curriculum/<?= $curriculum->curriculum_code ?>" class="btn btn-warning"><i class="fa fa-pencil"></i></a>
                                         <button class="btn btn-danger" onclick="delete_curriculum(<?= $curriculum->curriculum_code_id ?>)"><i class="fa fa-trash"></i></button>
                                     </td>
                                 </tr>

@@ -5,7 +5,7 @@ class SuperAdmin_model extends CI_Model
 {
 
     // =======================================================================================
-    // END OF STUDENTS
+    // STUDENTS
     // =======================================================================================
 
     public function fetch_all_student()
@@ -36,18 +36,26 @@ class SuperAdmin_model extends CI_Model
         return $query->row();
     }
 
-    // public function add_program_csv($data)
+    // public function add_student_csv($data)
     // {
     //     if ($data['name']) {
     //         $filename = explode(".", $data['name']);
     //         if (end($filename) == "csv") {
     //             $handle = fopen($data['tmp_name'], "r");
     //             while ($data = fgetcsv($handle)) {
-    //                 $code = strip_tags($data[0]);
+    //                 $acc_number = strip_tags($data[0]);
+    //                 $acc_fname = strip_tags($data[1]);
+    //                 $acc_mname = strip_tags($data[2]);
+    //                 $acc_lname = strip_tags($data[0]);
+    //                 $acc_email = strip_tags($data[1]);
+    //                 $acc_program = strip_tags($data[2]);
+    //                 $acc_specialization = strip_tags($data[0]);
     //                 $description = strip_tags($data[1]);
     //                 $assigned_college = strip_tags($data[2]);
+    //                 $assigned_college = strip_tags($data[2]);
+    //                 $assigned_college = strip_tags($data[2]);
     //                 $data = array(
-    //                     'program_code' => $code,
+    //                     'acc_number' => $code,
     //                     'program_description' => $description,
     //                     'assigned_college' => $assigned_college
     //                 );
@@ -88,10 +96,10 @@ class SuperAdmin_model extends CI_Model
         $this->db->insert('accounts_tbl', $student);
     }
 
-    // public function edit_program($id, $content)
+    // public function edit_student($id, $content)
     // {
-    //     $this->db->where('program_id', $id);
-    //     $this->db->update('programs_tbl', $content);
+    //     $this->db->where('acc_number', $id);
+    //     $this->db->update('accounts_tbl', $content);
     // }
 
     // public function delete_program($id)
@@ -601,6 +609,9 @@ class SuperAdmin_model extends CI_Model
 
     public function add_curriculum_csv($data, $curriculum)
     {
+
+
+
         if ($data['name']) {
             $filename = explode(".", $data['name']);
             if (end($filename) == "csv") {
@@ -622,6 +633,8 @@ class SuperAdmin_model extends CI_Model
                             'year' => $year,
                             'term' => $term
                         );
+
+                        // $this->dd($data);
 
                         $this->db->insert('curriculum_tbl', $data);
                         $records_imported++;
@@ -1191,4 +1204,12 @@ class SuperAdmin_model extends CI_Model
     // =======================================================================================
     // END OF STUDENT MANAGEMENT FUNCTIONS
     // =======================================================================================
+
+    public function dd($data)
+    {
+        echo "<pre>";
+        print_r($data);
+        echo "<pre>";
+        die();
+    }
 }

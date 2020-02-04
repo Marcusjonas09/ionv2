@@ -189,21 +189,21 @@ class SuperAdmin extends CI_Controller
         }
     }
 
-    // public function add_program_csv()
-    // {
-    //     if (isset($_POST["import"])) {
-    //         $message = $this->SuperAdmin_model->add_program_csv($_FILES['csv_file']);
-    //     } else {
-    //         $message = '
-    //     <div class="alert alert-success alert-dismissible">
-    //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    //         <h4><i class="icon fa fa-warning"></i>Warning!</h4>
-    //         <p>Please select a file!</p>
-    //     </div>
-    //     ';
-    //     }
-    //     $this->add_program($message);
-    // }
+    public function add_student_csv()
+    {
+        if (isset($_POST["import"])) {
+            $message = $this->SuperAdmin_model->add_student_csv($_FILES['csv_file']);
+        } else {
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Please select a file!</p>
+        </div>
+        ';
+        }
+        $this->add_student($message);
+    }
 
     public function create_student()
     {
@@ -1835,6 +1835,7 @@ class SuperAdmin extends CI_Controller
         $data['lab_count'] = $this->SuperAdmin_model->fetch_laboratory_count();
         $data['section_count'] = $this->SuperAdmin_model->fetch_section_count();
         $data['curriculum_count'] = $this->SuperAdmin_model->fetch_curriculum_count();
+        $data['student_count'] = $this->SuperAdmin_model->fetch_student_count();
 
 
         $this->load->view('includes_super_admin/superadmin_header');
