@@ -181,7 +181,7 @@ class Mobile_model extends CI_Model
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////
-    // COURSE CARD FUNCTIONS
+    // BALANCE FUNCTIONS
     ///////////////////////////////////////////////////////////////////////////////////////////
 
     public function get_final_balance($stud_number)
@@ -477,6 +477,15 @@ class Mobile_model extends CI_Model
             return $query->result();
         }
         return $query->result();
+    }
+
+    public function fetch_faculty()
+    {
+        $this->db->select('*');
+        $this->db->from('accounts_tbl');
+        $this->db->where(array('acc_access_level' => 3));
+        $query = $this->db->get();
+        return $query->result;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////

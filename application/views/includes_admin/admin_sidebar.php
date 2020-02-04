@@ -47,7 +47,7 @@
          </a>
          <ul class="treeview-menu">
            <li><a href="<?= base_url() ?>Admin/course_petitions"><i class="fa fa-file-text-o"></i><span>Course Petitions</span></a></li>
-           <li><a href="<?= base_url() ?>Admin/cor"><i class="fa fa-file-text-o"></i><span>COR Revision</span></a></li>
+           <li><a href="<?= base_url() ?>Admin/faculty_evaluation"><i class="fa fa-file-text-o"></i><span>Faculty Evaluation</span></a></li>
            <li><a href="<?= base_url() ?>Admin/underload"><i class="fa fa-file-text-o"></i><span>Underload Requests</span></a></li>
            <li><a href="<?= base_url() ?>Admin/overload"><i class="fa fa-file-text-o"></i><span>Overload Requests</span></a></li>
            <li><a href="<?= base_url() ?>Admin/simul"><i class="fa fa-file-text-o"></i><span>Simul Requests</span></a></li>

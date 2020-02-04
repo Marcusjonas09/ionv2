@@ -76,13 +76,11 @@
            <li><a href="http://opac.feutech.edu.ph/" target="_blank"><i class="fa fa-file-text-o"></i> <span>Online Public Access Catalogue</span></a></li>
            <li><a href="http://fcis.feutech.edu.ph/" target="_blank"><i class="fa fa-file-text-o"></i> <span>Online Fitness Reservation</span></a></li>
            <li><a href="<?= base_url() ?>Student/petitions"><i class="fa fa-file-text-o"></i> <span>Petition Course</span></a></li>
-           <li><a href="<?= base_url() ?>Student/maintenance"><i class="fa fa-file-text-o"></i> <span>Load Revision</span></a></li>
-           <li><a href="<?= base_url() ?>Student/maintenance"><i class="fa fa-file-text-o"></i> <span>Overload / Underload</span></a></li>
-           <li><a href="<?= base_url() ?>Student/maintenance"><i class="fa fa-file-text-o"></i> <span>Request for Simultaneous</span></a></li>
+           <li><a href="<?= base_url() ?>Student/check_units/<?= $this->session->acc_number ?>/<?= $this->session->curr_year ?>/<?= $this->session->curr_term ?>"><i class="fa fa-file-text-o"></i> <span>Overload / Underload</span></a></li>
+           <li><a href="<?= base_url() ?>Student/check_graduating"><i class="fa fa-file-text-o"></i> <span>Request for Simultaneous</span></a></li>
 
-           <!-- <li><a href="<?= base_url() ?>Student/revisions"><i class="fa fa-file-text-o"></i> <span>Load Revision</span></a></li> -->
-           <!-- <li><a href="<?= base_url() ?>Student/check_units/<?= $this->session->acc_number ?>/<?= $this->session->curr_year ?>/<?= $this->session->curr_term ?>"><i class="fa fa-file-text-o"></i> <span>Overload / Underload</span></a></li> -->
-           <!-- <li><a href="<?= base_url() ?>Student/check_graduating"><i class="fa fa-file-text-o"></i> <span>Request for Simultaneous</span></a></li> -->
+           <!-- <li><a href="<?= base_url() ?>Student/maintenance"><i class="fa fa-file-text-o"></i> <span>Overload / Underload</span></a></li>
+           <li><a href="<?= base_url() ?>Student/maintenance"><i class="fa fa-file-text-o"></i> <span>Request for Simultaneous</span></a></li> -->
          </ul>
        </li>
 

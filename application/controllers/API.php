@@ -234,6 +234,12 @@ class API extends CI_Controller
 		echo json_encode($data);
 	}
 
+	public function fetch_faculty()
+	{
+		$data = $this->Mobile_model->fetch_faculty();
+		echo json_encode($data);
+	}
+
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	// ACADEMICS FUNCTIONS
