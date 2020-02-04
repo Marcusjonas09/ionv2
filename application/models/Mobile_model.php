@@ -483,9 +483,9 @@ class Mobile_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('accounts_tbl');
-        $this->db->where(array('acc_access_level' => 3));
+        $this->db->where(array('acc_access_level' => 2));
         $query = $this->db->get();
-        return $query->result;
+        return $query->result();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////
