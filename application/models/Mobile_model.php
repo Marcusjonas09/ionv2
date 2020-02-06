@@ -488,6 +488,15 @@ class Mobile_model extends CI_Model
         return $query->result();
     }
 
+    public function fetch_faculty_single($id)
+    {
+        $this->db->select('*');
+        $this->db->from('accounts_tbl');
+        $this->db->where(array('acc_id' => $id));
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////
     // ACADEMICS FUNCTIONS
     ///////////////////////////////////////////////////////////////////////////////////////////
