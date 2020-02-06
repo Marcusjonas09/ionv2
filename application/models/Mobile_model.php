@@ -494,7 +494,7 @@ class Mobile_model extends CI_Model
         $this->db->from('accounts_tbl');
         $this->db->where(array('acc_id' => $faculty_id));
         $query = $this->db->get();
-        return $query->row();
+        return $query->result();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////
