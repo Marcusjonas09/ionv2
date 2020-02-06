@@ -240,8 +240,9 @@ class API extends CI_Controller
 		echo json_encode($data);
 	}
 
-	public function fetch_faculty_single($faculty_id)
+	public function fetch_faculty_single()
 	{
+		$faculty_id = file_get_contents("php://input");
 		$data = $this->Mobile_model->fetch_faculty_single($faculty_id);
 		echo json_encode($data);
 	}
