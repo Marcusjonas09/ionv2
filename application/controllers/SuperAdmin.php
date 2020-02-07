@@ -284,7 +284,7 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
-    public function add_class()
+    public function add_class($message = null)
     {
         $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
         $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
@@ -324,6 +324,28 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
         $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function create_class()
+    {
+        $this->form_validation->set_rules('course_code', 'Course Code', 'required|strip_tags');
+        $this->form_validation->set_rules('section_code', 'Section Code', 'required|strip_tags');
+        $this->form_validation->set_rules('faculty_id', 'Faculty assignment', 'required|strip_tags');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->add_class();
+        } else {
+            $class = array(
+                'class_code' => $this->input->post('college_code'),
+                'class_section' => $this->input->post('section_code'),
+                'class_faculty' => $this->input->post('faculty_id')
+            );
+
+            $this->SuperAdmin_model->create_class($class);
+            $this->add_class("Record successfully edited!");
+        }
+
+        // $this->SuperAdmin_model->create_class($class_sched);
     }
 
     public function save_sched()

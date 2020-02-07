@@ -1119,9 +1119,13 @@ class SuperAdmin_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('classes_tbl');
-        $this->db->order_by('class_code', 'ASC');
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function create_class($data)
+    {
+        $this->db->insert('classes_tbl', $data);
     }
 
     public function save_sched($data)

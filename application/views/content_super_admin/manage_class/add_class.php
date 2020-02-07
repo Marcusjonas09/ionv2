@@ -16,15 +16,12 @@
                 <?php echo validation_errors(); ?>
             </div>
         <?php endif; ?>
-        <?php if (isset($success_msg)) : ?>
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h4><i class="icon fa fa-warning"></i>Success!</h4>
-                <?php echo $success_msg; ?>
-            </div>
+        <?php if (isset($message)) : ?>
+            <?php echo $message; ?>
         <?php endif; ?>
         <div class="container-fluid col-md-8" style="padding-left:0px; padding-right:0px;">
-            <form action="<?= base_url() ?>SuperAdmin/edit_course_function" method="post">
+
+            <form action="<?= base_url() ?>SuperAdmin/create_class" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong>Create class</strong></h3>
@@ -43,7 +40,7 @@
 
                             <div class="form-group col-md-4">
                                 <label for="laboratory_code">Section:</label>
-                                <select class="form-control" name="section_code" id="class_section_code">
+                                <select class="form-control js-example-basic-single" name="section_code" id="class_section_code">
                                     <option value="">--</option>
                                     <?php foreach ($sections as $section) : ?>
                                         <option value="<?= $section->section_code ?>"><?= $section->section_code ?></option>
@@ -63,12 +60,12 @@
                         </div>
                     </div>
                     <div class="box-footer">
-                        <input class="btn btn-success pull-right" type="submit" value="Apply" />
+                        <input class="btn btn-success pull-right" type="submit" value="Create" />
                     </div>
                 </div>
             </form>
 
-            <div class="box box-success">
+            <!-- <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Class Schedules</strong></h3>
                 </div>
@@ -83,10 +80,10 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div> -->
         </div>
 
-        <div class="container-fluid col-md-4">
+        <!-- <div class="container-fluid col-md-4">
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Add class schedule</strong></h3>
@@ -147,7 +144,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </section>
 </div>
 <!-- /.content-wrapper -->
