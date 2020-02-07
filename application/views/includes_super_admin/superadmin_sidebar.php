@@ -20,7 +20,6 @@
      <ul class="sidebar-menu" data-widget="tree">
        <li class="header">MAIN NAVIGATION</li>
        <!-- Optionally, you can add icons to the links -->
-       <li class="active"><a href="<?= base_url() ?>Admin/"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
        <li><a href="<?= base_url() ?>SuperAdmin/school_parameters"><i class="fa fa-user"></i> <span>School Parameters</span></a></li>
        <li><a href="<?= base_url() ?>SuperAdmin/admin"><i class="fa fa-user"></i> <span>Admin Accounts</span></a></li>
        <!-- <li><a href="<?= base_url() ?>SuperAdmin/faculty"><i class="fa fa-user"></i> <span>Faculty</span></a></li>

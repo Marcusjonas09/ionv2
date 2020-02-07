@@ -41,7 +41,7 @@ class SuperAdmin extends CI_Controller
                 if ($this->session->access == 'admin') {
                     redirect('Admin/dashboard');
                 } else if ($this->session->access == 'superadmin') {
-                    redirect('SuperAdmin');
+                    redirect('SuperAdmin/school_parameters');
                 } else {
                     redirect('Admin');
                 }
@@ -263,6 +263,70 @@ class SuperAdmin extends CI_Controller
 
     // =======================================================================================
     // END OF STUDENTS
+    // =======================================================================================
+
+    // =======================================================================================
+    // CLASSES
+    // =======================================================================================
+
+    public function classes()
+    {
+        $data['classes'] = $this->SuperAdmin_model->fetch_all_classes();
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_class/all_classes', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function add_class()
+    {
+        $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_class/add_class', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function edit_class()
+    {
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_class/edit_class');
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function delete_class()
+    {
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_class/delete_class');
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    // =======================================================================================
+    // END OF CLASSES
     // =======================================================================================
 
     // =======================================================================================

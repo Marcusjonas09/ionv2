@@ -51,7 +51,7 @@ class Admin extends CI_Controller
 				if ($this->session->access == 'admin') {
 					redirect('Admin/dashboard');
 				} else if ($this->session->access == 'superadmin') {
-					redirect('SuperAdmin/dashboard');
+					redirect('SuperAdmin/school_parameters');
 				} else {
 					redirect('Admin');
 				}

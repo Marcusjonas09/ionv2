@@ -7,7 +7,7 @@ if ($this->session->access == 'admin') {
 } else if ($this->session->access == 'student') {
       redirect('Student/dashboard');
 } else if ($this->session->access == 'superadmin') {
-      redirect('SuperAdmin');
+      redirect('SuperAdmin/school_parameters');
 } else {
       redirect('Admin/dashboard');
 }

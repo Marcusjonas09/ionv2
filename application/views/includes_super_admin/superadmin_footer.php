@@ -13,6 +13,7 @@
 <script src="<?= base_url() ?>bower_components/fastclick/lib/fastclick.js"></script>
 <!-- bootstrap time picker -->
 <script src="<?= base_url() ?>plugins/timepicker/bootstrap-timepicker.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
 <!-- AdminLTE App -->
@@ -233,6 +234,11 @@
         });
         // Create a new object
         $('.js-example-basic-single').select2();
+
+        //Timepicker
+        $('.timepicker').timepicker({
+            showInputs: true
+        });
     });
 </script>
 

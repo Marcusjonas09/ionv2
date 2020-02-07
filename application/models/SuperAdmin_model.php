@@ -1112,6 +1112,118 @@ class SuperAdmin_model extends CI_Model
     // =======================================================================================
 
     // =======================================================================================
+    // CLASSES
+    // =======================================================================================
+
+    public function fetch_all_classes()
+    {
+        $this->db->select('*');
+        $this->db->from('classes_tbl');
+        $this->db->order_by('class_code', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    // public function fetch_section_count()
+    // {
+    //     $this->db->select('*');
+    //     $this->db->from('sections_tbl');
+    //     $query = $this->db->get();
+    //     return $query->num_rows();
+    // }
+
+    // public function fetch_section($id)
+    // {
+    //     $this->db->select('*');
+    //     $this->db->where(array('section_id' => $id));
+    //     $this->db->from('sections_tbl');
+    //     $query = $this->db->get();
+    //     return $query->row();
+    // }
+
+    // public function add_section_csv($data)
+    // {
+    //     if ($data['name']) {
+    //         $filename = explode(".", $data['name']);
+    //         if (end($filename) == "csv") {
+    //             $handle = fopen($data['tmp_name'], "r");
+    //             $line_errors = 0;
+    //             $records_imported = 0;
+    //             while ($data = fgetcsv($handle)) {
+    //                 if (count($data) == 1) {
+    //                     $code = strip_tags($data[0]);
+    //                     // mysqli_query($connect, $query);
+    //                     $data = array(
+    //                         'section_code' => $code,
+    //                     );
+
+    //                     $this->db->insert('sections_tbl', $data);
+    //                     $records_imported++;
+    //                 } else {
+    //                     $line_errors++;
+    //                 }
+    //             }
+    //             fclose($handle);
+    //             if ($line_errors > 0) {
+    //                 $message = '
+    //                 <div class="alert alert-warning alert-dismissible">
+    //                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //                     <h4><i class="icon fa fa-warning"></i>Error!</h4>
+    //                     <p>' . $line_errors . ' records were not imported!</p>
+    //                 </div>
+    //                 ';
+    //             } else {
+    //                 $message = '
+    //                 <div class="alert alert-success alert-dismissible">
+    //                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //                     <h4><i class="icon fa fa-warning"></i>Success!</h4>
+    //                     <p>Import complete!</p>
+    //                     <p>' . $records_imported . ' records imported!</p>
+    //                 </div>
+    //                 ';
+    //             }
+    //         } else {
+    //             $message = '
+    //     <div class="alert alert-warning alert-dismissible">
+    //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //         <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+    //         <p>Please Select CSV File only</p>
+    //     </div>
+    //     ';
+    //         }
+    //     } else {
+    //         $message = '
+    //     <div class="alert alert-warning alert-dismissible">
+    //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //         <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+    //         <p>Please Select File</p>
+    //     </div>
+    //     ';
+    //     }
+    //     return $message;
+    // }
+
+    // public function create_section($section)
+    // {
+    //     $this->db->insert('sections_tbl', $section);
+    // }
+
+    // public function edit_section($id, $content)
+    // {
+    //     $this->db->where('section_id', $id);
+    //     $this->db->update('sections_tbl', $content);
+    // }
+
+    // public function delete_section($id)
+    // {
+    //     $this->db->delete('sections_tbl', array('section_id' => $id));
+    // }
+
+    // =======================================================================================
+    // END OF CLASSES
+    // =======================================================================================
+
+    // =======================================================================================
     // ADMIN MANAGEMENT FUNCTIONS
     // =======================================================================================
 
