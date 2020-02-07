@@ -1124,6 +1124,11 @@ class SuperAdmin_model extends CI_Model
         return $query->result();
     }
 
+    public function save_sched($data)
+    {
+        $this->db->insert('class_schedule_tbl', $data);
+    }
+
     // public function fetch_section_count()
     // {
     //     $this->db->select('*');

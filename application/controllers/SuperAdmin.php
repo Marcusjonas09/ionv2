@@ -326,6 +326,19 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
+    public function save_sched()
+    {
+        $class_sched = array(
+            'class_code' => $_POST['class_sched']['course'],
+            'class_day' => $_POST['class_sched']['day'],
+            'class_start_time' => $_POST['class_sched']['start_time'],
+            'class_end_time' => $_POST['class_sched']['end_time'],
+            'faculty_id' => $_POST['class_sched']['faculty'],
+            'class_room' => $_POST['class_sched']['room']
+        );
+        $this->SuperAdmin_model->save_sched($class_sched);
+    }
+
     // =======================================================================================
     // END OF CLASSES
     // =======================================================================================

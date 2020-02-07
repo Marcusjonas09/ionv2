@@ -33,7 +33,7 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="laboratory_code">Course Code:</label>
-                                <select class="form-control js-example-basic-single" name="course_code" id="course_code">
+                                <select class="form-control js-example-basic-single" name="course_code" id="class_course_code">
                                     <option value="">--</option>
                                     <?php foreach ($courses as $course) : ?>
                                         <option value="<?= $course->course_code ?>"><?= $course->course_code . ' - ' . $course->course_title ?></option>
@@ -43,7 +43,7 @@
 
                             <div class="form-group col-md-4">
                                 <label for="laboratory_code">Section:</label>
-                                <select class="form-control js-example-basic-single" name="section_code" id="section_code">
+                                <select class="form-control" name="section_code" id="class_section_code">
                                     <option value="">--</option>
                                     <?php foreach ($sections as $section) : ?>
                                         <option value="<?= $section->section_code ?>"><?= $section->section_code ?></option>
@@ -53,14 +53,11 @@
 
                             <div class="form-group col-md-4">
                                 <label for="laboratory_code">Faculty:</label>
-                                <select class="form-control js-example-basic-single" name="faculty_id" id="faculty_id">
+                                <select class="form-control js-example-basic-single" name="faculty_id" id="class_faculty_id">
                                     <option value="">--</option>
                                     <option value="1">Roman, De Angel</option>
                                     <option value="2">Tejuco, Hadji Javier</option>
                                     <option value="3">Mansul, Danna May</option>
-                                    <!-- <?php foreach ($faculties as $faculty) : ?>
-                                        <option value="<?= $faculty->faculty_id ?>"><?= $faculty->acc_lname . ', ' . $faculty->acc_fname . ' ' . $faculty->mname ?></option>
-                                    <?php endforeach; ?> -->
                                 </select>
                             </div>
                         </div>

@@ -204,8 +204,7 @@
 
         var schedule_entry;
         var sched_table = [];
-        var offering_entry;
-        var petition_details = [];
+
 
         // Initialize variables
 
@@ -221,8 +220,14 @@
             var start_time = $("#class_start_time").val();
             var end_time = $("#class_end_time").val();
             var room = $("#class_room").val();
+            var faculty = $("#class_faculty_id").val();
+            var course = $("#class_course_code").val();
+            var section = $("#class_section_code").val();
 
             schedule_entry = {
+                faculty: faculty,
+                section: section,
+                course: course,
                 day: day,
                 start_time: start_time,
                 end_time: end_time,
@@ -242,7 +247,17 @@
             // echo date("G:i", strtotime($time));
 
             schedule_entry_old = schedule_entry;
-            // alert(JSON.stringify(schedule_entry));
+
+        });
+        $("#save_sched").click(function() {
+            $.post("<?= base_url() ?>SuperAdmin/save_sched", {
+                    class_sched: schedule_entry
+                }).done(function(data) {
+                    alert("success " + data);
+                })
+                .fail(function() {
+                    alert("Petition approval failed!");
+                });
         });
 
 
