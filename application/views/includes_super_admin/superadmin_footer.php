@@ -231,13 +231,14 @@
             for (var k in inner_sched) {
                 console.log(inner_sched[k]);
             }
+
         });
         // Create a new object
         $('.js-example-basic-single').select2();
 
         //Timepicker
         $('.timepicker').timepicker({
-            showInputs: true
+            showInputs: false
         });
     });
 </script>

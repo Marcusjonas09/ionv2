@@ -16,105 +16,120 @@
                 <?php echo validation_errors(); ?>
             </div>
         <?php endif; ?>
-        <?php if (isset($message)) : ?>
-            <?php echo $message; ?>
+        <?php if (isset($success_msg)) : ?>
+            <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-warning"></i>Success!</h4>
+                <?php echo $success_msg; ?>
+            </div>
         <?php endif; ?>
-        <div class="container-fluid col-md-9" style="padding-left:0px; padding-right:0px;">
-            <form action="<?= base_url() ?>SuperAdmin/create_section" method="post">
+        <div class="container-fluid col-md-8" style="padding-left:0px; padding-right:0px;">
+            <form action="<?= base_url() ?>SuperAdmin/edit_course_function" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong>Create class</strong></h3>
                     </div>
                     <div class="box-body">
-                        <div class="form-group col-md-4">
-                            <label>Course:</label>
-                            <select class="form-control js-example-basic-single" name="class_code" id="class_code">
-                                <option value="">none</option>
-                                <?php foreach ($courses as $course) : ?>
-                                    <option value="<?= $course->course_code ?>"><?= $course->course_code . ' - ' . $course->course_title ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <label>Section:</label>
-                            <select class="form-control js-example-basic-single" name="class_code" id="class_code">
-                                <option value="">none</option>
-                                <?php foreach ($sections as $section) : ?>
-                                    <option value="<?= $section->section_code ?>"><?= $course->course_code ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <label>Faculty:</label>
-                            <select class="form-control js-example-basic-single" name="class_code" id="class_code">
-                                <option value="">none</option>
-                                <?php foreach ($faculty as $faculty) : ?>
-                                    <option value="<?= $faculty->acc_id ?>"><?= $faculty->acc_lname . ', ' . $faculty->acc_fname ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <label>Day:</label>
-                            <select class="form-control js-example-basic-single" name="class_code" id="class_code">
-                                <option value="">none</option>
-                                <?php foreach ($courses as $course) : ?>
-                                    <option value="<?= $course->course_code ?>"><?= $course->course_code . ' - ' . $course->course_title ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="form-group col-md-4">
-                            <label>Start Time:</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control timepicker">
-
-                                <div class="input-group-addon">
-                                    <i class="fa fa-clock-o"></i>
-                                </div>
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="laboratory_code">Course Code:</label>
+                                <select class="form-control js-example-basic-single" name="laboratory_code" id="laboratory_code">
+                                    <?php foreach ($courses as $course) : ?>
+                                        <option value="<?= $course->course_code ?>"><?= $course->course_code . ' - ' . $course->course_title ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         </div>
-
-                        <div class="form-group col-md-4">
-                            <label>End Time:</label>
-                            <select class="form-control js-example-basic-single" name="class_code" id="class_code">
-                                <option value="">none</option>
-                                <?php foreach ($faculty as $faculty) : ?>
-                                    <option value="<?= $faculty->acc_id ?>"><?= $faculty->acc_lname . ', ' . $faculty->acc_fname ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                        <div class="row">
+                            <div class="form-group col-md-6" style="padding-left:0px; padding-right:0px;">>
+                                <label for="course_title">Course Title:</label>
+                                <input class="form-control" type="text" name="course_title" id="course_title" value="<?= $course->course_title ?>" placeholder="Enter course title" required />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="department_code">Department:</label>
+                                <select class="form-control js-example-basic-single" name="department_code" id="department_code">
+                                    <?php foreach ($departments as $department) : ?>
+                                        <option <?php if ($department->department_code == $course->department_code) {
+                                                    echo "selected";
+                                                } ?> value="<?= $department->department_code ?>"><?= $department->department_code . ' - ' . $department->department_description ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <input type="hidden" name="course_id" value="<?= $course->course_id ?>">
+                            </div>
                         </div>
                     </div>
                     <div class="box-footer">
-                        <input class="btn btn-success pull-right" type="submit" value="Submit" />
+                        <input class="btn btn-success pull-right" type="submit" value="Apply" />
                     </div>
                 </div>
             </form>
-        </div>
-        <div class="container-fluid col-md-3">
+
             <div class="box box-success">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><strong>Insert Multiple Entry</strong></h3>
+                    <h3 class="box-title"><strong>Pre Requisite Courses</strong></h3>
                 </div>
-                <form action="<?= base_url() ?>SuperAdmin/add_section_csv" method="post" enctype="multipart/form-data">
+                <div class="box-body">
+                    <table class="datatables table table-striped text-center" data-page-length='10'>
+                        <thead class="bg-success" style="background-color:#00a65a; color:white;">
+                            <th class="text-center col-md-1">#</th>
+                            <th class="text-center col-md-2">Course code</th>
+                            <th class="text-center col-md-4">Course title</th>
+                            <th class="text-center col-md-1">Units</th>
+                            <th class="text-center col-md-2">Action</th>
+                        </thead>
+                        <tbody>
+                            <?php $i = 1;
+                            foreach ($prereq_courses as $prereq_course) : ?>
+                                <tr>
+                                    <td>
+                                        <?= $i++ ?>
+                                    </td>
+                                    <td>
+                                        <?= $prereq_course->prereq_code ?>
+                                    </td>
+                                    <td>
+                                        <?= $prereq_course->prereq_title ?>
+                                    </td>
+                                    <td>
+                                        <?= $prereq_course->prereq_units ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-danger" onclick="delete_prereq_from_course(<?= $prereq_course->prereq_id ?>,<?= $course->course_id ?>)"><i class="fa fa-minus"></i></button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid col-md-4">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><strong>Add pre-requisite course</strong></h3>
+                </div>
+                <form action="<?= base_url() ?>SuperAdmin/add_prereq_to_course" method="post">
                     <div class="box-body">
                         <div class="form-group">
-                            <label>Upload CSV file</label>
-                            <input class="form-control btn btn-default" type="file" name="csv_file" />
+                            <label for="course_code">Course Code:</label>
+                            <select class="form-control js-example-basic-single" name="prereq_code" id="prereq_code">
+                                <?php foreach ($prereqs as $prereq) : ?>
+                                    <option value="<?= $prereq->course_code ?>"><?= $prereq->course_code . ' - ' . $prereq->course_title ?></option>
+                                <?php endforeach; ?>
+                                <input type="hidden" name="root_course" value="<?= $course->course_code ?>">
+                                <input type="hidden" name="course_id" value="<?= $course->course_id ?>">
+                                <input type="hidden" name="prereq_units" value="<?= $prereq->course_units ?>">
+                                <input type="hidden" name="prereq_title" value="<?= $prereq->course_title ?>">
+                            </select>
                         </div>
                     </div>
                     <div class="box-footer">
-                        <input class="btn btn-success pull-right" type="submit" name="import" value="Import" />
+                        <input class="btn btn-success pull-right" type="submit" value="Add" />
                     </div>
                 </form>
             </div>
         </div>
-
-
-
-
     </section>
 </div>
 <!-- /.content-wrapper -->
