@@ -202,37 +202,50 @@
             'autoWidth': false
         });
 
-        // Initialize variables
-        var schedule_entry, sched_table = [],
-            inner_sched = [];
+        var schedule_entry;
+        var sched_table = [];
+        var offering_entry;
+        var petition_details = [];
 
-        $("#add_sched").click(function() {
-            var day = $("#sched_day").val();
-            var start_time = $("#start_time").val();
-            var end_time = $("#end_time").val();
-            var room = $("#room").val();
+        // Initialize variables
+
+        schedule_entry_old = {
+            day: '',
+            start_time: '',
+            end_time: '',
+            room: ''
+        };
+
+        $("#add_class_sched").click(function() {
+            var day = $("#class_sched_day").val();
+            var start_time = $("#class_start_time").val();
+            var end_time = $("#class_end_time").val();
+            var room = $("#class_room").val();
+
             schedule_entry = {
                 day: day,
                 start_time: start_time,
                 end_time: end_time,
-                room: room,
+                room: room
             };
 
-            if (start_time < end_time && start_time != end_time) {
+            if ((start_time < end_time && start_time != end_time) && schedule_entry != schedule_entry_old) {
                 sched_table.push(schedule_entry);
-                var tr = '<tr><td class="col-md-2 text-center">' + day + '</td><td class="col-md-7">' + start_time + ' - ' + end_time + '</td><td class="col-md-3">' + room + '</td></tr>';
-                $("#sched_table_body").append(tr); // Append new elements
-            }
+                var tr = '<tr>' +
+                    '<td>' + day + '</td>' +
+                    '<td>' + start_time + ' - ' + end_time + '</td>' +
+                    '<td></td>' +
+                    '</tr>'
+                $("#class_sched_table_body").append(tr);
+            };
 
+            // echo date("G:i", strtotime($time));
 
-            for (var k in sched_table) {
-                inner_sched = sched_table[k];
-            }
-            for (var k in inner_sched) {
-                console.log(inner_sched[k]);
-            }
-
+            schedule_entry_old = schedule_entry;
+            // alert(JSON.stringify(schedule_entry));
         });
+
+
         // Create a new object
         $('.js-example-basic-single').select2();
 

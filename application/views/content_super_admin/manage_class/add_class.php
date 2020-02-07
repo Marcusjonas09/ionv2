@@ -33,28 +33,35 @@
                         <div class="row">
                             <div class="form-group col-md-4">
                                 <label for="laboratory_code">Course Code:</label>
-                                <select class="form-control js-example-basic-single" name="laboratory_code" id="laboratory_code">
+                                <select class="form-control js-example-basic-single" name="course_code" id="course_code">
+                                    <option value="">--</option>
                                     <?php foreach ($courses as $course) : ?>
                                         <option value="<?= $course->course_code ?>"><?= $course->course_code . ' - ' . $course->course_title ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-md-6" style="padding-left:0px; padding-right:0px;">>
-                                <label for="course_title">Course Title:</label>
-                                <input class="form-control" type="text" name="course_title" id="course_title" value="<?= $course->course_title ?>" placeholder="Enter course title" required />
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="department_code">Department:</label>
-                                <select class="form-control js-example-basic-single" name="department_code" id="department_code">
-                                    <?php foreach ($departments as $department) : ?>
-                                        <option <?php if ($department->department_code == $course->department_code) {
-                                                    echo "selected";
-                                                } ?> value="<?= $department->department_code ?>"><?= $department->department_code . ' - ' . $department->department_description ?></option>
+
+                            <div class="form-group col-md-4">
+                                <label for="laboratory_code">Section:</label>
+                                <select class="form-control js-example-basic-single" name="section_code" id="section_code">
+                                    <option value="">--</option>
+                                    <?php foreach ($sections as $section) : ?>
+                                        <option value="<?= $section->section_code ?>"><?= $section->section_code ?></option>
                                     <?php endforeach; ?>
                                 </select>
-                                <input type="hidden" name="course_id" value="<?= $course->course_id ?>">
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="laboratory_code">Faculty:</label>
+                                <select class="form-control js-example-basic-single" name="faculty_id" id="faculty_id">
+                                    <option value="">--</option>
+                                    <option value="1">Roman, De Angel</option>
+                                    <option value="2">Tejuco, Hadji Javier</option>
+                                    <option value="3">Mansul, Danna May</option>
+                                    <!-- <?php foreach ($faculties as $faculty) : ?>
+                                        <option value="<?= $faculty->faculty_id ?>"><?= $faculty->acc_lname . ', ' . $faculty->acc_fname . ' ' . $faculty->mname ?></option>
+                                    <?php endforeach; ?> -->
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -66,38 +73,16 @@
 
             <div class="box box-success">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><strong>Pre Requisite Courses</strong></h3>
+                    <h3 class="box-title"><strong>Class Schedules</strong></h3>
                 </div>
                 <div class="box-body">
-                    <table class="datatables table table-striped text-center" data-page-length='10'>
+                    <table class="table table-striped text-center" data-page-length='10'>
                         <thead class="bg-success" style="background-color:#00a65a; color:white;">
-                            <th class="text-center col-md-1">#</th>
-                            <th class="text-center col-md-2">Course code</th>
-                            <th class="text-center col-md-4">Course title</th>
-                            <th class="text-center col-md-1">Units</th>
-                            <th class="text-center col-md-2">Action</th>
+                            <th class="text-center col-md-3">DAY</th>
+                            <th class="text-center col-md-6">TIME</th>
+                            <th class="text-center col-md-3">ACTION</th>
                         </thead>
-                        <tbody>
-                            <?php $i = 1;
-                            foreach ($prereq_courses as $prereq_course) : ?>
-                                <tr>
-                                    <td>
-                                        <?= $i++ ?>
-                                    </td>
-                                    <td>
-                                        <?= $prereq_course->prereq_code ?>
-                                    </td>
-                                    <td>
-                                        <?= $prereq_course->prereq_title ?>
-                                    </td>
-                                    <td>
-                                        <?= $prereq_course->prereq_units ?>
-                                    </td>
-                                    <td class="text-center">
-                                        <button class="btn btn-danger" onclick="delete_prereq_from_course(<?= $prereq_course->prereq_id ?>,<?= $course->course_id ?>)"><i class="fa fa-minus"></i></button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
+                        <tbody id="class_sched_table_body">
                         </tbody>
                     </table>
                 </div>
@@ -107,27 +92,63 @@
         <div class="container-fluid col-md-4">
             <div class="box box-success">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><strong>Add pre-requisite course</strong></h3>
+                    <h3 class="box-title"><strong>Add class schedule</strong></h3>
                 </div>
-                <form action="<?= base_url() ?>SuperAdmin/add_prereq_to_course" method="post">
-                    <div class="box-body">
-                        <div class="form-group">
-                            <label for="course_code">Course Code:</label>
-                            <select class="form-control js-example-basic-single" name="prereq_code" id="prereq_code">
-                                <?php foreach ($prereqs as $prereq) : ?>
-                                    <option value="<?= $prereq->course_code ?>"><?= $prereq->course_code . ' - ' . $prereq->course_title ?></option>
-                                <?php endforeach; ?>
-                                <input type="hidden" name="root_course" value="<?= $course->course_code ?>">
-                                <input type="hidden" name="course_id" value="<?= $course->course_id ?>">
-                                <input type="hidden" name="prereq_units" value="<?= $prereq->course_units ?>">
-                                <input type="hidden" name="prereq_title" value="<?= $prereq->course_title ?>">
+
+                <div class="box-body">
+                    <div class="row">
+
+                        <div class="form-group col-md-6">
+                            <label for="laboratory_code">Day:</label>
+                            <select class="form-control" name="class_day" id="class_sched_day">
+                                <option value="">--</option>
+                                <option value="M">Monday</option>
+                                <option value="T">Tuesday</option>
+                                <option value="W">Thursday</option>
+                                <option value="TH">Thursday</option>
+                                <option value="F">Friday</option>
+                                <option value="S">Saturday</option>
                             </select>
                         </div>
+
+                        <div class="form-group col-md-6">
+                            <label>Room:</label>
+                            <div class="form-group">
+                                <input class="form-control" type="text" name="" id="class_room">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label>Start Time:</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control timepicker" name="" id="class_start_time">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label>End Time:</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control timepicker" id="class_end_time">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="box-footer">
-                        <input class="btn btn-success pull-right" type="submit" value="Add" />
+
+                </div>
+                <div class="box-footer">
+                    <div class="form-group pull-right">
+                        <button id="save_sched" class="btn btn-success">Save Schedule</button>
                     </div>
-                </form>
+                    <div class="form-group pull-right">
+                        <button id="add_class_sched" style="margin-right:10px;" class="btn btn-primary">Add Schedule</button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

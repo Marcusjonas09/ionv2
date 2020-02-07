@@ -35,12 +35,12 @@
                     <table class="datatables table table-striped text-center" data-page-length='10'>
                         <thead class="bg-success text-center" style="background-color:#00a65a; color:white;">
                             <th class="text-center col-md-1">#</th>
-                            <th class="text-center col-md-2">Code</th>
-                            <th class="text-center col-md-1">Section</th>
-                            <th class="text-center col-md-1">Day</th>
-                            <th class="text-center col-md-3">Time</th>
-                            <th class="text-center col-md-2">Faculty</th>
-                            <th class="text-center col-md-2">Action</th>
+                            <th class="text-center col-md-2">CODE</th>
+                            <th class="text-center col-md-1">SECTION</th>
+                            <th class="text-center col-md-1">DAY</th>
+                            <th class="text-center col-md-3">TIME</th>
+                            <th class="text-center col-md-2">FACULTY</th>
+                            <th class="text-center col-md-2">ACTION</th>
                         </thead>
                         <tbody>
                             <?php $i = 1;

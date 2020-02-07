@@ -287,6 +287,7 @@ class SuperAdmin extends CI_Controller
     public function add_class()
     {
         $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
+        $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
