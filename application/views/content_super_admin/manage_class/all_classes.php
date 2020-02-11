@@ -59,7 +59,7 @@
                                         <?= $class->class_faculty ?>
                                     </td>
                                     <td class="text-center">
-                                        <a href="<?= base_url() ?>SuperAdmin/view_class/<?= $class->class_id ?>" class="btn btn-warning"><i class="fa fa-eye"></i></a>
+                                        <a href="<?= base_url() ?>SuperAdmin/view_class/<?= $class->class_id ?>" class="btn btn-primary"><i class="fa fa-eye"></i></a>
                                         <a href="<?= base_url() ?>SuperAdmin/edit_class/<?= $class->class_id ?>" class="btn btn-warning"><i class="fa fa-pencil"></i></a>
                                         <button class="btn btn-danger" onclick="delete_class(<?= $class->class_id ?>)"><i class="fa fa-trash"></i></button>
                                     </td>

@@ -288,6 +288,7 @@ class SuperAdmin extends CI_Controller
     {
         $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
         $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
+        // $data['sections'] = $this->SuperAdmin_model->fetch_all_faculty();
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -328,7 +329,7 @@ class SuperAdmin extends CI_Controller
 
     public function create_class()
     {
-        $this->form_validation->set_rules('course_code', 'Course Code', 'required|strip_tags');
+        $this->form_validation->set_rules('class_code', 'Course Code', 'required|strip_tags');
         $this->form_validation->set_rules('section_code', 'Section Code', 'required|strip_tags');
         $this->form_validation->set_rules('faculty_id', 'Faculty assignment', 'required|strip_tags');
 
@@ -336,9 +337,10 @@ class SuperAdmin extends CI_Controller
             $this->add_class();
         } else {
             $class = array(
-                'class_code' => $this->input->post('college_code'),
+                'class_code' => $this->input->post('class_code'),
                 'class_section' => $this->input->post('section_code'),
-                'class_faculty' => $this->input->post('faculty_id')
+                'class_faculty' => $this->input->post('faculty_id'),
+                'class_sched' => $this->input->post('class_code') . $this->input->post('section_code')
             );
 
             $this->SuperAdmin_model->create_class($class);
@@ -350,13 +352,15 @@ class SuperAdmin extends CI_Controller
 
     public function save_sched()
     {
+        $this->dd($_POST);
         $class_sched = array(
-            'class_code' => $_POST['class_sched']['course'],
-            'class_day' => $_POST['class_sched']['day'],
-            'class_start_time' => $_POST['class_sched']['start_time'],
-            'class_end_time' => $_POST['class_sched']['end_time'],
-            'faculty_id' => $_POST['class_sched']['faculty'],
-            'class_room' => $_POST['class_sched']['room']
+            'class_code' => $_POST['class_sched']['class_code'],
+            'class_day' => $_POST['class_sched']['class_day'],
+            'class_start_time' => $_POST['class_sched']['class_start_time'],
+            'class_end_time' => $_POST['class_sched']['class_end_time'],
+            'faculty_id' => $_POST['class_sched']['faculty_id'],
+            'class_room' => $_POST['class_sched']['class_room'],
+            'class_sched' => $_POST['class_sched']['class_sched']
         );
         $this->SuperAdmin_model->save_sched($class_sched);
     }

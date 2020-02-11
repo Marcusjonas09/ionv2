@@ -209,10 +209,14 @@
         // Initialize variables
 
         schedule_entry_old = {
+            faculty: '',
+            section: '',
+            course: '',
             day: '',
             start_time: '',
             end_time: '',
-            room: ''
+            room: '',
+            class_sched: ''
         };
 
         $("#add_class_sched").click(function() {
@@ -223,15 +227,28 @@
             var faculty = $("#class_faculty_id").val();
             var course = $("#class_course_code").val();
             var section = $("#class_section_code").val();
+            var class_sched = course + section;
+
+            // schedule_entry = {
+            //     faculty: faculty,
+            //     section: section,
+            //     course: course,
+            //     day: day,
+            //     start_time: start_time,
+            //     end_time: end_time,
+            //     room: room,
+            //     class_sched: class_sched
+            // };
 
             schedule_entry = {
-                faculty: faculty,
-                section: section,
-                course: course,
-                day: day,
-                start_time: start_time,
-                end_time: end_time,
-                room: room
+                faculty_id: faculty,
+                class_section: section,
+                class_code: course,
+                class_day: day,
+                class_start_time: start_time,
+                class_end_time: end_time,
+                class_room: room,
+                class_sched: class_sched
             };
 
             if ((start_time < end_time && start_time != end_time) && schedule_entry != schedule_entry_old) {
