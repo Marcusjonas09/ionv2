@@ -32,11 +32,11 @@
                     <div class="box-body">
                         <div class="form-group col-md-4">
                             <label for="curr_code">Code:</label>
-                            <input class="form-control" type="text" name="college_code" id="college_code" value="<?= $college->college_code ?>" required />
+                            <input class="form-control" type="text" name="college_code" id="college_code" value="<?= $college->college_code ?>" value="<?= set_value('college_code') ?>" />
                         </div>
                         <div class="form-group col-md-8">
                             <label for="curr_code">Description:</label>
-                            <input class="form-control" type="text" name="college_description" id="college_description" value="<?= $college->college_description ?>" required />
+                            <input class="form-control" type="text" name="college_description" id="college_description" value="<?= $college->college_description ?>" value="<?= set_value('college_description') ?>" />
                             <input type="hidden" type="text" name="college_id" id="college_id" value="<?= $college->college_id ?>" />
                         </div>
                     </div>

@@ -490,7 +490,9 @@ class SuperAdmin extends CI_Controller
     {
         $this->form_validation->set_rules('college_code', 'College Code', 'required|strip_tags');
         $this->form_validation->set_rules('college_description', 'College Description', 'required|strip_tags');
+
         $id = $this->input->post('college_id');
+
         if ($this->form_validation->run() == FALSE) {
             $this->edit_college($id);
         } else {
@@ -522,7 +524,12 @@ class SuperAdmin extends CI_Controller
 
     public function create_college()
     {
-        $this->form_validation->set_rules('college_code', 'College Code', 'required|strip_tags|is_unique[college_tbl.college_code]');
+        $this->form_validation->set_rules(
+            'college_code',
+            'College Code',
+            'required|strip_tags|is_unique[college_tbl.college_code]',
+            array('is_unique' => 'This college already exists!')
+        );
         $this->form_validation->set_rules('college_description', 'College Description', 'required|strip_tags');
 
         if ($this->form_validation->run() == FALSE) {
@@ -792,7 +799,12 @@ class SuperAdmin extends CI_Controller
 
     public function create_department()
     {
-        $this->form_validation->set_rules('department_code', 'Department Code', 'required|strip_tags|is_unique[department_tbl.department_code]');
+        $this->form_validation->set_rules(
+            'department_code',
+            'Department Code',
+            'required|strip_tags|is_unique[department_tbl.department_code]',
+            array('is_unique' => 'This department already exists!')
+        );
         $this->form_validation->set_rules('department_description', 'Department Description', 'required|strip_tags');
         $this->form_validation->set_rules('assigned_college', 'College assignment', 'required|strip_tags');
 
@@ -1134,11 +1146,11 @@ class SuperAdmin extends CI_Controller
         }
     }
 
-    public function delete_curriculum($id)
+    public function delete_curriculum($curriculum_code)
     {
 
-        if (!$this->SuperAdmin_model->delete_curriculum($id)) {
-            $this->SuperAdmin_model->delete_curriculum($id);
+        if (!$this->SuperAdmin_model->delete_curriculum($curriculum_code)) {
+            $this->SuperAdmin_model->delete_curriculum($curriculum_code);
             $this->curriculum("Record successfully deleted!", null);
         } else {
             $this->curriculum(null, "Failed to delete Record!");

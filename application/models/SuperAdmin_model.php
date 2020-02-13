@@ -698,9 +698,10 @@ class SuperAdmin_model extends CI_Model
         $this->db->update('curriculum_code_tbl', $content);
     }
 
-    public function delete_curriculum($id)
+    public function delete_curriculum($curriculum_code)
     {
-        $this->db->delete('curriculum_code_tbl', array('curriculum_code_id' => $id));
+        $this->db->delete('curriculum_code_tbl', array('curriculum_code' => $curriculum_code));
+        $this->db->delete('curriculum_tbl', array('curriculum_code' => $curriculum_code));
     }
 
     public function delete_course_from_curriculum($id)
