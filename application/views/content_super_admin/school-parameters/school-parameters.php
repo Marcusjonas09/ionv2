@@ -286,17 +286,6 @@
                         </div>
                     </div>
 
-                </div>
-                <!-- /.box-body -->
-            </div>
-
-            <div class="box box-success">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><strong>Added modules</strong></h3>
-                </div>
-
-
-                <div class="box-body">
                     <div class="col-lg-3 col-xs-6">
                         <!-- small box -->
                         <div class="small-box bg-yellow">
@@ -313,6 +302,18 @@
                             </a>
                         </div>
                     </div>
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><strong>Added modules</strong></h3>
+                </div>
+
+
+                <div class="box-body">
 
                     <div class="col-lg-3 col-xs-6">
                         <!-- small box -->

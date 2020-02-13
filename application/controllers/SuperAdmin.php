@@ -467,13 +467,9 @@ class SuperAdmin extends CI_Controller
 
     public function edit_college($id, $success_msg = null, $fail_msg = null)
     {
-        // $id = $this->input->post('college_id');
         $data['college'] = $this->SuperAdmin_model->fetch_college($id);
         $data['success_msg'] = $success_msg;
         $data['fail_msg'] = $fail_msg;
-
-        // print_r($data);
-        // die();
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -488,20 +484,25 @@ class SuperAdmin extends CI_Controller
 
     public function edit_college_function()
     {
+        $id = $this->input->post('college_id');
+        $college = $this->SuperAdmin_model->fetch_college($id);
+        $college_post = array(
+            'college_code' => $this->input->post('college_code'),
+            'college_description' => $this->input->post('college_description')
+        );
         $this->form_validation->set_rules('college_code', 'College Code', 'required|strip_tags');
         $this->form_validation->set_rules('college_description', 'College Description', 'required|strip_tags');
-
-        $id = $this->input->post('college_id');
+        if ($college->college_code != $college_post['college_code']) {
+            $this->form_validation->set_rules('college_code', 'College Code', 'required|strip_tags|is_unique[college_tbl.college_code]');
+        }
+        if ($college->college_description != $college_post['college_description']) {
+            $this->form_validation->set_rules('college_description', 'College Description', 'required|strip_tags|is_unique[college_tbl.college_description]');
+        }
 
         if ($this->form_validation->run() == FALSE) {
             $this->edit_college($id);
         } else {
-            $college = array(
-                'college_code' => $this->input->post('college_code'),
-                'college_description' => $this->input->post('college_description')
-            );
-
-            $this->SuperAdmin_model->edit_college($id, $college);
+            $this->SuperAdmin_model->edit_college($id, $college_post);
             $this->edit_college($id, "Record successfully edited!");
         }
     }
@@ -1532,7 +1533,6 @@ class SuperAdmin extends CI_Controller
 
     public function edit_course($id, $success_msg = null, $fail_msg = null)
     {
-        // $id = $this->input->post('college_id');
         $data['course'] = $this->SuperAdmin_model->fetch_course($id);
         $data['laboratories'] = $this->SuperAdmin_model->fetch_all_laboratories();
         $data['departments'] = $this->SuperAdmin_model->fetch_all_department();
@@ -1540,10 +1540,6 @@ class SuperAdmin extends CI_Controller
         $data['prereq_courses'] = $this->SuperAdmin_model->fetch_all_prereq_courses($data['course']->course_code);
         $data['success_msg'] = $success_msg;
         $data['fail_msg'] = $fail_msg;
-        // echo "<pre>";
-        // print_r($data);
-        // echo "</pre>";
-        // die();
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -1563,6 +1559,7 @@ class SuperAdmin extends CI_Controller
         $this->form_validation->set_rules('course_units', 'Course Units', 'required|strip_tags');
         $this->form_validation->set_rules('laboratory_code', 'Laboratory Code', 'required|strip_tags');
         $this->form_validation->set_rules('department_code', 'Department Designation', 'required|strip_tags');
+
         $id = $this->input->post('course_id');
         if ($this->form_validation->run() == FALSE) {
             $this->edit_course($id);
