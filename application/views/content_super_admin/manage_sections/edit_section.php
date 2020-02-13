@@ -8,7 +8,7 @@
     </section>
 
     <!-- Main content -->
-    <section class="content container-fluid" style="padding-left:0px; padding-right:0px;">
+    <section class="content container-fluid">
         <?php if (validation_errors()) : ?>
             <div class="alert alert-warning alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -23,7 +23,7 @@
                 <?php echo $success_msg; ?>
             </div>
         <?php endif; ?>
-        <div class="container-fluid col-md-9" style="padding-right:0px;">
+        <div class="container-fluid col-md-9" style="padding:0px;">
             <form action="<?= base_url() ?>SuperAdmin/edit_section_function" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
@@ -32,7 +32,7 @@
                     <div class="box-body">
                         <div class="form-group col-md-4">
                             <label for="curr_code">Code:</label>
-                            <input class="form-control" type="text" name="section_code" id="section_code" value="<?= $section->section_code ?>" required />
+                            <input class="form-control" type="text" name="section_code" id="section_code" value="<?= $section->section_code ?>" />
                             <input type="hidden" type="text" name="section_id" id="section_id" value="<?= $section->section_id ?>" />
                         </div>
                     </div>

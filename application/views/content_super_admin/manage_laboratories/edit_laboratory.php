@@ -8,7 +8,7 @@
     </section>
 
     <!-- Main content -->
-    <section class="content container-fluid" style="padding-left:0px; padding-right:0px;">
+    <section class="content container-fluid">
         <?php if (validation_errors()) : ?>
             <div class="alert alert-warning alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -23,7 +23,7 @@
                 <?php echo $success_msg; ?>
             </div>
         <?php endif; ?>
-        <div class="container-fluid col-md-9" style="padding-right:0px;">
+        <div class="container-fluid col-md-9" style="padding:0px;">
             <form action="<?= base_url() ?>SuperAdmin/edit_laboratory_function" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
@@ -33,18 +33,18 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Laboratory Code:</label>
-                                <input class="form-control" type="text" name="laboratory_code" id="laboratory_code" value="<?= $laboratory->laboratory_code ?>" placeholder="Enter laboratory code" required />
+                                <input class="form-control" type="text" name="laboratory_code" id="laboratory_code" value="<?= $laboratory->laboratory_code ?>" placeholder="Enter laboratory code" />
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="laboratory_units">Units:</label>
-                                <input class="form-control" type="number" name="laboratory_units" id="laboratory_units" value="<?= $laboratory->laboratory_units ?>" placeholder="Enter units" required />
+                                <input class="form-control" type="number" name="laboratory_units" id="laboratory_units" value="<?= $laboratory->laboratory_units ?>" placeholder="Enter units" />
                             </div>
 
                         </div>
                         <div class="row">
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-md-12" style="padding-right:0px;">
                                 <label for="laboratory_title">Laboratory Title:</label>
-                                <input class="form-control" type="text" name="laboratory_title" id="laboratory_title" value="<?= $laboratory->laboratory_title ?>" placeholder="Enter laboratory title" required />
+                                <input class="form-control" type="text" name="laboratory_title" id="laboratory_title" value="<?= $laboratory->laboratory_title ?>" placeholder="Enter laboratory title" />
                                 <input type="hidden" name="laboratory_id" value="<?= $laboratory->laboratory_id ?>">
                             </div>
                         </div>

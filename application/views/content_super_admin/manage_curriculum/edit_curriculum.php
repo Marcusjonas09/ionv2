@@ -23,7 +23,7 @@
                 <?php echo $success_msg; ?>
             </div>
         <?php endif; ?>
-        <div class="container-fluid col-md-9" style="padding-right:0px;">
+        <div class="container-fluid col-md-8" style="padding:0px;">
             <form action="<?= base_url() ?>SuperAdmin/edit_curriculum_function" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
@@ -32,10 +32,10 @@
                     <div class="box-body">
                         <div class="form-group col-md-4">
                             <label for="curr_code">Code:</label>
-                            <input class="form-control" type="text" name="curriculum_code" id="curriculum_code" value="<?= $curriculum->curriculum_code ?>" required />
+                            <input class="form-control" type="text" name="curriculum_code" id="curriculum_code" value="<?= $curriculum->curriculum_code ?>" />
                         </div>
 
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-8">
                             <label for="curr_code">Department:</label>
                             <select class="form-control js-example-basic-single" name="assigned_department" id="assigned_department">
                                 <?php foreach ($departments as $department) : ?>
@@ -44,37 +44,15 @@
                                             } ?> value="<?= $department->department_code ?>"><?= $department->department_code . ' - ' . $department->department_description ?></option>
                                 <?php endforeach; ?>
                             </select>
-                            <input type="hidden" name="curriculum_code_id" value="<?= $curriculum->curriculum_code_id ?>">
+                            <input type="hidden" name="curriculum_code" value="<?= $curriculum->curriculum_code ?>">
                         </div>
                     </div>
                     <div class="box-footer">
-                        <input class="btn btn-success pull-right" type="submit" value="Submit" />
+                        <input class="btn btn-success pull-right" type="submit" value="Update" />
                     </div>
                 </div>
             </form>
         </div>
-        <div class="container-fluid col-md-3">
-            <div class="box box-success">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><strong>Insert Multiple Entry</strong></h3>
-                </div>
-                <div class="box-body">
-                    <form action="" method="post" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label>Upload CSV file</label>
-                            <input class="form-control btn btn-default" type="file" name="facultycsv" />
-                        </div>
-                    </form>
-                </div>
-                <div class="box-footer">
-                    <input class="btn btn-success pull-right" type="submit" value="Import" />
-                </div>
-            </div>
-        </div>
-
-
-
-
     </section>
 </div>
 <!-- /.content-wrapper -->

@@ -1071,16 +1071,14 @@ class SuperAdmin extends CI_Controller
         $this->add_course_curriculum($_POST['curriculum_code'], null, null, $message);
     }
 
-    public function edit_curriculum($id, $success_msg = null, $fail_msg = null)
+    public function edit_curriculum($curriculum_code, $success_msg = null, $fail_msg = null)
     {
         // $id = $this->input->post('college_id');
-        $data['curriculum'] = $this->SuperAdmin_model->fetch_curriculum($id);
+        $data['curriculum'] = $this->SuperAdmin_model->fetch_curriculum($curriculum_code);
+
         $data['departments'] = $this->SuperAdmin_model->fetch_all_department();
         $data['success_msg'] = $success_msg;
         $data['fail_msg'] = $fail_msg;
-
-        // print_r($data);
-        // die();
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -1097,17 +1095,16 @@ class SuperAdmin extends CI_Controller
     {
         $this->form_validation->set_rules('curriculum_code', 'Curriculum Code', 'required|strip_tags');
         $this->form_validation->set_rules('assigned_department', 'Department assignment', 'required|strip_tags');
-        $id = $this->input->post('curriculum_code_id');
+        $curriculum_code = $this->input->post('curriculum_code');
         if ($this->form_validation->run() == FALSE) {
-            $this->edit_curriculum($id);
+            $this->edit_curriculum($curriculum_code);
         } else {
             $curriculum = array(
                 'curriculum_code' => $this->input->post('curriculum_code'),
                 'assigned_department' => $this->input->post('assigned_department')
             );
-
-            $this->SuperAdmin_model->edit_curriculum($id, $curriculum);
-            $this->edit_curriculum($id, "Record successfully edited!");
+            $this->SuperAdmin_model->edit_curriculum($curriculum_code, $curriculum);
+            $this->edit_curriculum($curriculum_code, "Record successfully edited!");
         }
     }
 
