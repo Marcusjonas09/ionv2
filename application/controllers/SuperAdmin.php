@@ -569,6 +569,146 @@ class SuperAdmin extends CI_Controller
     // =======================================================================================
 
     // =======================================================================================
+    // FINANCE
+    // =======================================================================================
+
+    public function finances($success_msg = null, $fail_msg = null)
+    {
+        // $data['finances'] = $this->SuperAdmin_model->fetch_all_finance();
+        $data['school_years'] = $this->SuperAdmin_model->fetch_all_sy();
+        $data['success_msg'] = $success_msg;
+        $data['fail_msg'] = $fail_msg;
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_finance/all_finance', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function add_finance($message = null)
+    {
+        $data['message'] = $message;
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_finance/add_finance', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function edit_finance($id, $success_msg = null, $fail_msg = null)
+    {
+        $data['school_year'] = $this->SuperAdmin_model->fetch_current_sy($id);
+        // $this->dd($data);
+        // $data['finance'] = $this->SuperAdmin_model->fetch_finance($id);
+        $data['success_msg'] = $success_msg;
+        $data['fail_msg'] = $fail_msg;
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_finance/view_finance', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function edit_finance_function()
+    {
+        $id = $this->input->post('finance_id');
+        $finance = $this->SuperAdmin_model->fetch_finance($id);
+        $finance_post = array(
+            'finance_code' => $this->input->post('finance_code'),
+            'finance_value' => $this->input->post('finance_value')
+        );
+
+        $this->form_validation->set_rules('finance_code', 'Finance Code', 'required|strip_tags');
+
+        if ($finance->finance_code != $finance_post['finance_code']) {
+            $this->form_validation->set_rules('finance_code', 'Finance Code', 'required|strip_tags|is_unique[finance_tbl.finance_code]');
+        }
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->edit_finance($id);
+        } else {
+            $this->SuperAdmin_model->edit_finance($id, $finance_post);
+            $this->edit_finance($id, "Record successfully edited!");
+        }
+    }
+
+    public function add_finance_csv()
+    {
+        if (isset($_POST["import"])) {
+            $message = $this->SuperAdmin_model->add_finance_csv($_FILES['csv_file']);
+        } else {
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Please select a file!</p>
+        </div>
+        ';
+        }
+        $this->add_finance($message);
+    }
+
+    public function create_finance()
+    {
+        // $this->dd($_POST);
+        $this->form_validation->set_rules(
+            'finance_code',
+            'Finance Code',
+            'required|strip_tags|is_unique[finance_tbl.finance_code]',
+            array('is_unique' => 'This parameter already exists!')
+        );
+        $this->form_validation->set_rules('finance_value', 'Value', 'required|strip_tags|numeric');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->add_finance();
+        } else {
+            $finance = array(
+                'finance_code' => $this->input->post('finance_code'),
+                'finance_value' => round($this->input->post('finance_value'), 2)
+            );
+
+            $this->SuperAdmin_model->create_finance($finance);
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Success!</h4>
+            <p>Record successfully added!</p>
+        </div>
+        ';
+            $this->add_finance($message);
+        }
+    }
+
+    public function delete_finance($id)
+    {
+
+        if (!$this->SuperAdmin_model->delete_finance($id)) {
+            $this->SuperAdmin_model->delete_finance($id);
+            $this->finances("Record successfully deleted!", null);
+        } else {
+            $this->finances(null, "Failed to delete Record!");
+        }
+    }
+
+    // =======================================================================================
+    // END OF FINANCE
+    // =======================================================================================
+
+    // =======================================================================================
     // PROGRAM
     // =======================================================================================
 
@@ -764,20 +904,29 @@ class SuperAdmin extends CI_Controller
 
     public function edit_department_function()
     {
+        $id = $this->input->post('department_id');
+        $department = $this->SuperAdmin_model->fetch_department($id);
+        $department_post = array(
+            'department_code' => $this->input->post('department_code'),
+            'department_description' => $this->input->post('department_description'),
+            'assigned_college' => $this->input->post('assigned_college')
+        );
+
         $this->form_validation->set_rules('department_code', 'Department Code', 'required|strip_tags');
         $this->form_validation->set_rules('department_description', 'Department Description', 'required|strip_tags');
         $this->form_validation->set_rules('assigned_college', 'College assignment', 'required|strip_tags');
-        $id = $this->input->post('department_id');
+
+        if ($department->department_code != $department_post['department_code']) {
+            $this->form_validation->set_rules('department_code', 'Department Code', 'required|strip_tags|is_unique[department_tbl.department_code]');
+        }
+        if ($department->department_description != $department_post['department_description']) {
+            $this->form_validation->set_rules('department_description', 'Department description', 'required|strip_tags|is_unique[department_tbl.department_description]');
+        }
+
         if ($this->form_validation->run() == FALSE) {
             $this->edit_department($id);
         } else {
-            $department = array(
-                'department_code' => $this->input->post('department_code'),
-                'department_description' => $this->input->post('department_description'),
-                'assigned_college' => $this->input->post('assigned_college')
-            );
-
-            $this->SuperAdmin_model->edit_department($id, $department);
+            $this->SuperAdmin_model->edit_department($id, $department_post);
             $this->edit_department($id, "Record successfully edited!");
         }
     }

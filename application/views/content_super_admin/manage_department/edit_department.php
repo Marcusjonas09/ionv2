@@ -43,7 +43,9 @@
                             <select class="form-control js-example-basic-single" name="assigned_college" id="assigned_college">
                                 <option value="">none</option>
                                 <?php foreach ($colleges as $college) : ?>
-                                    <option value="<?= $college->college_code ?>"><?= $college->college_code . ' - ' . $college->college_description ?></option>
+                                    <option <?php if ($college->college_code == $department->assigned_college) {
+                                                echo "selected";
+                                            } ?> value="<?= $college->college_code ?>"><?= $college->college_code . ' - ' . $college->college_description ?></option>
                                 <?php endforeach; ?>
                             </select>
                             <input type="hidden" type="text" name="department_id" id="department_id" value="<?= $department->department_id ?>" />

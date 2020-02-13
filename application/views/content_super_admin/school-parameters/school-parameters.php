@@ -303,18 +303,6 @@
                         </div>
                     </div>
 
-                </div>
-                <!-- /.box-body -->
-            </div>
-
-            <div class="box box-success">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><strong>Added modules</strong></h3>
-                </div>
-
-
-                <div class="box-body">
-
                     <div class="col-lg-3 col-xs-6">
                         <!-- small box -->
                         <div class="small-box bg-yellow">
@@ -326,11 +314,23 @@
                             <div class="icon">
                                 <!-- <i class="fa fa-shopping-cart"></i> -->
                             </div>
-                            <a href="<?= base_url() ?>SuperAdmin/curriculum" class="small-box-footer">
+                            <a href="<?= base_url() ?>SuperAdmin/finances" class="small-box-footer">
                                 More info <i class="fa fa-arrow-circle-right"></i>
                             </a>
                         </div>
                     </div>
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><strong>Added modules</strong></h3>
+                </div>
+
+
+                <div class="box-body">
 
                 </div>
 

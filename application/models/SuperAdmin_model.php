@@ -232,6 +232,120 @@ class SuperAdmin_model extends CI_Model
     // =======================================================================================
 
     // =======================================================================================
+    // FINANCE
+    // =======================================================================================
+
+    public function fetch_all_finance()
+    {
+        $this->db->select('*');
+        $this->db->from('finance_tbl');
+        $this->db->order_by('finance_code', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function fetch_finance_count()
+    {
+        $this->db->select('*');
+        $this->db->from('finance_tbl');
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    public function fetch_finance($id)
+    {
+        $this->db->select('*');
+        $this->db->where(array('finance_id' => $id));
+        $this->db->from('finance_tbl');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function add_finance_csv($data)
+    {
+        if ($data['name']) {
+            $filename = explode(".", $data['name']);
+            if (end($filename) == "csv") {
+                $handle = fopen($data['tmp_name'], "r");
+                $line_errors = 0;
+                $records_imported = 0;
+                while ($data = fgetcsv($handle)) {
+                    if (count($data) == 2) {
+                        $code = (!empty(strip_tags($data[0])) ? strip_tags($data[0]) : "");
+                        $description = (!empty(strip_tags($data[1])) ? strip_tags($data[1]) : "");
+
+                        $data = array(
+                            'finance_code' => $code,
+                            'finance_description' => $description
+                        );
+
+                        $this->db->insert('finance_tbl', $data);
+                        $records_imported++;
+                    } else {
+                        $line_errors++;
+                    }
+                }
+                fclose($handle);
+                if ($line_errors > 0) {
+                    $message = '
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Error!</h4>
+                        <p>' . $line_errors . ' records were not imported!</p>
+                    </div>
+                    ';
+                } else {
+                    $message = '
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Success!</h4>
+                        <p>Import complete!</p>
+                        <p>' . $records_imported . ' records imported!</p>
+                    </div>
+                    ';
+                }
+            } else {
+                $message = '
+        <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Please Select CSV File only</p>
+        </div>
+        ';
+            }
+        } else {
+            $message = '
+        <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Please Select File</p>
+        </div>
+        ';
+        }
+        return $message;
+    }
+
+    public function create_finance($finance)
+    {
+        $this->db->insert('finance_tbl', $finance);
+    }
+
+    public function edit_finance($id, $content)
+    {
+        $this->db->where('finance_id', $id);
+        $this->db->update('finance_tbl', $content);
+    }
+
+    public function delete_finance($id)
+    {
+        $this->db->delete('finance_tbl', array('finance_id' => $id));
+    }
+
+    // =======================================================================================
+    // END OF FINANCE
+    // =======================================================================================
+
+    // =======================================================================================
     // DEPARTMENT
     // =======================================================================================
 
@@ -1234,6 +1348,32 @@ class SuperAdmin_model extends CI_Model
     // =======================================================================================
 
     // =======================================================================================
+    // SCHOOL YEAR
+    // =======================================================================================
+
+    public function fetch_all_sy()
+    {
+        $this->db->select('*');
+        $this->db->from('settings_tbl');
+        $this->db->order_by('settings_ID', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function fetch_current_sy($id)
+    {
+        $this->db->select('*');
+        $this->db->where(array('settings_ID' => $id));
+        $this->db->from('settings_tbl');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    // =======================================================================================
+    // END OF SCHOOL YEAR
+    // =======================================================================================
+
+    // =======================================================================================
     // ADMIN MANAGEMENT FUNCTIONS
     // =======================================================================================
 
@@ -1326,6 +1466,8 @@ class SuperAdmin_model extends CI_Model
     // =======================================================================================
     // END OF STUDENT MANAGEMENT FUNCTIONS
     // =======================================================================================
+
+
 
     public function dd($data)
     {
