@@ -23,13 +23,6 @@ class Overload_underload_model extends CI_Model
     // ADMIN FUNCTIONS
     ///////////////////////////////////////////////////////////////////////////////////////////
 
-    public function fetch_all_revisions()
-    {
-        $this->db->order_by('ou_id', 'DESC');
-        $query = $this->db->get('overload_underload_tbl');
-        return $query->result();
-    }
-
     public function fetch_all_overload()
     {
         $this->db->order_by('ou_id', 'DESC');
@@ -174,7 +167,4 @@ class Overload_underload_model extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
-
-    public function fetch_potential_petitioner()
-    { }
 }
