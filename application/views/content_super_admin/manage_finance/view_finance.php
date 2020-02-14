@@ -29,21 +29,6 @@
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong>Edit finance (SY: <?= $school_year->school_year . ' - Term: ' . $school_year->school_term ?>)</strong></h3>
                     </div>
-                    <!-- <div class="box-body">
-                        <div class="form-group col-md-4">
-                            <label for="finance_code">Code:</label>
-                            <input class="form-control" type="text" name="finance_code" id="finance_code" value="<?= $finance->finance_code ?>" value="<?= set_value('finance_code') ?>" />
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="finance_description">Description:</label>
-                            <input class="form-control" type="text" name="finance_description" id="finance_description" value="<?= $finance->finance_description ?>" value="<?= set_value('finance_description') ?>" />
-                            <input type="hidden" type="text" name="finance_id" id="finance_id" value="<?= $finance->finance_id ?>" />
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="finance_value">Value:</label>
-                            <input class="form-control" type="text" name="finance_value" id="finance_value" value="<?= $finance->finance_value ?>" value="<?= set_value('finance_value') ?>" />
-                        </div>
-                    </div> -->
                     <div class="box-footer">
                         <input class="btn btn-success pull-right" type="submit" value="Submit" />
                     </div>
