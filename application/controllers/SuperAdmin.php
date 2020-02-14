@@ -272,6 +272,8 @@ class SuperAdmin extends CI_Controller
     public function classes()
     {
         $data['classes'] = $this->SuperAdmin_model->fetch_all_classes();
+        $data['class_sched'] = $this->SuperAdmin_model->fetch_all_class_sched();
+        $this->dd($data);
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -301,13 +303,38 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
-    public function edit_class()
+    public function edit_class($id)
     {
+        $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
+        $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
+        $data['class'] = $this->SuperAdmin_model->fetch_class($id);
+
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_class/edit_class');
+        $this->load->view('content_super_admin/manage_class/edit_class', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function view_class($id)
+    {
+        $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
+        $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
+        $data['class'] = $this->SuperAdmin_model->fetch_class($id);
+
+        $class_sched = $data['class']->class_code . $data['class']->class_section;
+        $data['class_scheds'] = $this->SuperAdmin_model->fetch_class_sched($class_sched);
+
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_class/view_class', $data);
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');

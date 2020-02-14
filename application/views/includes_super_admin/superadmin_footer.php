@@ -272,7 +272,8 @@
                 var tr = '<tr>' +
                     '<td>' + day + '</td>' +
                     '<td>' + start_time + ' - ' + end_time + '</td>' +
-                    '<td></td>' +
+                    '<td>' + room + '</td>' +
+                    '<td><button class="btn btn-danger"><span class="fa fa-minus"></span></button></td>' +
                     '</tr>'
                 $("#class_sched_table_body").append(tr);
             };
