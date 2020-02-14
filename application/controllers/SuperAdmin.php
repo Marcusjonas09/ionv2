@@ -272,8 +272,7 @@ class SuperAdmin extends CI_Controller
     public function classes()
     {
         $data['classes'] = $this->SuperAdmin_model->fetch_all_classes();
-        $data['class_sched'] = $this->SuperAdmin_model->fetch_all_class_sched();
-        $this->dd($data);
+        // $this->dd($data);
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -290,7 +289,7 @@ class SuperAdmin extends CI_Controller
     {
         $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
         $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
-        // $data['sections'] = $this->SuperAdmin_model->fetch_all_faculty();
+        $data['message'] = $message;
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -370,8 +369,26 @@ class SuperAdmin extends CI_Controller
                 'class_sched' => $this->input->post('class_code') . $this->input->post('section_code')
             );
 
-            $this->SuperAdmin_model->create_class($class);
-            $this->add_class("Record successfully edited!");
+            if ($this->SuperAdmin_model->fetch_specific_class($class['class_sched']) > 0) {
+                $message = '
+                <div class="alert alert-warning alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+                    <p>Class already exists!</p>
+                </div>
+                ';
+            } else {
+                $this->SuperAdmin_model->create_class($class);
+                $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Success!</h4>
+            <p>Record successfully edited!</p>
+        </div>
+        ';
+            }
+
+            $this->add_class($message);
         }
 
         // $this->SuperAdmin_model->create_class($class_sched);

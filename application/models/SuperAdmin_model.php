@@ -1238,17 +1238,18 @@ class SuperAdmin_model extends CI_Model
         return $query->result();
     }
 
-    public function fetch_all_class_sched()
-    {
-        $this->db->select('*');
-        $this->db->from('classes_tbl');
-        $this->db->join('class_schedule_tbl', 'class_schedule_tbl.class_sched = classes_tbl.class_sched', 'LEFT');
-        $query = $this->db->get();
-        return $query->result();
-    }
+    // public function fetch_all_class_sched()
+    // {
+    //     $this->db->select('*');
+    //     $this->db->from('classes_tbl');
+    //     $this->db->join('class_schedule_tbl', 'class_schedule_tbl.class_sched = classes_tbl.class_sched', 'LEFT');
+    //     $query = $this->db->get();
+    //     return $query->result();
+    // }
 
     public function create_class($data)
     {
+
         $this->db->insert('classes_tbl', $data);
     }
 
@@ -1272,6 +1273,15 @@ class SuperAdmin_model extends CI_Model
         $this->db->from('classes_tbl');
         $query = $this->db->get();
         return $query->row();
+    }
+
+    public function fetch_specific_class($class_sched)
+    {
+        $this->db->select('*');
+        $this->db->where(array('class_sched' => $class_sched));
+        $this->db->from('classes_tbl');
+        $query = $this->db->get();
+        return $query->num_rows();
     }
 
     public function fetch_class_sched($class_sched)

@@ -34,12 +34,10 @@
                 <div class="box-body">
                     <table class="datatables table table-striped text-center" data-page-length='10'>
                         <thead class="bg-success text-center" style="background-color:#00a65a; color:white;">
-                            <th class="text-center col-md-1">#</th>
-                            <th class="text-center col-md-2">CODE</th>
-                            <th class="text-center col-md-1">SECTION</th>
-                            <th class="text-center col-md-1">DAY</th>
-                            <th class="text-center col-md-3">TIME</th>
-                            <th class="text-center col-md-2">FACULTY</th>
+                            <th class="text-center col-md-2">#</th>
+                            <th class="text-center col-md-3">CODE</th>
+                            <th class="text-center col-md-2">SECTION</th>
+                            <th class="text-center col-md-3">FACULTY</th>
                             <th class="text-center col-md-2">ACTION</th>
                         </thead>
                         <tbody>
@@ -53,8 +51,6 @@
                                     <td>
                                         <?= $class->class_section ?>
                                     </td>
-                                    <td></td>
-                                    <td></td>
                                     <td>
                                         <?= $class->class_faculty ?>
                                     </td>
