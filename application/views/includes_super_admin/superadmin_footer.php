@@ -45,6 +45,22 @@
         })
     }
 
+    function delete_class(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.value) {
+                window.location.replace(baselink + "SuperAdmin/delete_class/" + id)
+            }
+        })
+    }
+
     function delete_finance(id) {
         Swal.fire({
             title: 'Are you sure?',
@@ -219,7 +235,7 @@
         });
 
         var schedule_entry;
-        var sched_table = [];
+        var sched_table = new Array();
 
 
         // Initialize variables
@@ -244,17 +260,6 @@
             var course = $("#class_course_code").val();
             var section = $("#class_section_code").val();
             var class_sched = course + section;
-
-            // schedule_entry = {
-            //     faculty: faculty,
-            //     section: section,
-            //     course: course,
-            //     day: day,
-            //     start_time: start_time,
-            //     end_time: end_time,
-            //     room: room,
-            //     class_sched: class_sched
-            // };
 
             schedule_entry = {
                 faculty_id: faculty,
@@ -285,12 +290,18 @@
         });
         $("#save_sched").click(function() {
             $.post("<?= base_url() ?>SuperAdmin/save_sched", {
-                    class_sched: schedule_entry
+                    schedule_entry
                 }).done(function(data) {
-                    alert("success " + data);
+                    Swal.fire({
+                        title: 'Success',
+                        text: data,
+                    });
                 })
-                .fail(function() {
-                    alert("Petition approval failed!");
+                .fail(function(data) {
+                    Swal.fire({
+                        title: 'Failed',
+                        text: data,
+                    });
                 });
         });
 

@@ -232,6 +232,113 @@ class SuperAdmin_model extends CI_Model
     // =======================================================================================
 
     // =======================================================================================
+    // FACULTY
+    // =======================================================================================
+
+    public function fetch_all_faculty()
+    {
+        $this->db->select('*');
+        $this->db->where(array('acc_access_level' => 10));
+        $this->db->from('accounts_tbl');
+        $this->db->order_by('acc_lname', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function fetch_faculty_count()
+    {
+        $this->db->select('*');
+        $this->db->where(array('acc_access_level' => 2));
+        $this->db->from('accounts_tbl');
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    public function fetch_faculty($id)
+    {
+        $this->db->select('*');
+        $this->db->where(array('acc_id' => $id));
+        $this->db->from('accounts_tbl');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    // public function add_faculty_csv($data)
+    // {
+    //     if ($data['name']) {
+    //         $filename = explode(".", $data['name']);
+    //         if (end($filename) == "csv") {
+    //             $handle = fopen($data['tmp_name'], "r");
+    //             while ($data = fgetcsv($handle)) {
+    //                 $acc_number = strip_tags($data[0]);
+    //                 $acc_fname = strip_tags($data[1]);
+    //                 $acc_mname = strip_tags($data[2]);
+    //                 $acc_lname = strip_tags($data[0]);
+    //                 $acc_email = strip_tags($data[1]);
+    //                 $acc_program = strip_tags($data[2]);
+    //                 $acc_specialization = strip_tags($data[0]);
+    //                 $description = strip_tags($data[1]);
+    //                 $assigned_college = strip_tags($data[2]);
+    //                 $assigned_college = strip_tags($data[2]);
+    //                 $assigned_college = strip_tags($data[2]);
+    //                 $data = array(
+    //                     'acc_number' => $code,
+    //                     'program_description' => $description,
+    //                     'assigned_college' => $assigned_college
+    //                 );
+
+    //                 $this->db->insert('programs_tbl', $data);
+    //             }
+    //             fclose($handle);
+    //             $message = '
+    //     <div class="alert alert-success alert-dismissible">
+    //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //         <h4><i class="icon fa fa-warning"></i>Success!</h4>
+    //         <p>Import complete!</p>
+    //     </div>
+    //     ';
+    //         } else {
+    //             $message = '
+    //     <div class="alert alert-warning alert-dismissible">
+    //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //         <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+    //         <p>Please Select CSV File only</p>
+    //     </div>
+    //     ';
+    //         }
+    //     } else {
+    //         $message = '
+    //     <div class="alert alert-warning alert-dismissible">
+    //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //         <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+    //         <p>Please Select File</p>
+    //     </div>
+    //     ';
+    //     }
+    //     return $message;
+    // }
+
+    public function create_faculty($faculty)
+    {
+        $this->db->insert('accounts_tbl', $faculty);
+    }
+
+    // public function edit_faculty($id, $content)
+    // {
+    //     $this->db->where('acc_number', $id);
+    //     $this->db->update('accounts_tbl', $content);
+    // }
+
+    // public function delete_program($id)
+    // {
+    //     $this->db->delete('programs_tbl', array('program_id' => $id));
+    // }
+
+    // =======================================================================================
+    // END OF FACULTY
+    // =======================================================================================
+
+    // =======================================================================================
     // FINANCE
     // =======================================================================================
 
@@ -1366,10 +1473,10 @@ class SuperAdmin_model extends CI_Model
     //     $this->db->update('sections_tbl', $content);
     // }
 
-    // public function delete_section($id)
-    // {
-    //     $this->db->delete('sections_tbl', array('section_id' => $id));
-    // }
+    public function delete_class($id)
+    {
+        $this->db->delete('classes_tbl', array('class_id' => $id));
+    }
 
     // =======================================================================================
     // END OF CLASSES

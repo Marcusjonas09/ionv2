@@ -52,7 +52,12 @@
                                         <?= $class->class_section ?>
                                     </td>
                                     <td>
-                                        <?= $class->class_faculty ?>
+                                        <?php foreach ($faculties as $faculty) : ?>
+                                            <?php if ($class->class_faculty ==  $faculty->acc_number) : ?>
+                                                <?= $faculty->acc_lname . ', ' . $faculty->acc_lname . ' ' . $faculty->acc_mname ?>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+
                                     </td>
                                     <td class="text-center">
                                         <a href="<?= base_url() ?>SuperAdmin/view_class/<?= $class->class_id ?>" class="btn btn-primary"><i class="fa fa-eye"></i></a>

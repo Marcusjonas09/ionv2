@@ -52,9 +52,10 @@
                                 <label for="laboratory_code">Faculty:</label>
                                 <select class="form-control js-example-basic-single" name="faculty_id" id="class_faculty_id">
                                     <option value="">--</option>
-                                    <option value="1">Roman, De Angel</option>
-                                    <option value="2">Tejuco, Hadji Javier</option>
-                                    <option value="3">Mansul, Danna May</option>
+                                    <?php foreach ($faculties as $faculty) : ?>
+                                        <option value="<?= $faculty->acc_number ?>"><?= $faculty->acc_lname . ', ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>

@@ -33,7 +33,7 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Course Code:</label>
-                                <select class="form-control js-example-basic-single" name="course_code" id="class_course_code">
+                                <select disabled class="form-control js-example-basic-single" name="course_code" id="class_course_code">
                                     <option value="">--</option>
                                     <?php foreach ($courses as $course) : ?>
                                         <option <?php if ($course->course_code == $class->class_code) {
@@ -59,9 +59,12 @@
                                 <label for="laboratory_code">Faculty:</label>
                                 <select class="form-control js-example-basic-single" name="faculty_id" id="class_faculty_id">
                                     <option value="">--</option>
-                                    <option value="1">Roman, De Angel</option>
-                                    <option value="2">Tejuco, Hadji Javier</option>
-                                    <option value="3">Mansul, Danna May</option>
+                                    <?php foreach ($faculties as $faculty) : ?>
+                                        <option <?php if ($faculty->acc_number == $class->class_faculty) {
+                                                    echo "selected";
+                                                } ?> value="<?= $faculty->acc_number ?>"><?= $faculty->acc_lname . ', ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
