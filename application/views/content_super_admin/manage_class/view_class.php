@@ -75,9 +75,9 @@
                 <div class="box-body">
                     <table class="table table-striped text-center" data-page-length='10'>
                         <thead class="bg-success" style="background-color:#00a65a; color:white;">
-                            <th class="text-center col-md-4">DAY</th>
-                            <th class="text-center col-md-4">TIME</th>
-                            <th class="text-center col-md-4">ROOM</th>
+                            <th class="text-center col-md-3">DAY</th>
+                            <th class="text-center col-md-3">TIME</th>
+                            <th class="text-center col-md-3">ROOM</th>
                         </thead>
                         <tbody id="class_sched_table_body">
                             <?php foreach ($class_scheds as $class_sched) : ?>

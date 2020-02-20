@@ -16,12 +16,8 @@
                 <?php echo validation_errors(); ?>
             </div>
         <?php endif; ?>
-        <?php if (isset($success_msg)) : ?>
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h4><i class="icon fa fa-warning"></i>Success!</h4>
-                <?php echo $success_msg; ?>
-            </div>
+        <?php if (isset($message)) : ?>
+            <?php echo $message; ?>
         <?php endif; ?>
         <div class="container-fluid col-md-8" style="padding-left:0px; padding-right:0px;">
             <form action="<?= base_url() ?>SuperAdmin/edit_course_function" method="post">
@@ -45,7 +41,7 @@
 
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Section:</label>
-                                <select class="form-control js-example-basic-single" name="section_code" id="class_section_code">
+                                <select disabled class="form-control js-example-basic-single" name="section_code" id="class_section_code">
                                     <option value="">--</option>
                                     <?php foreach ($sections as $section) : ?>
                                         <option <?php if ($section->section_code == $class->class_section) {
@@ -83,9 +79,10 @@
                 <div class="box-body">
                     <table class="table table-striped text-center" data-page-length='10'>
                         <thead class="bg-success" style="background-color:#00a65a; color:white;">
-                            <th class="text-center col-md-4">DAY</th>
-                            <th class="text-center col-md-4">TIME</th>
-                            <th class="text-center col-md-4">ROOM</th>
+                            <th class="text-center col-md-3">DAY</th>
+                            <th class="text-center col-md-3">TIME</th>
+                            <th class="text-center col-md-3">ROOM</th>
+                            <th class="text-center col-md-3">ACTION</th>
                         </thead>
                         <tbody id="class_sched_table_body">
                             <?php foreach ($class_scheds as $class_sched) : ?>
@@ -93,6 +90,7 @@
                                     <td><?= $class_sched->class_day ?></td>
                                     <td><?= $class_sched->class_start_time . ' - ' . $class_sched->class_end_time ?></td>
                                     <td><?= $class_sched->class_room ?></td>
+                                    <td><button class="btn btn-danger" onclick="delete_sched('<?= $class->class_id ?>','<?= $class_sched->cs_id ?>')"><i class="fa fa-trash"></i></button></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

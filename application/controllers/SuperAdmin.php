@@ -304,7 +304,7 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
-    public function edit_class($id)
+    public function edit_class($id, $message = null)
     {
         $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
         $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
@@ -312,6 +312,7 @@ class SuperAdmin extends CI_Controller
         $data['class'] = $this->SuperAdmin_model->fetch_class($id);
         $class_sched = $data['class']->class_code . $data['class']->class_section;
         $data['class_scheds'] = $this->SuperAdmin_model->fetch_class_sched($class_sched);
+        $data['message'] = $message;
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -408,8 +409,6 @@ class SuperAdmin extends CI_Controller
         $this->form_validation->set_rules('class_end_time', 'class day', 'required|strip_tags');
 
         $id = $this->input->post('class_id');
-        $start = $this->input->post('class_start_time');
-        $end = $this->input->post('class_end_time');
 
         $class_sched = array(
             'class_day' => $this->input->post('class_day'),
@@ -419,22 +418,35 @@ class SuperAdmin extends CI_Controller
             'class_sched' => $this->input->post('class_sched')
         );
 
-        if (strtotime($end) <= strtotime($start)) {
+        if ($this->form_validation->run() == FALSE) {
+            $this->edit_class($id);
+        } else {
+            $message = $this->SuperAdmin_model->add_sched($class_sched);
+            $this->edit_class($id, $message);
+        }
+    }
+
+    public function delete_sched($class_id, $cs_id)
+    {
+        if (!$this->SuperAdmin_model->delete_sched($cs_id)) {
+            $this->SuperAdmin_model->delete_sched($cs_id);
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Success!</h4>
+            <p>Record successfully deleted!</p>
+        </div>
+        ';
+            $this->edit_class($class_id, $message);
+        } else {
             $message = '
         <div class="alert alert-warning alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <h4><i class="icon fa fa-warning"></i>Warning!</h4>
-            <p>End time cannot be the same time or earlier!</p>
+            <p>Failed to delete record!</p>
         </div>
         ';
-            $this->view_class($id, $message);
-        } else {
-            if ($this->form_validation->run() == FALSE) {
-                $this->view_class($id);
-            } else {
-                $message = $this->SuperAdmin_model->add_sched($class_sched);
-                $this->view_class($id, $message);
-            }
+            $this->edit_class($class_id, $message);
         }
     }
 
