@@ -39,7 +39,7 @@
 
         <li>
           <!-- Menu Toggle Button -->
-          <a href="<?= base_url() ?>Superadmin/logout"><span class="fa fa-sign-out"></span></a>
+          <a href="<?= base_url() ?>SuperAdmin/logout"><span class="fa fa-sign-out"></span></a>
         </li>
         <!-- Control Sidebar Toggle Button -->
         <!-- <li>
