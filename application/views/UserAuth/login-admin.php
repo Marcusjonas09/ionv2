@@ -1,7 +1,6 @@
 <?php
 if (!$this->session->login) {
     session_destroy();
-    redirect('Admin');
 }
 if ($this->session->access == 'admin') {
     redirect('Admin/dashboard');
