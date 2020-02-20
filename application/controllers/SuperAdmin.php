@@ -310,6 +310,8 @@ class SuperAdmin extends CI_Controller
         $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
         $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
         $data['class'] = $this->SuperAdmin_model->fetch_class($id);
+        $class_sched = $data['class']->class_code . $data['class']->class_section;
+        $data['class_scheds'] = $this->SuperAdmin_model->fetch_class_sched($class_sched);
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
