@@ -322,16 +322,18 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
-    public function view_class($id)
+    public function view_class($id, $message = null)
     {
         $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
         $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
         $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
         $data['class'] = $this->SuperAdmin_model->fetch_class($id);
+        $data['message'] = $message;
 
         $class_sched = $data['class']->class_code . $data['class']->class_section;
         $data['class_scheds'] = $this->SuperAdmin_model->fetch_class_sched($class_sched);
 
+        // $this->dd($data['class_scheds']);
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -396,23 +398,42 @@ class SuperAdmin extends CI_Controller
         // $this->SuperAdmin_model->create_class($class_sched);
     }
 
-    public function save_sched()
+    public function add_sched()
     {
-        $this->dd($_POST);
-        // $class_sched = array(
-        //     'class_code' => $_POST['class_sched']['class_code'],
-        //     'class_day' => $_POST['class_sched']['class_day'],
-        //     'class_start_time' => $_POST['class_sched']['class_start_time'],
-        //     'class_end_time' => $_POST['class_sched']['class_end_time'],
-        //     'faculty_id' => $_POST['class_sched']['faculty_id'],
-        //     'class_room' => $_POST['class_sched']['class_room'],
-        //     'class_sched' => $_POST['class_sched']['class_sched']
-        // );
-        foreach ($_POST as $class_sched) {
-        }
-        $this->SuperAdmin_model->save_sched($class_sched);
+        $this->form_validation->set_rules('class_day', 'class day', 'required|strip_tags');
+        $this->form_validation->set_rules('class_room', 'class day', 'required|strip_tags');
+        $this->form_validation->set_rules('class_start_time', 'class day', 'required|strip_tags');
+        $this->form_validation->set_rules('class_end_time', 'class day', 'required|strip_tags');
 
-        echo jsoN_encode($_POST);
+        $id = $this->input->post('class_id');
+        $start = $this->input->post('class_start_time');
+        $end = $this->input->post('class_end_time');
+
+        $class_sched = array(
+            'class_day' => $this->input->post('class_day'),
+            'class_start_time' => $this->input->post('class_start_time'),
+            'class_end_time' => $this->input->post('class_end_time'),
+            'class_room' => $this->input->post('class_room'),
+            'class_sched' => $this->input->post('class_sched')
+        );
+
+        if (strtotime($end) <= strtotime($start)) {
+            $message = '
+        <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>End time cannot be the same time or earlier!</p>
+        </div>
+        ';
+            $this->view_class($id, $message);
+        } else {
+            if ($this->form_validation->run() == FALSE) {
+                $this->view_class($id);
+            } else {
+                $message = $this->SuperAdmin_model->add_sched($class_sched);
+                $this->view_class($id, $message);
+            }
+        }
     }
 
     // =======================================================================================

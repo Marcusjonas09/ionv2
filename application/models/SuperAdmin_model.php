@@ -1360,9 +1360,37 @@ class SuperAdmin_model extends CI_Model
         $this->db->insert('classes_tbl', $data);
     }
 
-    public function save_sched($data)
+    public function add_sched($data)
     {
-        $this->db->insert('class_schedule_tbl', $data);
+        // $this->dd($data['class_day']);
+        $q = $this->db->get_where('class_schedule_tbl', array(
+            'class_day' => $data['class_day'],
+            'class_start_time' => $data['class_start_time'],
+            'class_end_time' => $data['class_end_time'],
+            'class_room' => $data['class_room']
+        ));
+        $result = $q->num_rows();
+
+        if ($result > 0) {
+            $message = '
+        <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Error!</h4>
+            <p>Schedule already exists!</p>
+        </div>
+        ';
+            return $message;
+        } else {
+            $this->db->insert('class_schedule_tbl', $data);
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-check"></i>Success!</h4>
+            <p>Class schedule successfully saved!</p>
+        </div>
+        ';
+            return $message;
+        }
     }
 
     // public function fetch_section_count()

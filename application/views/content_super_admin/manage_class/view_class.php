@@ -16,12 +16,8 @@
                 <?php echo validation_errors(); ?>
             </div>
         <?php endif; ?>
-        <?php if (isset($success_msg)) : ?>
-            <div class="alert alert-success alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h4><i class="icon fa fa-warning"></i>Success!</h4>
-                <?php echo $success_msg; ?>
-            </div>
+        <?php if (isset($message)) : ?>
+            <?php echo $message; ?>
         <?php endif; ?>
         <div class="container-fluid col-md-8" style="padding-left:0px; padding-right:0px;">
             <form action="<?= base_url() ?>SuperAdmin/edit_course_function" method="post">
@@ -69,15 +65,13 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="box-footer">
-                        <input class="btn btn-success pull-right" type="submit" value="Apply" />
-                    </div> -->
                 </div>
             </form>
 
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Class Schedules</strong></h3>
+                    <button style="margin-right:10px;" class="btn btn-success pull-right" data-toggle="modal" data-target="#addSchedModal">Add Schedule</button>
                 </div>
                 <div class="box-body">
                     <table class="table table-striped text-center" data-page-length='10'>
@@ -162,6 +156,70 @@
                 </div>
             </div>
         </div> -->
+
     </section>
 </div>
 <!-- /.content-wrapper -->
+
+<!-- Modal -->
+<div class="modal fade" id="addSchedModal" tabindex="-1" role="dialog" aria-labelledby="addSchedLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addSchedLabel">Add Schedule</h4>
+            </div>
+            <form action="<?= base_url() ?>SuperAdmin/add_sched" method="post">
+                <div class="modal-body">
+                    <div class="form-group col-md-6">
+                        <label for="laboratory_code">Day:</label>
+                        <select class="form-control" name="class_day" id="class_sched_day">
+                            <option value="">--</option>
+                            <option value="M">Monday</option>
+                            <option value="T">Tuesday</option>
+                            <option value="W">Thursday</option>
+                            <option value="TH">Thursday</option>
+                            <option value="F">Friday</option>
+                            <option value="S">Saturday</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>Room:</label>
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="class_room" id="class_room">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>Start Time:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control timepicker" name="class_start_time" id="class_start_time">
+                            <div class="input-group-addon">
+                                <i class="fa fa-clock-o"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>End Time:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control timepicker" name="class_end_time" id="class_end_time">
+                            <div class="input-group-addon">
+                                <i class="fa fa-clock-o"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="class_id" value="<?= $class->class_id ?>">
+                    <input type="hidden" name="class_sched" value="<?= $class->class_sched ?>">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success col-md-2 pull-right">Submit</button>
+                    <button type="button" class="btn btn-default col-md-2 pull-right" style="margin-right:10px;" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
