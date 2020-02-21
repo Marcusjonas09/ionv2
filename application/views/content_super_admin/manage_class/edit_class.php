@@ -20,7 +20,7 @@
             <?php echo $message; ?>
         <?php endif; ?>
         <div class="container-fluid col-md-8" style="padding-left:0px; padding-right:0px;">
-            <form action="<?= base_url() ?>SuperAdmin/edit_course_function" method="post">
+            <form action="<?= base_url() ?>SuperAdmin/edit_class_function" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong>Class : <?= $class->class_code . ' - ' . $class->class_section ?></strong></h3>
@@ -54,7 +54,7 @@
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Faculty:</label>
                                 <select class="form-control js-example-basic-single" name="faculty_id" id="class_faculty_id">
-                                    <option value="">--</option>
+                                    <option value="0">--</option>
                                     <?php foreach ($faculties as $faculty) : ?>
                                         <option <?php if ($faculty->acc_number == $class->class_faculty) {
                                                     echo "selected";
@@ -63,10 +63,12 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div>
+                            <input type="hidden" name="class_id" id="class_id" value="<?= $class->class_id ?>">
                         </div>
                     </div>
                     <div class="box-footer">
-                        <input class="btn btn-success pull-right col-md-2" type="submit" value="Apply" />
+                        <!-- <input class="btn btn-success pull-right col-md-2" type="submit" value="Apply" /> -->
+                        <button type="button" class="btn btn-success pull-right col-md-2" onclick="edit_class()">Apply</button>
                     </div>
                 </div>
             </form>
@@ -119,7 +121,7 @@
                             <option value="">--</option>
                             <option value="M">Monday</option>
                             <option value="T">Tuesday</option>
-                            <option value="W">Thursday</option>
+                            <option value="W">Wednesday</option>
                             <option value="TH">Thursday</option>
                             <option value="F">Friday</option>
                             <option value="S">Saturday</option>

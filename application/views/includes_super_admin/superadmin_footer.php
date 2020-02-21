@@ -237,6 +237,24 @@
         })
     }
 
+    function edit_class() {
+        var class_id = $("#class_id").val();
+        var class_faculty_id = $("#class_faculty_id").val();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Save!'
+        }).then((result) => {
+            if (result.value) {
+                window.location.replace(baselink + "SuperAdmin/edit_class_function/" + class_id + "/" + class_faculty_id)
+            }
+        })
+    }
+
 
 
     $(document).ready(function() {

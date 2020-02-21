@@ -304,62 +304,6 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
-    public function edit_class($id, $message = null)
-    {
-        $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
-        $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
-        $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
-        $data['class'] = $this->SuperAdmin_model->fetch_class($id);
-        $class_sched = $data['class']->class_code . $data['class']->class_section;
-        $data['class_scheds'] = $this->SuperAdmin_model->fetch_class_sched($class_sched);
-        $data['message'] = $message;
-
-        $this->load->view('includes_super_admin/superadmin_header');
-        $this->load->view('includes_super_admin/superadmin_topnav');
-        $this->load->view('includes_super_admin/superadmin_sidebar');
-
-        $this->load->view('content_super_admin/manage_class/edit_class', $data);
-
-        $this->load->view('includes_super_admin/superadmin_contentFooter');
-        $this->load->view('includes_super_admin/superadmin_rightnav');
-        $this->load->view('includes_super_admin/superadmin_footer');
-    }
-
-    public function view_class($id, $message = null)
-    {
-        $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
-        $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
-        $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
-        $data['class'] = $this->SuperAdmin_model->fetch_class($id);
-        $data['message'] = $message;
-
-        $class_sched = $data['class']->class_code . $data['class']->class_section;
-        $data['class_scheds'] = $this->SuperAdmin_model->fetch_class_sched($class_sched);
-
-        // $this->dd($data['class_scheds']);
-
-        $this->load->view('includes_super_admin/superadmin_header');
-        $this->load->view('includes_super_admin/superadmin_topnav');
-        $this->load->view('includes_super_admin/superadmin_sidebar');
-
-        $this->load->view('content_super_admin/manage_class/view_class', $data);
-
-        $this->load->view('includes_super_admin/superadmin_contentFooter');
-        $this->load->view('includes_super_admin/superadmin_rightnav');
-        $this->load->view('includes_super_admin/superadmin_footer');
-    }
-
-    public function delete_class($id)
-    {
-
-        if (!$this->SuperAdmin_model->delete_class($id)) {
-            $this->SuperAdmin_model->delete_class($id);
-            $this->classes("Record successfully deleted!", null);
-        } else {
-            $this->classes(null, "Failed to delete Record!");
-        }
-    }
-
     public function create_class()
     {
         $this->form_validation->set_rules('class_code', 'Course Code', 'required|strip_tags');
@@ -399,6 +343,83 @@ class SuperAdmin extends CI_Controller
         }
 
         // $this->SuperAdmin_model->create_class($class_sched);
+    }
+
+    public function edit_class($id, $message = null)
+    {
+        $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
+        $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
+        $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
+        $data['class'] = $this->SuperAdmin_model->fetch_class($id);
+        $class_sched = $data['class']->class_code . $data['class']->class_section;
+        $data['class_scheds'] = $this->SuperAdmin_model->fetch_class_sched($class_sched);
+        $data['message'] = $message;
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_class/edit_class', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function edit_class_function($class_id, $class_faculty_id)
+    {
+        // echo ($class_faculty_id);
+        // die();
+        // $this->form_validation->set_rules('faculty_id', 'Faculty', 'strip_tags');
+
+        // if ($this->form_validation->run() == FALSE) {
+        //     $this->edit_class($class_id);
+        // } else {
+        $this->SuperAdmin_model->edit_class($class_id, $class_faculty_id);
+        $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Success!</h4>
+            <p>Record successfully edited!</p>
+        </div>
+        ';
+        $this->edit_class($class_id, $message);
+        // }
+    }
+
+    public function view_class($id, $message = null)
+    {
+        $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
+        $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
+        $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
+        $data['class'] = $this->SuperAdmin_model->fetch_class($id);
+        $data['message'] = $message;
+
+        $class_sched = $data['class']->class_code . $data['class']->class_section;
+        $data['class_scheds'] = $this->SuperAdmin_model->fetch_class_sched($class_sched);
+
+        // $this->dd($data['class_scheds']);
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_class/view_class', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function delete_class($id)
+    {
+
+        if (!$this->SuperAdmin_model->delete_class($id)) {
+            $this->SuperAdmin_model->delete_class($id);
+            $this->classes("Record successfully deleted!", null);
+        } else {
+            $this->classes(null, "Failed to delete Record!");
+        }
     }
 
     public function add_sched()
@@ -2336,6 +2357,7 @@ class SuperAdmin extends CI_Controller
         $data['section_count'] = $this->SuperAdmin_model->fetch_section_count();
         $data['curriculum_count'] = $this->SuperAdmin_model->fetch_curriculum_count();
         $data['student_count'] = $this->SuperAdmin_model->fetch_student_count();
+        $data['class_count'] = $this->SuperAdmin_model->fetch_class_count();
 
 
         $this->load->view('includes_super_admin/superadmin_header');

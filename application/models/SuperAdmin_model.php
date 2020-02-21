@@ -1447,13 +1447,13 @@ class SuperAdmin_model extends CI_Model
         return $message;
     }
 
-    // public function fetch_section_count()
-    // {
-    //     $this->db->select('*');
-    //     $this->db->from('sections_tbl');
-    //     $query = $this->db->get();
-    //     return $query->num_rows();
-    // }
+    public function fetch_class_count()
+    {
+        $this->db->select('*');
+        $this->db->from('classes_tbl');
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
 
     public function fetch_class($id)
     {
@@ -1462,6 +1462,13 @@ class SuperAdmin_model extends CI_Model
         $this->db->from('classes_tbl');
         $query = $this->db->get();
         return $query->row();
+    }
+
+    public function edit_class($class_id, $class_faculty_id)
+    {
+        $this->db->set(array('class_faculty' => $class_faculty_id));
+        $this->db->where('class_id', $class_id);
+        $this->db->update('classes_tbl');
     }
 
     public function fetch_specific_class($class_sched)

@@ -290,7 +290,7 @@
                         <!-- small box -->
                         <div class="small-box bg-green">
                             <div class="inner">
-                                <h3 id="simul_number">0</h3>
+                                <h3 id="simul_number"><?= $class_count ?></h3>
 
                                 <p>Class Schedule</p>
                             </div>
