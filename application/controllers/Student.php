@@ -7,7 +7,7 @@ class Student extends CI_Controller
 	{
 		parent::__construct();
 
-		date_default_timezone_set("Asia/Singapore");
+		date_default_timezone_set("Asia/Manila");
 		require 'vendor/autoload.php';
 
 		$this->load->library('form_validation');

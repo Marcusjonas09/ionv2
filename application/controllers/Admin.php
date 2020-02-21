@@ -8,7 +8,7 @@ class Admin extends CI_Controller
 		parent::__construct();
 
 		require 'vendor/autoload.php';
-		date_default_timezone_set("Asia/Singapore");
+		date_default_timezone_set("Asia/Manila");
 
 		$this->load->library('form_validation');
 

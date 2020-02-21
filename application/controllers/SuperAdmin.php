@@ -12,7 +12,7 @@ class SuperAdmin extends CI_Controller
         $this->load->library('form_validation');
         $this->load->helper('date');
         $this->load->helper('text');
-        date_default_timezone_set("Asia/Singapore");
+        date_default_timezone_set("Asia/Manila");
         require 'vendor/autoload.php';
     }
 
