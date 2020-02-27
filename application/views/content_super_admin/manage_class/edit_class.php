@@ -63,12 +63,19 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="class_capacity">Max Slots:</label>
+                                <input type="number" value="<?= $class->class_capacity ?>" name="class_capacity" id="class_capacity" placeholder="Slot" class="form-control">
+                            </div>
+
                             <input type="hidden" name="class_id" id="class_id" value="<?= $class->class_id ?>">
                         </div>
                     </div>
                     <div class="box-footer">
                         <!-- <input class="btn btn-success pull-right col-md-2" type="submit" value="Apply" /> -->
-                        <button type="button" class="btn btn-success pull-right col-md-2" onclick="edit_class()">Apply</button>
+                        <!-- <button type="button" class="btn btn-success pull-right col-md-2" onclick="edit_class()">Apply</button> -->
+                        <button type="submit" class="btn btn-success pull-right col-md-2">Apply</button>
                     </div>
                 </div>
             </form>

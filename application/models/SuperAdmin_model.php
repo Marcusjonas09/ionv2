@@ -1362,80 +1362,76 @@ class SuperAdmin_model extends CI_Model
 
     public function add_sched($data)
     {
-
-        $conflict = false;
-
-        $q1 = $this->db->get_where('class_schedule_tbl', array(
-            'class_day' => $data['class_day'],
-            'class_start_time' => $data['class_start_time'],
-            'class_end_time' => $data['class_end_time'],
-            'class_room' => $data['class_room']
-        ));
-
-        $numrows = $q1->num_rows();
-
-        $this->db->select('class_start_time, class_end_time');
-        $q2 = $this->db->get_where('class_schedule_tbl', array(
-            'class_day' => $data['class_day'],
-            'class_room' => $data['class_room']
-        ));
-
-        $results = $q2->result();
-
-        foreach ($results as $result) {
-            // $this->dd(strtotime($result->class_start_time) < strtotime($data['class_start_time']) && strtotime($data['class_start_time']) > strtotime($result->class_end_time) ? 'true' : 'false');
-            if (strtotime($result->class_start_time) < strtotime($data['class_start_time']) && strtotime($data['class_start_time']) > strtotime($result->class_end_time)) {
-                $conflict = true;
-            }
-
-            if (strtotime($result->class_start_time) < strtotime($data['class_end_time']) && strtotime($data['class_end_time']) > strtotime($result->class_end_time)) {
-                $conflict = true;
-            }
-        }
-
         $message = "";
 
-        $debug = array(
-            'numrow' => $numrows,
-            'result' => $results,
-            'conflict' => $conflict,
-            'message' => $message
-        );
-        // $this->dd($debug);
+        $start = date('h:i:s', strtotime($data['class_start_time']));
+        $end = date('h:i:s', strtotime($data['class_end_time']));
+        $class_room = $data['class_room'];
+        $class_day = $data['class_day'];
 
-        if (strtotime($data['class_end_time']) <= strtotime($data['class_start_time'])) {
+        $q2 = $this->db->get_where('class_schedule_tbl', array(
+            'class_room' => $class_room,
+            'class_day' => $class_day,
+        ));
+        $results = $q2->result();
+
+        if ($start < $end) {
+            foreach ($results as $result) {
+                if (($start == date('h:i:s', strtotime($result->class_start_time)) && $end == date('h:i:s', strtotime($result->class_end_time))) && ($class_room == $result->class_room && $class_day == $result->class_day)) {
+                    $message .= '
+                            <div class="alert alert-warning alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+                                <p>Schedule already exists!</p>
+                            </div>
+                            ';
+                }
+
+                if (($start < date('h:i:s', strtotime($result->class_start_time)) && $end < date('h:i:s', strtotime($result->class_start_time)))
+                    &&
+                    ($start < date('h:i:s', strtotime($result->class_end_time)) && $end < date('h:i:s', strtotime($result->class_end_time)))
+                    ||
+                    ($start > date('h:i:s', strtotime($result->class_start_time)) && $end > date('h:i:s', strtotime($result->class_start_time)))
+                    &&
+                    ($start > date('h:i:s', strtotime($result->class_end_time)) && $end > date('h:i:s', strtotime($result->class_end_time)))
+                ) {
+                } else {
+                    $message .= '
+                <div class="alert alert-warning alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+                    <p>Conflict Schedule</p>
+                </div>
+                ';
+                }
+            }
+        } else {
             $message .= '
-        <div class="alert alert-warning alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
-            <p>END TIME cannot be less than or equal to the START TIME!</p>
-        </div>
-        ';
+                <div class="alert alert-warning alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+                    <p>Start time cannot be greater than the end time!</p>
+                </div>
+                ';
         }
 
-        if ($numrows > 0) {
-            $message .= '
-        <div class="alert alert-warning alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
-            <p>Schedule already exists!</p>
-        </div>
-        ';
+        foreach ($results as $result) {
+            if (($start == date('h:i:s', strtotime($result->class_start_time)) && $end == date('h:i:s', strtotime($result->class_end_time))) && ($class_room == $result->class_room && $class_day == $result->class_day)) {
+                $message = '
+                        <div class="alert alert-warning alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+                            <p>Schedule already exists!</p>
+                        </div>
+                        ';
+            }
         }
 
-        if ($conflict) {
-            $message .= '
-        <div class="alert alert-warning alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
-            <p>Schedule conflict!</p>
-        </div>
-        ';
-        }
+
 
         if ($message == "") {
             $this->db->insert('class_schedule_tbl', $data);
-            $message = '
+            $message .= '
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <h4><i class="icon fa fa-check"></i>Success!</h4>
@@ -1464,9 +1460,9 @@ class SuperAdmin_model extends CI_Model
         return $query->row();
     }
 
-    public function edit_class($class_id, $class_faculty_id)
+    public function edit_class($class_id, $class_data)
     {
-        $this->db->set(array('class_faculty' => $class_faculty_id));
+        $this->db->set($class_data);
         $this->db->where('class_id', $class_id);
         $this->db->update('classes_tbl');
     }

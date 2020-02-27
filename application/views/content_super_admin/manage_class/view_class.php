@@ -63,6 +63,11 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="class_capacity">Max Slots:</label>
+                                <input disabled type="number" value="<?= $class->class_capacity ?>" name="class_capacity" id="class_capacity" placeholder="Slot" class="form-control">
+                            </div>
                         </div>
                     </div>
                 </div>

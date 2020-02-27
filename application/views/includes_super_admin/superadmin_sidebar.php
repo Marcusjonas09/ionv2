@@ -19,14 +19,15 @@
      <!-- Sidebar Menu -->
      <ul class="sidebar-menu" data-widget="tree">
        <li class="header">MAIN NAVIGATION</li>
-       <!-- Optionally, you can add icons to the links -->
        <li><a href="<?= base_url() ?>SuperAdmin/school_parameters"><i class="fa fa-user"></i> <span>School Parameters</span></a></li>
-       <li><a href="<?= base_url() ?>SuperAdmin/admin"><i class="fa fa-user"></i> <span>Admin Accounts</span></a></li>
+       <?php if ($this->session->access == 'superadmin') : ?>
+         <li><a href="<?= base_url() ?>SuperAdmin/admin"><i class="fa fa-user"></i> <span>Admin Accounts</span></a></li>
+         <li><a href="<?= base_url() ?>SuperAdmin/database"><i class="fa fa-user"></i> <span>Database</span></a></li>
+       <?php endif; ?>
        <!-- <li><a href="<?= base_url() ?>SuperAdmin/faculty"><i class="fa fa-user"></i> <span>Faculty</span></a></li>
        <li><a href="<?= base_url() ?>SuperAdmin/student"><i class="fa fa-user"></i> <span>Student</span></a></li>
        <li><a href="<?= base_url() ?>SuperAdmin/course"><i class="fa fa-user"></i> <span>Course</span></a></li>
        <li><a href="<?= base_url() ?>SuperAdmin/laboratory"><i class="fa fa-user"></i> <span>Laboratory</span></a></li> -->
-       <li><a href="<?= base_url() ?>SuperAdmin/database"><i class="fa fa-user"></i> <span>Database</span></a></li>
      </ul>
      <!-- /.sidebar-menu -->
    </section>

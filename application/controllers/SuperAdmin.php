@@ -36,11 +36,27 @@ class SuperAdmin extends CI_Controller
         $this->User_model->login_admin($data);
         $error['error'] = "";
 
+        // if ($this->session->login) {
+        //     if ($this->session->acc_status) {
+        //         if ($this->session->access == 'admin') {
+        //             redirect('Admin/dashboard');
+        //         } else if ($this->session->access == 'superadmin') {
+        //             redirect('SuperAdmin/school_parameters');
+        //         } else {
+        //             redirect('Admin');
+        //         }
+        //     } else {
+        //         $error['error'] = "Your Account has been blocked. Please contact your administrator for details";
+        //         $this->load->view('UserAuth/login-admin', $error);
+        //     }
+        // } else {
+        //     $error['error'] = "Invalid login credentials";
+        //     $this->load->view('UserAuth/login-admin', $error);
+        // }
+
         if ($this->session->login) {
             if ($this->session->acc_status) {
-                if ($this->session->access == 'admin') {
-                    redirect('Admin/dashboard');
-                } else if ($this->session->access == 'superadmin') {
+                if ($this->session->access == 'superadmin' || $this->session->access == 'admin') {
                     redirect('SuperAdmin/school_parameters');
                 } else {
                     redirect('Admin');
@@ -309,6 +325,7 @@ class SuperAdmin extends CI_Controller
         $this->form_validation->set_rules('class_code', 'Course Code', 'required|strip_tags');
         $this->form_validation->set_rules('section_code', 'Section Code', 'required|strip_tags');
         $this->form_validation->set_rules('faculty_id', 'Faculty assignment', 'required|strip_tags');
+        $this->form_validation->set_rules('class_capacity', 'Class capacity', 'required|strip_tags|trim');
 
         if ($this->form_validation->run() == FALSE) {
             $this->add_class();
@@ -317,7 +334,8 @@ class SuperAdmin extends CI_Controller
                 'class_code' => $this->input->post('class_code'),
                 'class_section' => $this->input->post('section_code'),
                 'class_faculty' => $this->input->post('faculty_id'),
-                'class_sched' => $this->input->post('class_code') . $this->input->post('section_code')
+                'class_sched' => $this->input->post('class_code') . $this->input->post('section_code'),
+                'class_capacity' => $this->input->post('class_capacity')
             );
 
             if ($this->SuperAdmin_model->fetch_specific_class($class['class_sched']) > 0) {
@@ -366,25 +384,29 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
-    public function edit_class_function($class_id, $class_faculty_id)
+    public function edit_class_function()
     {
-        // echo ($class_faculty_id);
-        // die();
-        // $this->form_validation->set_rules('faculty_id', 'Faculty', 'strip_tags');
+        $this->form_validation->set_rules('class_capacity', 'Class Capacity', 'required|strip_tags|trim|is_natural|less_than_equal_to[40]');
 
-        // if ($this->form_validation->run() == FALSE) {
-        //     $this->edit_class($class_id);
-        // } else {
-        $this->SuperAdmin_model->edit_class($class_id, $class_faculty_id);
-        $message = '
+        $class_id = $this->input->post('class_id');
+        $class_data = array(
+            'class_faculty' => $this->input->post('faculty_id'),
+            'class_capacity' => $this->input->post('class_capacity')
+        );
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->edit_class($class_id);
+        } else {
+            $this->SuperAdmin_model->edit_class($class_id, $class_data);
+            $message = '
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <h4><i class="icon fa fa-warning"></i>Success!</h4>
             <p>Record successfully edited!</p>
         </div>
         ';
-        $this->edit_class($class_id, $message);
-        // }
+            $this->edit_class($class_id, $message);
+        }
     }
 
     public function view_class($id, $message = null)
@@ -1372,7 +1394,6 @@ class SuperAdmin extends CI_Controller
 
     public function delete_specialization($id)
     {
-
         if (!$this->SuperAdmin_model->delete_specialization($id)) {
             $this->SuperAdmin_model->delete_specialization($id);
             $this->specialization("Record successfully deleted!", null);
