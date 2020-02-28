@@ -3,7 +3,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            <strong>Account Management</strong>
+            <strong><a class="navi" href="<?= base_url() ?>SuperAdmin/admin"><span class="fa fa-chevron-left"></span>&nbsp&nbspBack</a></strong>
         </h1>
     </section>
 
@@ -23,33 +23,33 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <div class="col-md-4">
-                            <img class="col-md-12" src="<?= base_url() ?>dist/img/default_avatar.png">
-                        </div>
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <form action="<?= base_url() ?>SuperAdmin/create_admin_function" method="post">
                                 <div class="box-body">
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-4">
                                         <label for="emp_fname">First Name</label>
                                         <input type="text" class="form-control" placeholder="Enter firstname">
                                     </div>
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-4">
                                         <label for="emp_mname">Middle Name</label>
                                         <input type="text" class="form-control" placeholder="Enter firstname">
                                     </div>
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-4">
                                         <label for="emp_lname">Last Name</label>
                                         <input type="text" class="form-control" placeholder="Enter firstname">
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-4">
                                         <label for="emp_no">Employee No.</label>
-                                        <input type="email" class="form-control" placeholder="Enter employee number">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">2020</span>
+                                            <input type="email" class="form-control" placeholder="Enter employee number">
+                                        </div>
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-4">
                                         <label for="emp_dept">Department</label>
                                         <input type="text" class="form-control" placeholder="Enter firstname">
                                     </div>
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-4">
                                         <label for="emp_desig">Designation</label>
                                         <input type="text" class="form-control" placeholder="Enter firstname">
                                     </div>

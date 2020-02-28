@@ -36,27 +36,11 @@ class SuperAdmin extends CI_Controller
         $this->User_model->login_admin($data);
         $error['error'] = "";
 
-        // if ($this->session->login) {
-        //     if ($this->session->acc_status) {
-        //         if ($this->session->access == 'admin') {
-        //             redirect('Admin/dashboard');
-        //         } else if ($this->session->access == 'superadmin') {
-        //             redirect('SuperAdmin/school_parameters');
-        //         } else {
-        //             redirect('Admin');
-        //         }
-        //     } else {
-        //         $error['error'] = "Your Account has been blocked. Please contact your administrator for details";
-        //         $this->load->view('UserAuth/login-admin', $error);
-        //     }
-        // } else {
-        //     $error['error'] = "Invalid login credentials";
-        //     $this->load->view('UserAuth/login-admin', $error);
-        // }
-
         if ($this->session->login) {
             if ($this->session->acc_status) {
-                if ($this->session->access == 'superadmin' || $this->session->access == 'admin') {
+                if ($this->session->access == 'admin') {
+                    redirect('Admin/dashboard');
+                } else if ($this->session->access == 'superadmin') {
                     redirect('SuperAdmin/school_parameters');
                 } else {
                     redirect('Admin');
@@ -69,6 +53,22 @@ class SuperAdmin extends CI_Controller
             $error['error'] = "Invalid login credentials";
             $this->load->view('UserAuth/login-admin', $error);
         }
+
+        // if ($this->session->login) {
+        //     if ($this->session->acc_status) {
+        //         if ($this->session->access == 'superadmin' || $this->session->access == 'admin') {
+        //             redirect('SuperAdmin/school_parameters');
+        //         } else {
+        //             redirect('Admin');
+        //         }
+        //     } else {
+        //         $error['error'] = "Your Account has been blocked. Please contact your administrator for details";
+        //         $this->load->view('UserAuth/login-admin', $error);
+        //     }
+        // } else {
+        //     $error['error'] = "Invalid login credentials";
+        //     $this->load->view('UserAuth/login-admin', $error);
+        // }
     }
 
     public function logout()
@@ -1857,7 +1857,7 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_accounts/view_admin');
+        $this->load->view('content_super_admin/manage_admins/view_admin');
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
@@ -1870,7 +1870,7 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_accounts/create_admin');
+        $this->load->view('content_super_admin/manage_admins/create_admin');
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
@@ -1902,7 +1902,7 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_accounts/block_admin');
+        $this->load->view('content_super_admin/manage_admins/block_admin');
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
@@ -1915,7 +1915,7 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_accounts/edit_admin');
+        $this->load->view('content_super_admin/manage_admins/edit_admin');
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');

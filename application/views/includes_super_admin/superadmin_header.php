@@ -3,21 +3,21 @@ if (!$this->session->login) {
       session_destroy();
       redirect('SuperAdmin');
 }
-// if ($this->session->access == 'admin') {
-//       redirect('Admin/dashboard');
-// } else if ($this->session->access == 'student') {
-//       redirect('Student/Dashboard');
-// } else if ($this->session->access == 'superadmin') {
-// } else {
-//       redirect('SuperAdmin');
-// }
-
-if ($this->session->access == 'student') {
+if ($this->session->access == 'admin') {
+      redirect('Admin/dashboard');
+} else if ($this->session->access == 'student') {
       redirect('Student/Dashboard');
-} else if ($this->session->access == 'superadmin' || $this->session->access == 'admin') {
+} else if ($this->session->access == 'superadmin') {
 } else {
       redirect('SuperAdmin');
 }
+
+// if ($this->session->access == 'student') {
+//       redirect('Student/Dashboard');
+// } else if ($this->session->access == 'superadmin' || $this->session->access == 'admin') {
+// } else {
+//       redirect('SuperAdmin');
+// }
 
 ?>
 
