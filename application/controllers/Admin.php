@@ -25,6 +25,7 @@ class Admin extends CI_Controller
 		$this->load->model('Overload_underload_model');
 		$this->load->model('Real_time_model');
 		$this->load->model('Events_model');
+		$this->load->model('Calendar_model');
 
 		$this->load->helper('date');
 		$this->load->helper('text');
@@ -309,95 +310,136 @@ class Admin extends CI_Controller
 	// CALENDAR MODULE
 	// =======================================================================================
 
-	public function academic_calendar() // | Display Academic Calendar |
+	
+
+	public function academic_calendar($success = null, $error = null) // | Display Academic Calendar |
 	{
-
-		$year = $this->uri->segment(3);
-		$month = $this->uri->segment(4);
-		$prefs = array(
-			'start_day'    => 'saturday',
-			'month_type'   => 'long',
-			'day_type'     => 'short',
-			'show_next_prev'  => TRUE,
-			'next_prev_url'   => base_url() . 'Admin/academic_calendar/'
-		);
-
-
-		$prefs['template'] = '
-
-		        {table_open}<table class="table text-center" border="0" cellpadding="0" cellspacing="0">{/table_open}
-
-		        {heading_row_start}<tr>{/heading_row_start}
-
-		        {heading_previous_cell}<th><h3><strong><a href="{previous_url}" class="navi"><span class="fa fa-chevron-left"></span></a></strong></h3></th>{/heading_previous_cell}
-		        {heading_title_cell}<th colspan="5"><h3><strong>{heading}</strong></h3></th>{/heading_title_cell}
-		        {heading_next_cell}<th><h3><strong><a href="{next_url}" class="navi"><span class="fa fa-chevron-right"></span></a></strong></h3></th>{/heading_next_cell}
-
-		        {heading_row_end}</tr>{/heading_row_end}
-
-		        {week_row_start}<tr style="background-color:#efefef;">{/week_row_start}
-		        {week_day_cell}<td>{week_day}</td>{/week_day_cell}
-		        {week_row_end}</tr>{/week_row_end}
-
-		        {cal_row_start}<tr>{/cal_row_start}
-		        {cal_cell_start}<td>{/cal_cell_start}
-		        {cal_cell_start_today}<td>{/cal_cell_start_today}
-		        {cal_cell_start_other}<td class="other-month">{/cal_cell_start_other}
-
-		        {cal_cell_content}<a href="{content}">{day}</a>{/cal_cell_content}
-		        {cal_cell_content_today}<div class="highlight"><a href="{content}">{day}</a></div>{/cal_cell_content_today}
-
-		        {cal_cell_no_content}{day}{/cal_cell_no_content}
-		        {cal_cell_no_content_today}<div class="highlight">{day}</div>{/cal_cell_no_content_today}
-
-		        {cal_cell_blank}&nbsp;{/cal_cell_blank}
-
-		        {cal_cell_other}{day}{/cal_cel_other}
-
-		        {cal_cell_end}</td>{/cal_cell_end}
-		        {cal_cell_end_today}</td>{/cal_cell_end_today}
-		        {cal_cell_end_other}</td>{/cal_cell_end_other}
-		        {cal_row_end}</tr>{/cal_row_end}
-
-		        {table_close}</table>{/table_close}
-		';
-
-		$this->load->library('calendar', $prefs);
-
-		$data['my_calendar'] = $this->calendar->generate($year, $month);
-
+		$events = $this->Calendar_model->getAllEvent();
+		$data['events'] = $events;
 		$this->load->view('includes_admin/admin_header');
-
 		$this->load->view('includes_admin/admin_topnav');
 		$this->load->view('includes_admin/admin_sidebar');
-
 		$this->load->view('content_admin/academic_calendar/academic_calendar', $data);
-
 		$this->load->view('includes_admin/admin_contentFooter');
 		$this->load->view('includes_admin/admin_rightnav');
 		$this->load->view('includes_admin/admin_footer');
+
+		$data['success_msg'] = $success;
+		$data['error_msg'] = $error;
 	}
 
-	public function fetch_events()
+	public function get_events()
 	{
-		$data = $this->Events_model->fetch_events();
-		echo json_encode($data);
+		// Our Start and End Dates
+		$start = $this->input->get("start");
+		$end = $this->input->get("end");
+
+		$startdt = new DateTime('now'); // setup a local datetime
+		$startdt->setTimestamp($start); // Set the date based on timestamp
+		$start_format = $startdt->format('Y-m-d');
+
+		$enddt = new DateTime('now'); // setup a local datetime
+		$enddt->setTimestamp($end); // Set the date based on timestamp
+		$end_format = $enddt->format('Y-m-d');
+
+		$events = $this->Calendar_model->get_events($start_format, $end_format);
+
+		$data_events = array();
+
+		foreach ($events->result() as $r) {
+
+			$data_events[] = array(
+				"id" => $r->ID,
+				"title" => $r->title,
+				"description" => $r->description,
+				"start" => $r->start,
+				"end" => $r->end
+
+			);
+		}
+
+		echo json_encode(array("events" => $data_events));
+		exit();
 	}
 
-	public function create_event()
+	public function add_event()
 	{
-		$title = $this->input->post('title');
-		$start = $this->input->post('start');
-		$end = $this->input->post('end');
-		$event_details = array(
-			'title' => $title,
-			'start' => $start,
-			'end' => $end
+		/* Our calendar data */
+		$name = $this->input->post("name", TRUE);
+		$desc = $this->input->post("description", TRUE);
+		$start_date = $this->input->post("start_date", TRUE);
+		$end_date = $this->input->post("end_date", TRUE);
+
+		if (!empty($start_date)) {
+			$sd = DateTime::createFromFormat("Y/m/d", $start_date);
+			$start_date = $sd->format('Y-m-d ');
+		} else {
+			$start_date = date("Y-m-d");
+		}
+
+		if (!empty($end_date)) {
+			$ed = DateTime::createFromFormat("Y/m/d", $end_date);
+			$end_date = $ed->format('Y-m-d');
+		} else {
+			$end_date = date("Y-m-d");
+		}
+
+		$this->Calendar_model->add_event(
+			array(
+				"title" => $name,
+				"description" => $desc,
+				"start" => $start_date,
+				"end" => $end_date
+			)
 		);
+		redirect('Admin/academic_calendar');
+	}
 
-		// $this->Events_model->create_event($event_details);
 
-		echo json_encode($start);
+	public function edit_event()
+	{
+		$eventid = intval($this->input->post("eventid"));
+		$event = $this->Calendar_model->get_event($eventid);
+		if ($event->num_rows() == 0) {
+			echo('Invalid');
+			exit();
+		}
+		$event->row();
+
+		/* Our calendar data */
+		$name = $this->input->post("name");
+		$desc = $this->input->post("description");
+		$start_date = $this->input->post("start_date");
+		$end_date = $this->input->post("end_date");
+		$delete = intval($this->input->post("delete"));
+
+		if (!$delete) {
+			if (!empty($start_date)) {
+				$sd = DateTime::createFromFormat("Y/m/d", $start_date);
+				$start_date = $sd->format('Y-m-d');
+			} else {
+				$start_date = date("Y-m-d");
+			}
+			if (!empty($end_date)) {
+				$ed = DateTime::createFromFormat("Y/m/d", $end_date);
+				$end_date = $ed->format('Y-m-d');
+			} else {
+				$end_date = date("Y-m-d");
+			}
+			$this->Calendar_model->update_event(
+				$eventid,
+				array(
+					"title" => $name,
+					"description" => $desc,
+					"start" => $start_date,
+					"end" => $end_date,
+				)
+			);
+		} else {
+			$this->Calendar_model->delete_event($eventid);
+		}
+
+		redirect('Admin/academic_calendar');
 	}
 
 	// =======================================================================================

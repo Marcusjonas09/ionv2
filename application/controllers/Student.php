@@ -27,6 +27,7 @@ class Student extends CI_Controller
 		$this->load->model('Revision_model');
 		$this->load->model('Assessment_model');
 		$this->load->model('Overload_underload_model');
+		$this->load->model('Calendar_model');
 
 		$this->load->helper('date');
 		$this->load->helper('text');
@@ -121,6 +122,7 @@ class Student extends CI_Controller
 
 	public function announcements()
 	{
+		$events = $this->Calendar_model->getAllEvent();
 		$this->load->view('includes_student/student_header');
 		$this->load->view('includes_student/student_topnav');
 		$this->load->view('includes_student/student_sidebar');
@@ -132,6 +134,40 @@ class Student extends CI_Controller
 		$this->load->view('includes_student/student_contentFooter');
 		$this->load->view('includes_student/student_rightnav');
 		$this->load->view('includes_student/student_footer');
+	}
+
+	public function get_events()
+	{
+		// Our Start and End Dates
+		$start = $this->input->get("start");
+		$end = $this->input->get("end");
+
+		$startdt = new DateTime('now'); // setup a local datetime
+		$startdt->setTimestamp($start); // Set the date based on timestamp
+		$start_format = $startdt->format('Y-m-d');
+
+		$enddt = new DateTime('now'); // setup a local datetime
+		$enddt->setTimestamp($end); // Set the date based on timestamp
+		$end_format = $enddt->format('Y-m-d');
+
+		$events = $this->Calendar_model->get_events($start_format, $end_format);
+
+		$data_events = array();
+
+		foreach ($events->result() as $r) {
+
+			$data_events[] = array(
+				"id" => $r->ID,
+				"title" => $r->title,
+				"description" => $r->description,
+				"start" => $r->start,
+				"end" => $r->end
+
+			);
+		}
+
+		echo json_encode(array("events" => $data_events));
+		exit();
 	}
 
 	// =======================================================================================

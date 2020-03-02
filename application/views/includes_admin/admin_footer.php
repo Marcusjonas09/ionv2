@@ -3,7 +3,7 @@
 
 <!-- REQUIRED JS SCRIPTS -->
 <!-- jQuery 3 -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="<?= base_url() ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- SlimScroll -->
@@ -17,17 +17,20 @@
 <!-- Pusher JS -->
 <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="<?= base_url() ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <!-- Full Calendar JS -->
 <script src="<?= base_url() ?>bower_components/moment/moment.js"></script>
 <script src="<?= base_url() ?>bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/bootstrap/main.min.js"></script>
 <!-- bootstrap datepicker -->
 <script src="<?= base_url() ?>bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-
 <!-- DataTables -->
 <script src="<?= base_url() ?>bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="<?= base_url() ?>bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- Datepicker disable date JS -->
+<script src="<?= base_url() ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
+
+
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -352,141 +355,179 @@
         // end of underload module
         // =======================================================================================
 
-        var calendar_events;
+        var date_last_clicked = null;
 
-        $.get("<?= base_url() ?>Admin/fetch_events", function(data) {
-            calendar_events = data;
-            // swal(data);
-        });
+    $('#calendar').fullCalendar({
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,listMonth'
+        },
+        
+        eventSources: [
+           {
+           events: function(start, end, timezone, callback) {
+                $.ajax({
+                    url: '<?php echo base_url() ?>Admin/get_events',
+                    dataType: 'json',
+                    data: {
+                        // our hypothetical feed requires UNIX timestamps
+                        start: start.unix(),
+                        end: end.unix()
+                    },
+                    success: function(msg) {
+                        var events = msg.events;
+                        callback(events);
+                    }
+                });
+              }
+            },
+        ],
+        dayClick: function(date, jsEvent, view) {
+            // date_last_clicked = $(this);
+            var now = new Date();
+            var selected_date = new Date(date);
+            
+            // if (now.getTime() > selected_date.getTime()){
 
-        /* initialize the external events
-         -----------------------------------------------------------------*/
-        function init_events(ele) {
-            ele.each(function() {
-
-                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-                // it doesn't need to have a start or end
-                var eventObject = {
-                    title: $.trim($(this).text()) // use the element's text as the event title
-                }
-
-                // store the Event Object in the DOM element so we can get to it later
-                $(this).data('eventObject', eventObject)
-
-                // make the event draggable using jQuery UI
-                $(this).draggable({
-                    zIndex: 1070,
-                    revert: true, // will cause the event to go back to its
-                    revertDuration: 0 //  original position after the drag
+            if (selected_date < now ){
+                Swal.fire({
+                icon: 'warning',
+                title: 'TRY AGAIN ',
+                text: 'YOU CLICKED A PAST DATE!',
                 })
-            })
-        }
+            }else{
+                var add_selected_date = date.format('YYYY/MM/DD')
+                $('#add_start_date').val(add_selected_date);
 
-        init_events($('#external-events div.external-event'))
+                $('#add_end_date').datepicker({
+                    changeMonth: true,
+                    dateFormat: "yy/mm/dd",
+                    autoclose: true,
+                    minDate: add_selected_date
+                })
 
-        /* initialize the calendar
-         -----------------------------------------------------------------*/
-        //Date for the calendar events (dummy data)
-        var date = new Date()
-        var d = date.getDate(),
-            m = date.getMonth(),
-            y = date.getFullYear()
-        $('#calendar').fullCalendar({
-            header: {
-                left: 'prev,next',
-                center: 'title',
-                right: 'today'
-            },
-            buttonText: {
-                today: 'today',
-            },
-            //Random default events
-            calendar_events,
-            editable: true,
-            droppable: true, // this allows things to be dropped onto the calendar !!!
-            drop: function(date, allDay) { // this function is called when something is dropped
+                // /* ADDING EVENTS */
+                // var currColor = '#3c8dbc' //Red by default
+                //         //Color chooser button
+                //         var colorChooser = $('#color-chooser-btn')
+                //         $('#color-chooser > li > a').click(function (e) {
+                //         e.preventDefault()
+                //         //Save color
+                //         currColor = $(this).css('color')
+                //         //Add color effect to button
+                //         $('#add_calendar_event').css({ 'background-color': currColor, 'border-color': currColor })
+                //         })
+                //         $('#add_calendar_event').click(function (e) {
+                //         e.preventDefault()
+                //         //Get value and make sure it is not null
+                //         var val = $('#add_calendar_event').val()
+                //         if (val.length == 0) {
+                //             return
+                //         }
 
-                // retrieve the dropped element's stored Event Object
-                var originalEventObject = $(this).data('eventObject')
+                //         //Create events
+                //         var event = $('<div />')
+                //         event.css({
+                //             'background-color': currColor,
+                //             'border-color'    : currColor,
+                //             'color'           : '#fff'
+                //         }).addClass('external-event')
+                //         event.html(val)
+                //         $('#external-events').prepend(event)
 
-                // we need to copy it, so that multiple events don't have a reference to the same object
-                var copiedEventObject = $.extend({}, originalEventObject)
+                //         //Add draggable funtionality
+                //         init_events(event)
 
-                // assign it the date that was reported
-                copiedEventObject.start = date
-                copiedEventObject.allDay = allDay
-                copiedEventObject.backgroundColor = $(this).css('background-color')
-                copiedEventObject.borderColor = $(this).css('border-color')
-
-                // render the event on the calendar
-                // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-                $('#calendar').fullCalendar('renderEvent', copiedEventObject, true)
-
-                // is the "remove after drop" checkbox checked?
-                if ($('#drop-remove').is(':checked')) {
-                    // if so, remove the element from the "Draggable Events" list
-                    $(this).remove()
-                }
+                //         //Remove event from text input
+                //         $('#new-event').val('')
+                //         })
+                
+                $('#addModal').modal(
+                        $('#add_calendar_event').click(function(e){
+                            var valid = this.form.checkValidity();
+                            if(valid){
+                                Swal.fire(
+                                'Good job!',
+                                'You clicked the button!',
+                                'success'
+                                )
+                            }else{
+                                
+                            }
+                        })
+                );
 
             }
-        })
 
-        /* ADDING EVENTS */
-        var currColor = '#3c8dbc' //Red by default
-        //Color chooser button
-        var colorChooser = $('#color-chooser-btn')
-        $('#color-chooser > li > a').click(function(e) {
-            e.preventDefault()
-            //Save color
-            currColor = $(this).css('color')
-            //Add color effect to button
-            $('#add-new-event').css({
-                'background-color': currColor,
-                'border-color': currColor
-            })
-        })
-
-        $('#add-new-event').click(function(e) {
-            e.preventDefault()
-            //Get value and make sure it is not null
-            var inputtitle = $('#new-event').val()
-            var inputstart = $("#start_date").val();
-            var inputend = $("#end_date").val();
-            // if (title.length == 0 || start.length == 0 || end.length == 0) {
-            //     return
-            // }
-
-            $.post('<?= base_url() ?>Admin/create_event', {
-                    title: inputtitle,
-                    start: inputstart,
-                    end: inputend
-                }).done(function(data) {
-                    swal(data);
+           
+            
+        },
+        eventClick: function(event, jsEvent, view) {
+    
+            var now = new Date();
+            var dateFormat = "yy/mm/dd",
+                from = $( "#start_date" )
+                    .datepicker({
+                        dateFormat: "yy/mm/dd",
+                        defaultDate: "+1w",
+                        changeMonth: true,
+                        minDate: now
+                    })
+                    .on( "change", function() {
+                        to.datepicker( "option", "minDate", getDate( this ) );
+                    }),
+                to = $( "#end_date" ).datepicker({
+                    dateFormat: "yy/mm/dd",
+                    defaultDate: "+1w",
+                    changeMonth: true,
+                    minDate: now
                 })
-                .fail(function() {
-                    swal("failed!");
+                .on( "change", function() {
+                    from.datepicker( "option", "maxDate", getDate( this ) );
                 });
 
-            // //Create events
-            // var event = $('<div />')
-            // event.css({
-            //     'background-color': currColor,
-            //     'border-color': currColor,
-            //     'color': '#fff'
-            // }).addClass('external-event')
-            // event.html(val)
-            // $('#external-events').prepend(event)
+            function getDate( element ) {
+                var date;
+                try {
+                    date = $.datepicker.parseDate( dateFormat, element.value );
+                } catch( error ) {
+                    date = null;
+                }
 
-            // //Add draggable funtionality
-            // init_events(event)
+                return date;
+            }
+    
 
-            //Remove event from text input
-            $('#new-event').val('')
-        })
 
-        $('#start_date,#end_date').datepicker({
-            autoclose: true
-        })
+
+            $('#editname').val(event.title);
+            $('#editdescription').val(event.description);
+            $('#start_date').val(moment(event.start).format('YYYY/MM/DD'));
+            if(event.end) {
+                $('#end_date').val(moment(event.end).format('YYYY/MM/DD'));
+            }else {
+                $('#end_date').val(moment(event.start).format('YYYY/MM/DD'));
+            }
+            $('#event_id').val(event.id);
+            
+
+          $('#editModal').modal(
+            $('#edit_calendar_event').click(function(e){
+                            var valid = this.form.checkValidity();
+                            if(valid){
+                                Swal.fire(
+                                'Updated!',
+                                'Details succesfully updated!',
+                                'success'
+                                )
+                            }else{
+                                
+                            }
+                        })
+          );
+       },
+    });
     });
 </script>
 
