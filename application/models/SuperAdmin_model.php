@@ -1364,47 +1364,69 @@ class SuperAdmin_model extends CI_Model
     {
         $message = "";
 
-        $start = date('h:i:s', strtotime($data['class_start_time']));
-        $end = date('h:i:s', strtotime($data['class_end_time']));
+        $start = $data['class_start_time'];
+        $end = $data['class_end_time'];
         $class_room = $data['class_room'];
         $class_day = $data['class_day'];
+        $class_sched = $data['class_sched'];
 
-        $q2 = $this->db->get_where('class_schedule_tbl', array(
-            'class_room' => $class_room,
-            'class_day' => $class_day,
-        ));
+        $schedule = array(
+            'class_room' => $data['class_room'],
+            'class_day' => $data['class_day'],
+            'class_start_time' => $data['class_start_time'],
+            'class_end_time' => $data['class_end_time'],
+            'class_sched' => $data['class_sched']
+        );
+
+        // $q2 = $this->db->get_where('class_schedule_tbl', array(
+        //     'class_room' => $class_room,
+        //     'class_day' => $class_day,
+        // ));
+
+        $q2 = $this->db->get_where('class_schedule_tbl');
+
+        // $q2 = $this->db->get_where('class_schedule_tbl');
+
         $results = $q2->result();
-
+        // $current_class_scheds = $q3->result();
         if ($start < $end) {
-            foreach ($results as $result) {
-                if (($start == date('h:i:s', strtotime($result->class_start_time)) && $end == date('h:i:s', strtotime($result->class_end_time))) && ($class_room == $result->class_room && $class_day == $result->class_day)) {
-                    $message .= '
-                            <div class="alert alert-warning alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                <h4><i class="icon fa fa-warning"></i>Warning!</h4>
-                                <p>Schedule already exists!</p>
-                            </div>
-                            ';
-                }
 
-                if (($start < date('h:i:s', strtotime($result->class_start_time)) && $end < date('h:i:s', strtotime($result->class_start_time)))
-                    &&
-                    ($start < date('h:i:s', strtotime($result->class_end_time)) && $end < date('h:i:s', strtotime($result->class_end_time)))
-                    ||
-                    ($start > date('h:i:s', strtotime($result->class_start_time)) && $end > date('h:i:s', strtotime($result->class_start_time)))
-                    &&
-                    ($start > date('h:i:s', strtotime($result->class_end_time)) && $end > date('h:i:s', strtotime($result->class_end_time)))
-                ) {
+            foreach ($results as $result) {
+                if ($class_day == $result->class_day) {
+                    if (($start <= date('H:i', strtotime($result->class_start_time)) && $end <= date('H:i', strtotime($result->class_start_time)))
+                        &&
+                        ($start <= date('H:i', strtotime($result->class_end_time)) && $end <= date('H:i', strtotime($result->class_end_time)))
+                        ||
+                        ($start >= date('H:i', strtotime($result->class_start_time)) && $end >= date('H:i', strtotime($result->class_start_time)))
+                        &&
+                        ($start >= date('H:i', strtotime($result->class_end_time)) && $end >= date('H:i', strtotime($result->class_end_time)))
+                    ) {
+                    } else {
+                        $message = '
+                        <div class="alert alert-warning alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+                            <p>Conflict Schedule</p>
+                        </div>
+                        ';
+                    }
                 } else {
-                    $message .= '
-                <div class="alert alert-warning alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    <h4><i class="icon fa fa-warning"></i>Warning!</h4>
-                    <p>Conflict Schedule</p>
-                </div>
-                ';
                 }
             }
+
+            // foreach ($current_class_scheds as $current_class_sched) {
+
+            //     if () {
+            //     } else {
+            //         $message = '
+            //     <div class="alert alert-warning alert-dismissible">
+            //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            //         <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            //         <p>Conflict Schedule</p>
+            //     </div>
+            //     ';
+            //     }
+            // }
         } else {
             $message .= '
                 <div class="alert alert-warning alert-dismissible">
@@ -1416,7 +1438,7 @@ class SuperAdmin_model extends CI_Model
         }
 
         foreach ($results as $result) {
-            if (($start == date('h:i:s', strtotime($result->class_start_time)) && $end == date('h:i:s', strtotime($result->class_end_time))) && ($class_room == $result->class_room && $class_day == $result->class_day)) {
+            if (($start == date('H:i', strtotime($result->class_start_time)) && $end == date('H:i', strtotime($result->class_end_time))) && ($class_room == $result->class_room && $class_day == $result->class_day)) {
                 $message = '
                         <div class="alert alert-warning alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -1427,10 +1449,8 @@ class SuperAdmin_model extends CI_Model
             }
         }
 
-
-
         if ($message == "") {
-            $this->db->insert('class_schedule_tbl', $data);
+            $this->db->insert('class_schedule_tbl', $schedule);
             $message .= '
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>

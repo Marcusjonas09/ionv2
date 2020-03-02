@@ -88,7 +88,7 @@
                             <?php foreach ($class_scheds as $class_sched) : ?>
                                 <tr>
                                     <td><?= $class_sched->class_day ?></td>
-                                    <td><?= $class_sched->class_start_time . ' - ' . $class_sched->class_end_time ?></td>
+                                    <td><?= date('h:i A', strtotime($class_sched->class_start_time)) . ' - ' . date('h:i A', strtotime($class_sched->class_end_time)) ?></td>
                                     <td><?= $class_sched->class_room ?></td>
                                 </tr>
                             <?php endforeach; ?>

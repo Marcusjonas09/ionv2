@@ -30,6 +30,29 @@ class Admin extends CI_Controller
 		$this->load->helper('text');
 	}
 
+	public function update($tablename, $data)
+	{
+		$cols = array_keys($data);
+		$vals = array_values($data);
+		$data = "";
+
+		for ($i = 0; $i < count($cols); $i++) {
+			$data .= $cols[$i] . "=`" . $vals[$i] . "` ,";
+		}
+		$query = "UPDATE `" . $tablename . "` SET " . substr($data, 0, -1);
+		return $query;
+	}
+
+	public function sample()
+	{
+
+		$data = array(
+			"sample" => "sample",
+			"aw" => "aw"
+		);
+		print_r($this->update("sample_tbl", $data));
+	}
+
 	public function index()
 	{
 		$error['error'] = "";

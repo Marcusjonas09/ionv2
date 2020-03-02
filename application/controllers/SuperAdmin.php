@@ -446,6 +446,7 @@ class SuperAdmin extends CI_Controller
 
     public function add_sched()
     {
+
         $this->form_validation->set_rules('class_day', 'class day', 'required|strip_tags');
         $this->form_validation->set_rules('class_room', 'class day', 'required|strip_tags');
         $this->form_validation->set_rules('class_start_time', 'class day', 'required|strip_tags');
@@ -455,11 +456,13 @@ class SuperAdmin extends CI_Controller
 
         $class_sched = array(
             'class_day' => $this->input->post('class_day'),
-            'class_start_time' => $this->input->post('class_start_time'),
-            'class_end_time' => $this->input->post('class_end_time'),
+            'class_start_time' => date('H:i', strtotime($this->input->post('class_start_time'))),
+            'class_end_time' => date('H:i', strtotime($this->input->post('class_end_time'))),
             'class_room' => $this->input->post('class_room'),
             'class_sched' => $this->input->post('class_sched')
         );
+
+
 
         if ($this->form_validation->run() == FALSE) {
             $this->edit_class($id);
