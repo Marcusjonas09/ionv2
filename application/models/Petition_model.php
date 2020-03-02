@@ -8,6 +8,12 @@ class Petition_model extends CI_Model
     // ADMIN FUNCTIONS
     // =======================================================================================
 
+    public function add_petition_to_offering($petition_ID)
+    {
+        $q = $this->db->get_where('petitions_tbl', $petition_ID);
+        $petition = $q->row();
+    }
+
     public function fetchPetitionsAdmin($per_page, $end_page)
     {
         $this->db->limit($per_page, $end_page);

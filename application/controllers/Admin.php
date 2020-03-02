@@ -349,7 +349,7 @@ class Admin extends CI_Controller
 	// CALENDAR MODULE
 	// =======================================================================================
 
-	
+
 
 	public function academic_calendar($success = null, $error = null) // | Display Academic Calendar |
 	{
@@ -440,7 +440,7 @@ class Admin extends CI_Controller
 		$eventid = intval($this->input->post("eventid"));
 		$event = $this->Calendar_model->get_event($eventid);
 		if ($event->num_rows() == 0) {
-			echo('Invalid');
+			echo ('Invalid');
 			exit();
 		}
 		$event->row();
@@ -1020,6 +1020,7 @@ class Admin extends CI_Controller
 			$link = base_url() . "Student/petitionView/" . $petitionID . "/" . $petition_unique;
 			$this->send_notifications($recipients, $notif_message, $link);
 			$this->Petition_model->approve_petition($petition_unique);
+			$this->Petition_model->add_petition_to_offering($petitionID);
 		} else {
 			$message['message'] = 'Insufficient number of petitioners!';
 			$message['context'] = 'failed';
