@@ -32,9 +32,9 @@ if ($this->session->access == 'admin') {
       <!-- CSS -->
       <!-- Bootstrap time Picker -->
       <link rel="stylesheet" href="<?= base_url() ?>plugins/timepicker/bootstrap-timepicker.min.css">
-
       <!-- fullCalendar -->
       <link rel="stylesheet" href="<?= base_url() ?>bower_components/fullcalendar/dist/fullcalendar.min.css">
+      <link rel="stylesheet" href="<?= base_url() ?>bower_components/fullcalendar/dist/fullcalendar.min.js">
       <link rel="stylesheet" href="<?= base_url() ?>bower_components/fullcalendar/dist/fullcalendar.print.min.css" media="print">
       <!-- daterange picker -->
       <link rel="stylesheet" href="<?= base_url() ?>bower_components/bootstrap-daterangepicker/daterangepicker.css">
@@ -50,13 +50,18 @@ if ($this->session->access == 'admin') {
       <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
       <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
       <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
 
       <!-- Google Font -->
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
+      <link rel="stylesheet" href="<?= base_url() ?>folder/jquery-ui.css">
+	<link rel="stylesheet" href="<?= base_url() ?>folder/style.css">
+	<script src="<?= base_url() ?>folder/jquery-1.12.4.js.download"></script>
+      <script src="<?= base_url() ?>folder/jquery-ui.js.download"></script>
+      
       <style>
             a.navi:link {
                   color: black;

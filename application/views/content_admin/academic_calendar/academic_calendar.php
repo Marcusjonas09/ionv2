@@ -1,5 +1,5 @@
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
@@ -9,72 +9,11 @@
     </section>
 
     <!-- Main content -->
-    <section class="content container-fluid">
-      <div class="row">
-        <div class="col-md-3">
-
-          <div class="box box-solid">
-            <div class="box-header with-border">
-              <h3 class="box-title">Create Event</h3>
-            </div>
-            <div class="box-body">
-              <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
-                <!--<button type="button" id="color-chooser-btn" class="btn btn-info btn-block dropdown-toggle" data-toggle="dropdown">Color <span class="caret"></span></button>-->
-                <ul class="fc-color-picker" id="color-chooser">
-                  <li><a class="text-aqua" href="#"><i class="fa fa-square"></i></a></li>
-                  <li><a class="text-blue" href="#"><i class="fa fa-square"></i></a></li>
-                  <li><a class="text-light-blue" href="#"><i class="fa fa-square"></i></a></li>
-                  <li><a class="text-teal" href="#"><i class="fa fa-square"></i></a></li>
-                  <li><a class="text-yellow" href="#"><i class="fa fa-square"></i></a></li>
-                  <li><a class="text-orange" href="#"><i class="fa fa-square"></i></a></li>
-                  <li><a class="text-green" href="#"><i class="fa fa-square"></i></a></li>
-                  <li><a class="text-lime" href="#"><i class="fa fa-square"></i></a></li>
-                  <li><a class="text-red" href="#"><i class="fa fa-square"></i></a></li>
-                  <li><a class="text-purple" href="#"><i class="fa fa-square"></i></a></li>
-                  <li><a class="text-fuchsia" href="#"><i class="fa fa-square"></i></a></li>
-                  <li><a class="text-muted" href="#"><i class="fa fa-square"></i></a></li>
-                  <li><a class="text-navy" href="#"><i class="fa fa-square"></i></a></li>
-                </ul>
-              </div>
-
-              <div class="form-group">
-
-
-                <div class="input-group">
-                  <label>Event Title:</label>
-                  <input id="new-event" type="text" class="form-control" placeholder="Event Title">
-                </div>
-
-                <label>Start Date:</label>
-
-                <div class="input-group date">
-                  <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  <input id="start_date" type="text" class="form-control pull-right" id="datepicker">
-                </div>
-                <!-- /.input group -->
-
-                <label>End Date:</label>
-
-                <div class="input-group date">
-                  <div class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                  </div>
-                  <input id="end_date" type="text" class="form-control pull-right" id="datepicker">
-                </div>
-                <!-- /.input group -->
-
-              </div>
-              <!-- /.form group -->
-              <button id="add-new-event" type="button" class="btn btn-primary btn-flat col-md-12">Add</button>
-              <!-- /.input group -->
-
-            </div>
-          </div>
-        </div>
-        <!-- /.col -->
-        <div class="col-md-9">
+  <section class="content container-fluid">
+    <!-- /.col -->
+    <div class="col-md-12">
+        <!-- THE CALENDAR -->
+        <div class="col-md-8">
           <div class="box box-solid">
             <div class="box-body no-padding">
               <!-- THE CALENDAR -->
@@ -85,9 +24,164 @@
           <!-- /. box -->
         </div>
         <!-- /.col -->
-      </div>
-      <!-- /.row -->
-    </section>
-    <!-- /.content -->
+
+
+        <div class="col-md-4">
+          <div class="box box-solid">
+            <div class="box-body no-padding">
+              <!-- THE CALENDAR -->
+              <h1>All Events</h1>
+            <table class="table table-hover">
+              <tr>
+                <th>Event</th>
+                <th>Description</th>
+                <th>Start</th>
+                <th>End</th>
+              </tr>
+
+              <?php foreach ($events as $event) : ?>
+                <tr>
+                  <td><?= $event->title ?></td>
+                  <td><?= $event->description ?></td>
+                  <td><?= $event->start ?></td>
+                  <td><?= $event->end ?></td>
+                </tr>
+              <?php endforeach ?>
+            </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /. box -->
+        </div>
+        <!-- /.col -->
+
+          
+ 
+    </div>
+    <!-- /.col -->
+  </section>
+  <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add Calendar Event</h4>
+      </div>
+      <div class="modal-body">
+      <?php echo form_open(site_url("Admin/add_event"), array("class" => "form-horizontal")) ?>
+      <div class="form-group">
+                <label for="p-in" class="col-md-4 label-heading">Event Name</label>
+                <div class="col-md-8 ui-front">
+                    <input required type="text" class="form-control" name="name" id="name">
+                </div>
+        </div>
+        <div class="form-group">
+                <label for="p-in" class="col-md-4 label-heading">Description</label>
+                <div class="col-md-8 ui-front">
+                    <input type="text" class="form-control" name="description" id="description">
+                </div>
+        </div>
+        <div class="form-group">
+                <label for="p-in" class="col-md-4 label-heading">Start Date</label>
+                <div class="col-md-8">
+                    <input required type="text" class="form-control" name="start_date" id="add_start_date" readonly >
+                </div>
+        </div>
+        <div class="form-group">
+                <label for="p-in" class="col-md-4 label-heading">End Date</label>
+                <div class="col-md-8">
+                    <input required type="text" class="form-control" name="end_date" id="add_end_date">
+                </div>
+        </div>
+
+        <!-- <div class="form-group">
+                <label for="p-in" class="col-md-4 label-heading">Color</label>
+                <div class="col-md-8">
+                    <ul class="fc-color-picker" id="color-chooser">
+                        <li><a class="text-aqua" href="#"><i class="fa fa-square"></i></a></li>
+                        <li><a class="text-blue" href="#"><i class="fa fa-square"></i></a></li>
+                        <li><a class="text-light-blue" href="#"><i class="fa fa-square"></i></a></li>
+                        <li><a class="text-teal" href="#"><i class="fa fa-square"></i></a></li>
+                        <li><a class="text-yellow" href="#"><i class="fa fa-square"></i></a></li>
+                        <li><a class="text-orange" href="#"><i class="fa fa-square"></i></a></li>
+                        <li><a class="text-green" href="#"><i class="fa fa-square"></i></a></li>
+                        <li><a class="text-lime" href="#"><i class="fa fa-square"></i></a></li>
+                        <li><a class="text-red" href="#"><i class="fa fa-square"></i></a></li>
+                        <li><a class="text-purple" href="#"><i class="fa fa-square"></i></a></li>
+                        <li><a class="text-fuchsia" href="#"><i class="fa fa-square"></i></a></li>
+                        <li><a class="text-muted" href="#"><i class="fa fa-square"></i></a></li>
+                        <li><a class="text-navy" href="#"><i class="fa fa-square"></i></a></li>
+                    </ul>
+                </div>
+        </div> -->
+        
+        
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+        <input type="submit" class="btn btn-primary" value="Add Event" id="add_calendar_event">
+        <?php echo form_close() ?>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Update Calendar Event</h4>
+      </div>
+      <div class="modal-body">
+      <?php echo form_open(site_url("Admin/edit_event"), array("class" => "form-horizontal")) ?>
+
+
+        <!-- <textarea id="myTextarea" rows="5" cols="60" placeholder="Type something here..."></textarea> -->
+
+      <div class="output"></div>
+      <div class="form-group">
+                <label for="p-in" class="col-md-4 label-heading">Event Name</label>
+                <div class="col-md-8 ui-front">
+                    <input type="text" class="form-control" name="name"  id="editname" required>
+                </div>
+        </div>
+        <div class="form-group">
+                <label for="p-in" class="col-md-4 label-heading">Description</label>
+                <div class="col-md-8 ui-front">
+                    <input type="text" class="form-control" name="description" id="editdescription">
+                </div>
+        </div>
+        <div class="form-group">
+                <label for="p-in" class="col-md-4 label-heading">Start Date</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" name="start_date" id="start_date" required readonly> 
+                </div>
+        </div>
+        <div class="form-group">
+                <label for="p-in" class="col-md-4 label-heading">End Date</label>
+                <div class="col-md-8">
+                    <input required type="text" class="form-control" name="end_date" id="end_date" readonly>
+                </div>
+        </div>
+        <div class="form-group">
+                    <label for="p-in" class="col-md-4 label-heading">Delete Event</label>
+                    <div class="col-md-8">
+                        <input type="checkbox" name="delete" value="1">
+                    </div>
+            </div>
+            <input type="hidden" name="eventid" id="event_id" value="0" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="submit" class="btn btn-primary" value="Update Event" id="edit_calendar_event">
+        <?php echo form_close() ?>
+      </div>
+    </div>
+  </div>
+</div>

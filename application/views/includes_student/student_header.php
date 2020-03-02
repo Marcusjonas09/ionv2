@@ -56,6 +56,11 @@ if ($this->session->access == 'admin') {
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
+  <link rel="stylesheet" href="<?= base_url() ?>folder/jquery-ui.css">
+	<link rel="stylesheet" href="<?= base_url() ?>folder/style.css">
+	<script src="<?= base_url() ?>folder/jquery-1.12.4.js.download"></script>
+  <script src="<?= base_url() ?>folder/jquery-ui.js.download"></script>
+
   <style>
     a.navi:link {
       color: black;
