@@ -29,11 +29,11 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label for="course_code">Course Code:</label>
-                                <input class="form-control" type="text" name="course_code" id="course_code" placeholder="Enter course code" required />
+                                <input class="form-control" type="text" name="course_code" id="course_code" placeholder="Enter course code" />
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="course_units">Units:</label>
-                                <input class="form-control" type="number" name="course_units" id="course_units" placeholder="Enter units" required />
+                                <input class="form-control" type="number" name="course_units" id="course_units" placeholder="Enter units" />
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Laboratory Code:</label>
@@ -48,7 +48,7 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="course_title">Course Title:</label>
-                                <input class="form-control" type="text" name="course_title" id="course_title" placeholder="Enter course title" required />
+                                <input class="form-control" type="text" name="course_title" id="course_title" placeholder="Enter course title" />
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="department_code">Department:</label>

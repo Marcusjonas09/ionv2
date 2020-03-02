@@ -9,7 +9,7 @@
 
     <!-- Main content -->
     <section class="content container-fluid">
-        <div class="container-fluid col-md-9" style="padding-right:0px;">
+        <div class="container-fluid col-md-9" style="padding:0px;">
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Student details</strong></h3>

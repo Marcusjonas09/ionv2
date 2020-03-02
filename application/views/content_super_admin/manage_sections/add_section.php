@@ -28,7 +28,7 @@
                     <div class="box-body">
                         <div class="form-group col-md-4">
                             <label for="curr_code">Code:</label>
-                            <input class="form-control" type="text" name="section_code" id="section_code" placeholder="Enter code" required />
+                            <input class="form-control" type="text" name="section_code" id="section_code" placeholder="Enter code" />
                         </div>
                     </div>
                     <div class="box-footer">
@@ -37,7 +37,7 @@
                 </div>
             </form>
         </div>
-        <div class="container-fluid col-md-3">
+        <div class="container-fluid col-md-3" style="padding-right:0px;">
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Insert Multiple Entry</strong></h3>

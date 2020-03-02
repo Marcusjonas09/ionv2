@@ -23,7 +23,7 @@
                 <?php echo $success_msg; ?>
             </div>
         <?php endif; ?>
-        <div class="container-fluid col-md-8" style="padding-left:0px; padding-right:0px;">
+        <div class="container-fluid col-md-8" style="padding:0px;">
             <form action="<?= base_url() ?>SuperAdmin/edit_course_function" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
@@ -33,11 +33,11 @@
                         <div class="row">
                             <div class="form-group col-md-3">
                                 <label for="course_code">Course Code:</label>
-                                <input class="form-control" type="text" name="course_code" id="course_code" value="<?= $course->course_code ?>" placeholder="Enter course code" required />
+                                <input class="form-control" type="text" name="course_code" id="course_code" value="<?= $course->course_code ?>" placeholder="Enter course code" />
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="course_units">Units:</label>
-                                <input class="form-control" type="number" name="course_units" id="course_units" value="<?= $course->course_units ?>" placeholder="Enter units" required />
+                                <input class="form-control" type="number" name="course_units" id="course_units" value="<?= $course->course_units ?>" placeholder="Enter units" />
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Laboratory Code:</label>
@@ -51,9 +51,9 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-md-6" style="padding-left:0px; padding-right:0px;">>
+                            <div class="form-group col-md-6">
                                 <label for="course_title">Course Title:</label>
-                                <input class="form-control" type="text" name="course_title" id="course_title" value="<?= $course->course_title ?>" placeholder="Enter course title" required />
+                                <input class="form-control" type="text" name="course_title" id="course_title" value="<?= $course->course_title ?>" placeholder="Enter course title" />
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="department_code">Department:</label>
@@ -114,7 +114,7 @@
             </div>
         </div>
 
-        <div class="container-fluid col-md-4">
+        <div class="container-fluid col-md-4" style="padding-right:0px;">
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Add pre-requisite course</strong></h3>

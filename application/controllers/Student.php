@@ -7,7 +7,7 @@ class Student extends CI_Controller
 	{
 		parent::__construct();
 
-		date_default_timezone_set("Asia/Singapore");
+		date_default_timezone_set("Asia/Manila");
 		require 'vendor/autoload.php';
 
 		$this->load->library('form_validation');
@@ -95,11 +95,13 @@ class Student extends CI_Controller
 
 	public function dashboard()
 	{
+
+		// $this->dd($data);
 		$this->load->view('includes_student/student_header');
 		$this->load->view('includes_student/student_topnav');
 		$this->load->view('includes_student/student_sidebar');
 
-		$data['curr'] = $this->Dashboard_model->fetch_curriculum();
+		$data['curr'] = $this->Student_model->fetch_curriculum();
 		$data['grades'] = $this->Dashboard_model->fetchProgress();
 		$data['courses'] = $this->CourseCard_model->fetch_courses();
 		$data['offerings'] = $this->Dashboard_model->fetchOffering();
@@ -958,5 +960,13 @@ class Student extends CI_Controller
 	public function maintenance()
 	{
 		$this->load->view('maintenance_page');
+	}
+
+	public function dd($data)
+	{
+		echo "<pre>";
+		print_r($data);
+		echo "<pre>";
+		die();
 	}
 }

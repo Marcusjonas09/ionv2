@@ -1,7 +1,7 @@
 <?php
 if (!$this->session->login) {
       session_destroy();
-      redirect('Superadmin');
+      redirect('SuperAdmin');
 }
 if ($this->session->access == 'admin') {
       redirect('Admin/dashboard');
@@ -9,8 +9,15 @@ if ($this->session->access == 'admin') {
       redirect('Student/Dashboard');
 } else if ($this->session->access == 'superadmin') {
 } else {
-      redirect('Superadmin');
+      redirect('SuperAdmin');
 }
+
+// if ($this->session->access == 'student') {
+//       redirect('Student/Dashboard');
+// } else if ($this->session->access == 'superadmin' || $this->session->access == 'admin') {
+// } else {
+//       redirect('SuperAdmin');
+// }
 
 ?>
 

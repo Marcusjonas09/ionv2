@@ -8,7 +8,7 @@
     </section>
 
     <!-- Main content -->
-    <section class="content container-fluid" style="padding-left:0px; padding-right:0px;">
+    <section class="content container-fluid">
         <?php if (validation_errors()) : ?>
             <div class="alert alert-warning alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -23,7 +23,7 @@
                 <?php echo $success_msg; ?>
             </div>
         <?php endif; ?>
-        <div class="container-fluid col-md-9" style="padding-right:0px;">
+        <div class="container-fluid col-md-9" style="padding:0px;">
             <form action="<?= base_url() ?>SuperAdmin/edit_specialization_function" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
@@ -32,7 +32,7 @@
                     <div class="box-body">
                         <div class="form-group col-md-6">
                             <label for="curr_code">Code:</label>
-                            <input class="form-control" type="text" name="specialization_code" id="specialization_code" value="<?= $specialization->specialization_code ?>" placeholder="Enter code" required />
+                            <input class="form-control" type="text" name="specialization_code" id="specialization_code" value="<?= $specialization->specialization_code ?>" placeholder="Enter code" />
                         </div>
 
                         <div class="form-group col-md-6">
@@ -48,7 +48,7 @@
 
                         <div class="form-group col-md-12">
                             <label for="curr_code">Description:</label>
-                            <input class="form-control" type="text" name="specialization_description" id="specialization_description" value="<?= $specialization->specialization_description ?>" placeholder="Enter description" required />
+                            <input class="form-control" type="text" name="specialization_description" id="specialization_description" value="<?= $specialization->specialization_description ?>" placeholder="Enter description" />
                             <input type="hidden" name="specialization_id" value="<?= $specialization->specialization_id ?>">
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                 </div>
             </form>
         </div>
-        <div class="container-fluid col-md-3">
+        <div class="container-fluid col-md-3" style="padding-right:0px;">
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Insert Multiple Entry</strong></h3>

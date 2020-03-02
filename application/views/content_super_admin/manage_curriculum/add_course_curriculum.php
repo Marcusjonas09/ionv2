@@ -37,7 +37,7 @@
             <?php echo $message; ?>
         <?php endif; ?>
 
-        <div class="container-fluid col-md-9" style="padding-right:0px;">
+        <div class="container-fluid col-md-9" style="padding:0px;">
             <form action="<?= base_url() ?>SuperAdmin/add_course_to_curriculum" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
@@ -93,7 +93,7 @@
                 </div>
             </form>
         </div>
-        <div class="container-fluid col-md-3">
+        <div class="container-fluid col-md-3" style="padding-right:0px;">
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Insert Multiple Entry</strong></h3>
@@ -114,7 +114,7 @@
             </div>
         </div>
 
-        <div class="container-fluid col-md-12" style="padding-right:0px;">
+        <div class="container-fluid col-md-12" style="padding:0px;">
             <div class="box box-success">
                 <div class="box-header with-border">
                 </div>

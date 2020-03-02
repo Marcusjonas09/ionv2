@@ -8,7 +8,7 @@ class Courseflow extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Courseflow_model');
-        date_default_timezone_set("Asia/Singapore");
+        date_default_timezone_set("Asia/Manila");
     }
 
     public function suggest_what_to_petition()

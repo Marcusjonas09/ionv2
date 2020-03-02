@@ -232,6 +232,227 @@ class SuperAdmin_model extends CI_Model
     // =======================================================================================
 
     // =======================================================================================
+    // FACULTY
+    // =======================================================================================
+
+    public function fetch_all_faculty()
+    {
+        $this->db->select('*');
+        $this->db->where(array('acc_access_level' => 10));
+        $this->db->from('accounts_tbl');
+        $this->db->order_by('acc_lname', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function fetch_faculty_count()
+    {
+        $this->db->select('*');
+        $this->db->where(array('acc_access_level' => 2));
+        $this->db->from('accounts_tbl');
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    public function fetch_faculty($id)
+    {
+        $this->db->select('*');
+        $this->db->where(array('acc_id' => $id));
+        $this->db->from('accounts_tbl');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    // public function add_faculty_csv($data)
+    // {
+    //     if ($data['name']) {
+    //         $filename = explode(".", $data['name']);
+    //         if (end($filename) == "csv") {
+    //             $handle = fopen($data['tmp_name'], "r");
+    //             while ($data = fgetcsv($handle)) {
+    //                 $acc_number = strip_tags($data[0]);
+    //                 $acc_fname = strip_tags($data[1]);
+    //                 $acc_mname = strip_tags($data[2]);
+    //                 $acc_lname = strip_tags($data[0]);
+    //                 $acc_email = strip_tags($data[1]);
+    //                 $acc_program = strip_tags($data[2]);
+    //                 $acc_specialization = strip_tags($data[0]);
+    //                 $description = strip_tags($data[1]);
+    //                 $assigned_college = strip_tags($data[2]);
+    //                 $assigned_college = strip_tags($data[2]);
+    //                 $assigned_college = strip_tags($data[2]);
+    //                 $data = array(
+    //                     'acc_number' => $code,
+    //                     'program_description' => $description,
+    //                     'assigned_college' => $assigned_college
+    //                 );
+
+    //                 $this->db->insert('programs_tbl', $data);
+    //             }
+    //             fclose($handle);
+    //             $message = '
+    //     <div class="alert alert-success alert-dismissible">
+    //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //         <h4><i class="icon fa fa-warning"></i>Success!</h4>
+    //         <p>Import complete!</p>
+    //     </div>
+    //     ';
+    //         } else {
+    //             $message = '
+    //     <div class="alert alert-warning alert-dismissible">
+    //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //         <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+    //         <p>Please Select CSV File only</p>
+    //     </div>
+    //     ';
+    //         }
+    //     } else {
+    //         $message = '
+    //     <div class="alert alert-warning alert-dismissible">
+    //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    //         <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+    //         <p>Please Select File</p>
+    //     </div>
+    //     ';
+    //     }
+    //     return $message;
+    // }
+
+    public function create_faculty($faculty)
+    {
+        $this->db->insert('accounts_tbl', $faculty);
+    }
+
+    // public function edit_faculty($id, $content)
+    // {
+    //     $this->db->where('acc_number', $id);
+    //     $this->db->update('accounts_tbl', $content);
+    // }
+
+    // public function delete_program($id)
+    // {
+    //     $this->db->delete('programs_tbl', array('program_id' => $id));
+    // }
+
+    // =======================================================================================
+    // END OF FACULTY
+    // =======================================================================================
+
+    // =======================================================================================
+    // FINANCE
+    // =======================================================================================
+
+    public function fetch_all_finance()
+    {
+        $this->db->select('*');
+        $this->db->from('finance_tbl');
+        $this->db->order_by('finance_code', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function fetch_finance_count()
+    {
+        $this->db->select('*');
+        $this->db->from('finance_tbl');
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    public function fetch_finance($id)
+    {
+        $this->db->select('*');
+        $this->db->where(array('finance_id' => $id));
+        $this->db->from('finance_tbl');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function add_finance_csv($data)
+    {
+        if ($data['name']) {
+            $filename = explode(".", $data['name']);
+            if (end($filename) == "csv") {
+                $handle = fopen($data['tmp_name'], "r");
+                $line_errors = 0;
+                $records_imported = 0;
+                while ($data = fgetcsv($handle)) {
+                    if (count($data) == 2) {
+                        $code = (!empty(strip_tags($data[0])) ? strip_tags($data[0]) : "");
+                        $description = (!empty(strip_tags($data[1])) ? strip_tags($data[1]) : "");
+
+                        $data = array(
+                            'finance_code' => $code,
+                            'finance_description' => $description
+                        );
+
+                        $this->db->insert('finance_tbl', $data);
+                        $records_imported++;
+                    } else {
+                        $line_errors++;
+                    }
+                }
+                fclose($handle);
+                if ($line_errors > 0) {
+                    $message = '
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Error!</h4>
+                        <p>' . $line_errors . ' records were not imported!</p>
+                    </div>
+                    ';
+                } else {
+                    $message = '
+                    <div class="alert alert-success alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Success!</h4>
+                        <p>Import complete!</p>
+                        <p>' . $records_imported . ' records imported!</p>
+                    </div>
+                    ';
+                }
+            } else {
+                $message = '
+        <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Please Select CSV File only</p>
+        </div>
+        ';
+            }
+        } else {
+            $message = '
+        <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Please Select File</p>
+        </div>
+        ';
+        }
+        return $message;
+    }
+
+    public function create_finance($finance)
+    {
+        $this->db->insert('finance_tbl', $finance);
+    }
+
+    public function edit_finance($id, $content)
+    {
+        $this->db->where('finance_id', $id);
+        $this->db->update('finance_tbl', $content);
+    }
+
+    public function delete_finance($id)
+    {
+        $this->db->delete('finance_tbl', array('finance_id' => $id));
+    }
+
+    // =======================================================================================
+    // END OF FINANCE
+    // =======================================================================================
+
+    // =======================================================================================
     // DEPARTMENT
     // =======================================================================================
 
@@ -698,9 +919,10 @@ class SuperAdmin_model extends CI_Model
         $this->db->update('curriculum_code_tbl', $content);
     }
 
-    public function delete_curriculum($id)
+    public function delete_curriculum($curriculum_code)
     {
-        $this->db->delete('curriculum_code_tbl', array('curriculum_code_id' => $id));
+        $this->db->delete('curriculum_code_tbl', array('curriculum_code' => $curriculum_code));
+        $this->db->delete('curriculum_tbl', array('curriculum_code' => $curriculum_code));
     }
 
     public function delete_course_from_curriculum($id)
@@ -1123,32 +1345,145 @@ class SuperAdmin_model extends CI_Model
         return $query->result();
     }
 
+    // public function fetch_all_class_sched()
+    // {
+    //     $this->db->select('*');
+    //     $this->db->from('classes_tbl');
+    //     $this->db->join('class_schedule_tbl', 'class_schedule_tbl.class_sched = classes_tbl.class_sched', 'LEFT');
+    //     $query = $this->db->get();
+    //     return $query->result();
+    // }
+
     public function create_class($data)
     {
+
         $this->db->insert('classes_tbl', $data);
     }
 
-    public function save_sched($data)
+    public function add_sched($data)
     {
-        $this->db->insert('class_schedule_tbl', $data);
+        $message = "";
+
+        $start = date('h:i:s', strtotime($data['class_start_time']));
+        $end = date('h:i:s', strtotime($data['class_end_time']));
+        $class_room = $data['class_room'];
+        $class_day = $data['class_day'];
+
+        $q2 = $this->db->get_where('class_schedule_tbl', array(
+            'class_room' => $class_room,
+            'class_day' => $class_day,
+        ));
+        $results = $q2->result();
+
+        if ($start < $end) {
+            foreach ($results as $result) {
+                if (($start == date('h:i:s', strtotime($result->class_start_time)) && $end == date('h:i:s', strtotime($result->class_end_time))) && ($class_room == $result->class_room && $class_day == $result->class_day)) {
+                    $message .= '
+                            <div class="alert alert-warning alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+                                <p>Schedule already exists!</p>
+                            </div>
+                            ';
+                }
+
+                if (($start < date('h:i:s', strtotime($result->class_start_time)) && $end < date('h:i:s', strtotime($result->class_start_time)))
+                    &&
+                    ($start < date('h:i:s', strtotime($result->class_end_time)) && $end < date('h:i:s', strtotime($result->class_end_time)))
+                    ||
+                    ($start > date('h:i:s', strtotime($result->class_start_time)) && $end > date('h:i:s', strtotime($result->class_start_time)))
+                    &&
+                    ($start > date('h:i:s', strtotime($result->class_end_time)) && $end > date('h:i:s', strtotime($result->class_end_time)))
+                ) {
+                } else {
+                    $message .= '
+                <div class="alert alert-warning alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+                    <p>Conflict Schedule</p>
+                </div>
+                ';
+                }
+            }
+        } else {
+            $message .= '
+                <div class="alert alert-warning alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+                    <p>Start time cannot be greater than the end time!</p>
+                </div>
+                ';
+        }
+
+        foreach ($results as $result) {
+            if (($start == date('h:i:s', strtotime($result->class_start_time)) && $end == date('h:i:s', strtotime($result->class_end_time))) && ($class_room == $result->class_room && $class_day == $result->class_day)) {
+                $message = '
+                        <div class="alert alert-warning alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+                            <p>Schedule already exists!</p>
+                        </div>
+                        ';
+            }
+        }
+
+
+
+        if ($message == "") {
+            $this->db->insert('class_schedule_tbl', $data);
+            $message .= '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-check"></i>Success!</h4>
+            <p>Schedule successfully added!</p>
+        </div>
+        ';
+        }
+
+        return $message;
     }
 
-    // public function fetch_section_count()
-    // {
-    //     $this->db->select('*');
-    //     $this->db->from('sections_tbl');
-    //     $query = $this->db->get();
-    //     return $query->num_rows();
-    // }
+    public function fetch_class_count()
+    {
+        $this->db->select('*');
+        $this->db->from('classes_tbl');
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
 
-    // public function fetch_section($id)
-    // {
-    //     $this->db->select('*');
-    //     $this->db->where(array('section_id' => $id));
-    //     $this->db->from('sections_tbl');
-    //     $query = $this->db->get();
-    //     return $query->row();
-    // }
+    public function fetch_class($id)
+    {
+        $this->db->select('*');
+        $this->db->where(array('class_id' => $id));
+        $this->db->from('classes_tbl');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function edit_class($class_id, $class_data)
+    {
+        $this->db->set($class_data);
+        $this->db->where('class_id', $class_id);
+        $this->db->update('classes_tbl');
+    }
+
+    public function fetch_specific_class($class_sched)
+    {
+        $this->db->select('*');
+        $this->db->where(array('class_sched' => $class_sched));
+        $this->db->from('classes_tbl');
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    public function fetch_class_sched($class_sched)
+    {
+        $this->db->select('*');
+        $this->db->where(array('class_sched' => $class_sched));
+        $this->db->from('class_schedule_tbl');
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     // public function add_section_csv($data)
     // {
@@ -1223,13 +1558,44 @@ class SuperAdmin_model extends CI_Model
     //     $this->db->update('sections_tbl', $content);
     // }
 
-    // public function delete_section($id)
-    // {
-    //     $this->db->delete('sections_tbl', array('section_id' => $id));
-    // }
+    public function delete_class($id)
+    {
+        $this->db->delete('classes_tbl', array('class_id' => $id));
+    }
+
+    public function delete_sched($id)
+    {
+        $this->db->delete('class_schedule_tbl', array('cs_id' => $id));
+    }
 
     // =======================================================================================
     // END OF CLASSES
+    // =======================================================================================
+
+    // =======================================================================================
+    // SCHOOL YEAR
+    // =======================================================================================
+
+    public function fetch_all_sy()
+    {
+        $this->db->select('*');
+        $this->db->from('settings_tbl');
+        $this->db->order_by('settings_ID', 'DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function fetch_current_sy($id)
+    {
+        $this->db->select('*');
+        $this->db->where(array('settings_ID' => $id));
+        $this->db->from('settings_tbl');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    // =======================================================================================
+    // END OF SCHOOL YEAR
     // =======================================================================================
 
     // =======================================================================================
@@ -1325,6 +1691,8 @@ class SuperAdmin_model extends CI_Model
     // =======================================================================================
     // END OF STUDENT MANAGEMENT FUNCTIONS
     // =======================================================================================
+
+
 
     public function dd($data)
     {

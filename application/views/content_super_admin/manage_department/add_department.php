@@ -8,18 +8,18 @@
     </section>
 
     <!-- Main content -->
-    <section class="content container-fluid" style="padding-left:0px; padding-right:0px;">
+    <section class="content container-fluid">
         <?php if (validation_errors()) : ?>
             <div class="alert alert-warning alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h4><i class="icon fa fa-warning"></i> Alert!</h4>
+                <h4><i class="icon fa fa-warning"></i> Warning!</h4>
                 <?php echo validation_errors(); ?>
             </div>
         <?php endif; ?>
         <?php if (isset($message)) : ?>
             <?php echo $message; ?>
         <?php endif; ?>
-        <div class="container-fluid col-md-9" style="padding-right:0px;">
+        <div class="container-fluid col-md-9" style="padding:0px;">
             <form action="<?= base_url() ?>SuperAdmin/create_department" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
@@ -28,11 +28,11 @@
                     <div class="box-body">
                         <div class="form-group col-md-4">
                             <label for="curr_code">Code:</label>
-                            <input class="form-control" type="text" name="department_code" id="department_code" placeholder="Enter code" required />
+                            <input class="form-control" type="text" name="department_code" id="department_code" placeholder="Enter code" />
                         </div>
                         <div class="form-group col-md-4">
                             <label for="curr_code">Description:</label>
-                            <input class="form-control" type="text" name="department_description" id="department_description" placeholder="Enter description" required />
+                            <input class="form-control" type="text" name="department_description" id="department_description" placeholder="Enter description" />
                         </div>
                         <div class="form-group col-md-4">
                             <label for="curr_code">College:</label>
@@ -50,7 +50,7 @@
                 </div>
             </form>
         </div>
-        <div class="container-fluid col-md-3">
+        <div class="container-fluid col-md-3" style="padding-right:0px;">
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Insert Multiple Entry</strong></h3>

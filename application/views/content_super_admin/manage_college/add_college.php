@@ -12,7 +12,7 @@
         <?php if (validation_errors()) : ?>
             <div class="alert alert-warning alert-dismissible">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <h4><i class="icon fa fa-warning"></i> Alert!</h4>
+                <h4><i class="icon fa fa-warning"></i> Warning!</h4>
                 <?php echo validation_errors(); ?>
             </div>
         <?php endif; ?>
@@ -28,11 +28,11 @@
                     <div class="box-body">
                         <div class="form-group col-md-4">
                             <label for="curr_code">Code:</label>
-                            <input class="form-control" type="text" name="college_code" id="college_code" placeholder="Enter code" required />
+                            <input class="form-control" type="text" name="college_code" id="college_code" placeholder="Enter code" value="<?= set_value('college_code') ?>" />
                         </div>
                         <div class="form-group col-md-8">
                             <label for="curr_code">Description:</label>
-                            <input class="form-control" type="text" name="college_description" id="college_description" placeholder="Enter description" required />
+                            <input class="form-control" type="text" name="college_description" id="college_description" placeholder="Enter description" value="<?= set_value('college_description') ?>" />
                         </div>
                     </div>
                     <div class="box-footer">

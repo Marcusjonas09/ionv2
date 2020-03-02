@@ -19,7 +19,7 @@
         <?php if (isset($message)) : ?>
             <?php echo $message; ?>
         <?php endif; ?>
-        <div class="container-fluid col-md-9" style="padding-right:0px;">
+        <div class="container-fluid col-md-9" style="padding:0px;">
             <form action="<?= base_url() ?>SuperAdmin/create_curriculum" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
@@ -28,7 +28,7 @@
                     <div class="box-body">
                         <div class="form-group col-md-4">
                             <label for="curr_code">Code:</label>
-                            <input class="form-control" type="text" name="curriculum_code" id="curriculum_code" placeholder="Enter code" required />
+                            <input class="form-control" type="text" name="curriculum_code" id="curriculum_code" placeholder="Enter code" />
                         </div>
                         <div class="form-group col-md-6">
                             <label for="curr_code">Department:</label>
@@ -46,7 +46,7 @@
                 </div>
             </form>
         </div>
-        <div class="container-fluid col-md-3">
+        <div class="container-fluid col-md-3" style="padding-right:0px;">
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Insert Multiple Entry</strong></h3>

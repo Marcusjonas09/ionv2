@@ -3,7 +3,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            <strong><a class="navi" href="<?= base_url() ?>SuperAdmin/students"><span class="fa fa-chevron-left"></span>&nbsp&nbspBack</a></strong>
+            <strong><a class="navi" href="<?= base_url() ?>SuperAdmin/faculties"><span class="fa fa-chevron-left"></span>&nbsp&nbspBack</a></strong>
         </h1>
     </section>
 
@@ -19,19 +19,19 @@
         <?php if (isset($message)) : ?>
             <?php echo $message; ?>
         <?php endif; ?>
-        <div class="container-fluid col-md-9" style="padding:0px;">
-            <form action="<?= base_url() ?>SuperAdmin/create_student" method="post" enctype="multipart/form-data">
+        <div class="container-fluid col-md-9" style="padding-right:0px;">
+            <form action="<?= base_url() ?>SuperAdmin/create_faculty" method="post" enctype="multipart/form-data">
                 <div class="box box-success">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><strong>Add New Student</strong></h3>
+                        <h3 class="box-title"><strong>Add New Faculty</strong></h3>
                     </div>
                     <div class="box-body">
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group col-md-12">
-                                    <label for="curr_code">Student Number:</label>
-                                    <input class="form-control" type="number" name="acc_number" id="acc_number" placeholder="Enter student Number">
+                                    <label for="curr_code">Employee Number:</label>
+                                    <input class="form-control" type="number" name="acc_number" id="acc_number" placeholder="Enter faculty Number">
                                 </div>
                                 <div class="form-group col-md-12">
                                     <label for="curr_code">First Name:</label>
@@ -49,7 +49,7 @@
                                     <label for="curr_code">Citizenship:</label>
                                     <input class="form-control" type="text" name="acc_citizenship" id="acc_citizenship" placeholder="Enter citizenship">
                                     <input type="hidden" name="acc_status" value="1">
-                                    <input type="hidden" name="acc_access_level" value="3">
+                                    <input type="hidden" name="acc_access_level" value="2">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -63,8 +63,8 @@
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="curr_code">Program:</label>
+                                <div class="form-group col-md-12">
+                                    <label for="curr_code">Department:</label>
                                     <select class="form-control js-example-basic-single" name="acc_program" id="acc_program">
                                         <option value="">--</option>
                                         <?php foreach ($programs as $program) : ?>
@@ -73,25 +73,9 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-md-6">
-                                    <label for="curr_code">Specialization:</label>
-                                    <select class="form-control js-example-basic-single" name="acc_specialization" id="acc_specialization">
-                                        <option value="">--</option>
-                                        <?php foreach ($specs as $spec) : ?>
-                                            <option value="<?= $spec->specialization_code ?>"><?= $spec->specialization_code . ' - ' . $spec->specialization_description ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
 
-                                <div class="form-group col-md-12">
-                                    <label for="curr_code">Curriculum:</label>
-                                    <select class="form-control js-example-basic-single" name="curriculum_code" id="curriculum_code">
-                                        <option value="">--</option>
-                                        <?php foreach ($curricula as $curriculum) : ?>
-                                            <option value="<?= $curriculum->curriculum_code ?>"><?= $curriculum->curriculum_code ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
+
+
                             </div>
                         </div>
 
@@ -105,7 +89,7 @@
             </form>
         </div>
 
-        <div class="container-fluid col-md-3" style="padding-right:0px;">
+        <div class="container-fluid col-md-3">
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Insert Multiple Entry</strong></h3>

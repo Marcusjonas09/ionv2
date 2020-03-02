@@ -12,7 +12,7 @@ class SuperAdmin extends CI_Controller
         $this->load->library('form_validation');
         $this->load->helper('date');
         $this->load->helper('text');
-        date_default_timezone_set("Asia/Singapore");
+        date_default_timezone_set("Asia/Manila");
         require 'vendor/autoload.php';
     }
 
@@ -53,6 +53,22 @@ class SuperAdmin extends CI_Controller
             $error['error'] = "Invalid login credentials";
             $this->load->view('UserAuth/login-admin', $error);
         }
+
+        // if ($this->session->login) {
+        //     if ($this->session->acc_status) {
+        //         if ($this->session->access == 'superadmin' || $this->session->access == 'admin') {
+        //             redirect('SuperAdmin/school_parameters');
+        //         } else {
+        //             redirect('Admin');
+        //         }
+        //     } else {
+        //         $error['error'] = "Your Account has been blocked. Please contact your administrator for details";
+        //         $this->load->view('UserAuth/login-admin', $error);
+        //     }
+        // } else {
+        //     $error['error'] = "Invalid login credentials";
+        //     $this->load->view('UserAuth/login-admin', $error);
+        // }
     }
 
     public function logout()
@@ -272,6 +288,8 @@ class SuperAdmin extends CI_Controller
     public function classes()
     {
         $data['classes'] = $this->SuperAdmin_model->fetch_all_classes();
+        $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
+        // $this->dd($data);
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -288,6 +306,8 @@ class SuperAdmin extends CI_Controller
     {
         $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
         $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
+        $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
+        $data['message'] = $message;
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -300,65 +320,177 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
-    public function edit_class()
-    {
-        $this->load->view('includes_super_admin/superadmin_header');
-        $this->load->view('includes_super_admin/superadmin_topnav');
-        $this->load->view('includes_super_admin/superadmin_sidebar');
-
-        $this->load->view('content_super_admin/manage_class/edit_class');
-
-        $this->load->view('includes_super_admin/superadmin_contentFooter');
-        $this->load->view('includes_super_admin/superadmin_rightnav');
-        $this->load->view('includes_super_admin/superadmin_footer');
-    }
-
-    public function delete_class()
-    {
-        $this->load->view('includes_super_admin/superadmin_header');
-        $this->load->view('includes_super_admin/superadmin_topnav');
-        $this->load->view('includes_super_admin/superadmin_sidebar');
-
-        $this->load->view('content_super_admin/manage_class/delete_class');
-
-        $this->load->view('includes_super_admin/superadmin_contentFooter');
-        $this->load->view('includes_super_admin/superadmin_rightnav');
-        $this->load->view('includes_super_admin/superadmin_footer');
-    }
-
     public function create_class()
     {
-        $this->form_validation->set_rules('course_code', 'Course Code', 'required|strip_tags');
+        $this->form_validation->set_rules('class_code', 'Course Code', 'required|strip_tags');
         $this->form_validation->set_rules('section_code', 'Section Code', 'required|strip_tags');
         $this->form_validation->set_rules('faculty_id', 'Faculty assignment', 'required|strip_tags');
+        $this->form_validation->set_rules('class_capacity', 'Class capacity', 'required|strip_tags|trim');
 
         if ($this->form_validation->run() == FALSE) {
             $this->add_class();
         } else {
             $class = array(
-                'class_code' => $this->input->post('college_code'),
+                'class_code' => $this->input->post('class_code'),
                 'class_section' => $this->input->post('section_code'),
-                'class_faculty' => $this->input->post('faculty_id')
+                'class_faculty' => $this->input->post('faculty_id'),
+                'class_sched' => $this->input->post('class_code') . $this->input->post('section_code'),
+                'class_capacity' => $this->input->post('class_capacity')
             );
 
-            $this->SuperAdmin_model->create_class($class);
-            $this->add_class("Record successfully edited!");
+            if ($this->SuperAdmin_model->fetch_specific_class($class['class_sched']) > 0) {
+                $message = '
+                <div class="alert alert-warning alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+                    <p>Class already exists!</p>
+                </div>
+                ';
+            } else {
+                $this->SuperAdmin_model->create_class($class);
+                $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Success!</h4>
+            <p>Record successfully edited!</p>
+        </div>
+        ';
+            }
+
+            $this->add_class($message);
         }
 
         // $this->SuperAdmin_model->create_class($class_sched);
     }
 
-    public function save_sched()
+    public function edit_class($id, $message = null)
     {
-        $class_sched = array(
-            'class_code' => $_POST['class_sched']['course'],
-            'class_day' => $_POST['class_sched']['day'],
-            'class_start_time' => $_POST['class_sched']['start_time'],
-            'class_end_time' => $_POST['class_sched']['end_time'],
-            'faculty_id' => $_POST['class_sched']['faculty'],
-            'class_room' => $_POST['class_sched']['room']
+        $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
+        $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
+        $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
+        $data['class'] = $this->SuperAdmin_model->fetch_class($id);
+        $class_sched = $data['class']->class_code . $data['class']->class_section;
+        $data['class_scheds'] = $this->SuperAdmin_model->fetch_class_sched($class_sched);
+        $data['message'] = $message;
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_class/edit_class', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function edit_class_function()
+    {
+        $this->form_validation->set_rules('class_capacity', 'Class Capacity', 'required|strip_tags|trim|is_natural|less_than_equal_to[40]');
+
+        $class_id = $this->input->post('class_id');
+        $class_data = array(
+            'class_faculty' => $this->input->post('faculty_id'),
+            'class_capacity' => $this->input->post('class_capacity')
         );
-        $this->SuperAdmin_model->save_sched($class_sched);
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->edit_class($class_id);
+        } else {
+            $this->SuperAdmin_model->edit_class($class_id, $class_data);
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Success!</h4>
+            <p>Record successfully edited!</p>
+        </div>
+        ';
+            $this->edit_class($class_id, $message);
+        }
+    }
+
+    public function view_class($id, $message = null)
+    {
+        $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
+        $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
+        $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
+        $data['class'] = $this->SuperAdmin_model->fetch_class($id);
+        $data['message'] = $message;
+
+        $class_sched = $data['class']->class_code . $data['class']->class_section;
+        $data['class_scheds'] = $this->SuperAdmin_model->fetch_class_sched($class_sched);
+
+        // $this->dd($data['class_scheds']);
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_class/view_class', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function delete_class($id)
+    {
+
+        if (!$this->SuperAdmin_model->delete_class($id)) {
+            $this->SuperAdmin_model->delete_class($id);
+            $this->classes("Record successfully deleted!", null);
+        } else {
+            $this->classes(null, "Failed to delete Record!");
+        }
+    }
+
+    public function add_sched()
+    {
+        $this->form_validation->set_rules('class_day', 'class day', 'required|strip_tags');
+        $this->form_validation->set_rules('class_room', 'class day', 'required|strip_tags');
+        $this->form_validation->set_rules('class_start_time', 'class day', 'required|strip_tags');
+        $this->form_validation->set_rules('class_end_time', 'class day', 'required|strip_tags');
+
+        $id = $this->input->post('class_id');
+
+        $class_sched = array(
+            'class_day' => $this->input->post('class_day'),
+            'class_start_time' => $this->input->post('class_start_time'),
+            'class_end_time' => $this->input->post('class_end_time'),
+            'class_room' => $this->input->post('class_room'),
+            'class_sched' => $this->input->post('class_sched')
+        );
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->edit_class($id);
+        } else {
+            $message = $this->SuperAdmin_model->add_sched($class_sched);
+            $this->edit_class($id, $message);
+        }
+    }
+
+    public function delete_sched($class_id, $cs_id)
+    {
+        if (!$this->SuperAdmin_model->delete_sched($cs_id)) {
+            $this->SuperAdmin_model->delete_sched($cs_id);
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Success!</h4>
+            <p>Record successfully deleted!</p>
+        </div>
+        ';
+            $this->edit_class($class_id, $message);
+        } else {
+            $message = '
+        <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Failed to delete record!</p>
+        </div>
+        ';
+            $this->edit_class($class_id, $message);
+        }
     }
 
     // =======================================================================================
@@ -463,13 +595,9 @@ class SuperAdmin extends CI_Controller
 
     public function edit_college($id, $success_msg = null, $fail_msg = null)
     {
-        // $id = $this->input->post('college_id');
         $data['college'] = $this->SuperAdmin_model->fetch_college($id);
         $data['success_msg'] = $success_msg;
         $data['fail_msg'] = $fail_msg;
-
-        // print_r($data);
-        // die();
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -484,18 +612,25 @@ class SuperAdmin extends CI_Controller
 
     public function edit_college_function()
     {
+        $id = $this->input->post('college_id');
+        $college = $this->SuperAdmin_model->fetch_college($id);
+        $college_post = array(
+            'college_code' => $this->input->post('college_code'),
+            'college_description' => $this->input->post('college_description')
+        );
         $this->form_validation->set_rules('college_code', 'College Code', 'required|strip_tags');
         $this->form_validation->set_rules('college_description', 'College Description', 'required|strip_tags');
-        $id = $this->input->post('college_id');
+        if ($college->college_code != $college_post['college_code']) {
+            $this->form_validation->set_rules('college_code', 'College Code', 'required|strip_tags|is_unique[college_tbl.college_code]');
+        }
+        if ($college->college_description != $college_post['college_description']) {
+            $this->form_validation->set_rules('college_description', 'College Description', 'required|strip_tags|is_unique[college_tbl.college_description]');
+        }
+
         if ($this->form_validation->run() == FALSE) {
             $this->edit_college($id);
         } else {
-            $college = array(
-                'college_code' => $this->input->post('college_code'),
-                'college_description' => $this->input->post('college_description')
-            );
-
-            $this->SuperAdmin_model->edit_college($id, $college);
+            $this->SuperAdmin_model->edit_college($id, $college_post);
             $this->edit_college($id, "Record successfully edited!");
         }
     }
@@ -518,7 +653,12 @@ class SuperAdmin extends CI_Controller
 
     public function create_college()
     {
-        $this->form_validation->set_rules('college_code', 'College Code', 'required|strip_tags|is_unique[college_tbl.college_code]');
+        $this->form_validation->set_rules(
+            'college_code',
+            'College Code',
+            'required|strip_tags|is_unique[college_tbl.college_code]',
+            array('is_unique' => 'This college already exists!')
+        );
         $this->form_validation->set_rules('college_description', 'College Description', 'required|strip_tags');
 
         if ($this->form_validation->run() == FALSE) {
@@ -554,6 +694,302 @@ class SuperAdmin extends CI_Controller
 
     // =======================================================================================
     // END OF COLLEGE
+    // =======================================================================================
+
+    // =======================================================================================
+    // faculty
+    // =======================================================================================
+
+    public function faculties($success_msg = null, $fail_msg = null)
+    {
+        $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
+        // print_r($data);
+        // die();
+        $data['success_msg'] = $success_msg;
+        $data['fail_msg'] = $fail_msg;
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_faculty/all_faculties', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function add_faculty($message = null)
+    {
+        // $data['colleges'] = $this->SuperAdmin_model->fetch_all_college();
+        $data['programs'] = $this->SuperAdmin_model->fetch_all_program();
+        $data['colleges'] = $this->SuperAdmin_model->fetch_all_college();
+        $data['curricula'] = $this->SuperAdmin_model->fetch_all_curricula();
+        $data['specs'] = $this->SuperAdmin_model->fetch_all_specializations();
+        $data['message'] = $message;
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_faculty/add_faculty', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function edit_faculty($id, $success_msg = null, $fail_msg = null)
+    {
+        $data['departments'] = $this->SuperAdmin_model->fetch_all_department();
+        $data['faculty'] = $this->SuperAdmin_model->fetch_faculty($id);
+        $data['success_msg'] = $success_msg;
+        $data['fail_msg'] = $fail_msg;
+
+        // print_r($data);
+        // die();
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_faculty/edit_faculty', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function edit_faculty_function()
+    {
+        $this->form_validation->set_rules('acc_number', 'faculty Code', 'required|strip_tags');
+        $id = $this->input->post('program_id');
+        if ($this->form_validation->run() == FALSE) {
+            $this->edit_program($id);
+        } else {
+            $program = array(
+                'program_code' => $this->input->post('program_code'),
+                'program_description' => $this->input->post('program_description'),
+                'assigned_department' => $this->input->post('assigned_department')
+            );
+
+            $this->SuperAdmin_model->edit_program($id, $program);
+            $this->edit_program($id, "Record successfully edited!");
+        }
+    }
+
+    public function add_faculty_csv()
+    {
+        if (isset($_POST["import"])) {
+            $message = $this->SuperAdmin_model->add_faculty_csv($_FILES['csv_file']);
+        } else {
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Please select a file!</p>
+        </div>
+        ';
+        }
+        $this->add_faculty($message);
+    }
+
+    public function create_faculty()
+    {
+        // echo '<pre>';
+        // print_r($_POST);
+        // echo '</pre>';
+        // die();
+        $this->form_validation->set_rules('acc_number', 'Student number', 'required|strip_tags|is_unique[accounts_tbl.acc_number]');
+        $this->form_validation->set_rules('acc_fname', 'First Name', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_mname', 'Middle Name', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_lname', 'Last Name', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_program', 'Program designation', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_college', 'College designation', 'required|strip_tags');
+
+        $this->form_validation->set_rules('acc_citizenship', 'Citizenship', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_access_level', 'Access level', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_citizenship', 'Citizenship', 'required|strip_tags');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->add_faculty();
+        } else {
+            $program = array(
+                'acc_number' => $this->input->post('acc_number'),
+                'acc_fname' => $this->input->post('acc_fname'),
+                'acc_mname' => $this->input->post('acc_mname'),
+                'acc_lname' => $this->input->post('acc_lname'),
+                'acc_program' => $this->input->post('acc_program'),
+                'acc_college' => $this->input->post('acc_college'),
+                'acc_citizenship' => $this->input->post('acc_citizenship'),
+                'acc_status' => $this->input->post('acc_status'),
+                'acc_access_level' => $this->input->post('acc_access_level')
+            );
+
+            $this->SuperAdmin_model->create_faculty($program);
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Success!</h4>
+            <p>Record successfully added!</p>
+        </div>
+        ';
+            $this->add_faculty($message);
+        }
+    }
+
+    // public function delete_program($id)
+    // {
+
+    //     if (!$this->SuperAdmin_model->delete_program($id)) {
+    //         $this->SuperAdmin_model->delete_program($id);
+    //         $this->program("Record successfully deleted!", null);
+    //     } else {
+    //         $this->program(null, "Failed to delete Record!");
+    //     }
+    // }
+
+    // =======================================================================================
+    // END OF faculty
+    // =======================================================================================
+
+    // =======================================================================================
+    // FINANCE
+    // =======================================================================================
+
+    public function finances($success_msg = null, $fail_msg = null)
+    {
+        // $data['finances'] = $this->SuperAdmin_model->fetch_all_finance();
+        $data['school_years'] = $this->SuperAdmin_model->fetch_all_sy();
+        $data['success_msg'] = $success_msg;
+        $data['fail_msg'] = $fail_msg;
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_finance/all_finance', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function add_finance($message = null)
+    {
+        $data['message'] = $message;
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_finance/add_finance', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function edit_finance($id, $success_msg = null, $fail_msg = null)
+    {
+        $data['school_year'] = $this->SuperAdmin_model->fetch_current_sy($id);
+        // $this->dd($data);
+        // $data['finance'] = $this->SuperAdmin_model->fetch_finance($id);
+        $data['success_msg'] = $success_msg;
+        $data['fail_msg'] = $fail_msg;
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_finance/view_finance', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function edit_finance_function()
+    {
+        $id = $this->input->post('finance_id');
+        $finance = $this->SuperAdmin_model->fetch_finance($id);
+        $finance_post = array(
+            'finance_code' => $this->input->post('finance_code'),
+            'finance_value' => $this->input->post('finance_value')
+        );
+
+        $this->form_validation->set_rules('finance_code', 'Finance Code', 'required|strip_tags');
+
+        if ($finance->finance_code != $finance_post['finance_code']) {
+            $this->form_validation->set_rules('finance_code', 'Finance Code', 'required|strip_tags|is_unique[finance_tbl.finance_code]');
+        }
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->edit_finance($id);
+        } else {
+            $this->SuperAdmin_model->edit_finance($id, $finance_post);
+            $this->edit_finance($id, "Record successfully edited!");
+        }
+    }
+
+    public function add_finance_csv()
+    {
+        if (isset($_POST["import"])) {
+            $message = $this->SuperAdmin_model->add_finance_csv($_FILES['csv_file']);
+        } else {
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Please select a file!</p>
+        </div>
+        ';
+        }
+        $this->add_finance($message);
+    }
+
+    public function create_finance()
+    {
+        // $this->dd($_POST);
+        $this->form_validation->set_rules(
+            'finance_code',
+            'Finance Code',
+            'required|strip_tags|is_unique[finance_tbl.finance_code]',
+            array('is_unique' => 'This parameter already exists!')
+        );
+        $this->form_validation->set_rules('finance_value', 'Value', 'required|strip_tags|numeric');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->add_finance();
+        } else {
+            $finance = array(
+                'finance_code' => $this->input->post('finance_code'),
+                'finance_value' => round($this->input->post('finance_value'), 2)
+            );
+
+            $this->SuperAdmin_model->create_finance($finance);
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Success!</h4>
+            <p>Record successfully added!</p>
+        </div>
+        ';
+            $this->add_finance($message);
+        }
+    }
+
+    public function delete_finance($id)
+    {
+
+        if (!$this->SuperAdmin_model->delete_finance($id)) {
+            $this->SuperAdmin_model->delete_finance($id);
+            $this->finances("Record successfully deleted!", null);
+        } else {
+            $this->finances(null, "Failed to delete Record!");
+        }
+    }
+
+    // =======================================================================================
+    // END OF FINANCE
     // =======================================================================================
 
     // =======================================================================================
@@ -752,20 +1188,29 @@ class SuperAdmin extends CI_Controller
 
     public function edit_department_function()
     {
+        $id = $this->input->post('department_id');
+        $department = $this->SuperAdmin_model->fetch_department($id);
+        $department_post = array(
+            'department_code' => $this->input->post('department_code'),
+            'department_description' => $this->input->post('department_description'),
+            'assigned_college' => $this->input->post('assigned_college')
+        );
+
         $this->form_validation->set_rules('department_code', 'Department Code', 'required|strip_tags');
         $this->form_validation->set_rules('department_description', 'Department Description', 'required|strip_tags');
         $this->form_validation->set_rules('assigned_college', 'College assignment', 'required|strip_tags');
-        $id = $this->input->post('department_id');
+
+        if ($department->department_code != $department_post['department_code']) {
+            $this->form_validation->set_rules('department_code', 'Department Code', 'required|strip_tags|is_unique[department_tbl.department_code]');
+        }
+        if ($department->department_description != $department_post['department_description']) {
+            $this->form_validation->set_rules('department_description', 'Department description', 'required|strip_tags|is_unique[department_tbl.department_description]');
+        }
+
         if ($this->form_validation->run() == FALSE) {
             $this->edit_department($id);
         } else {
-            $department = array(
-                'department_code' => $this->input->post('department_code'),
-                'department_description' => $this->input->post('department_description'),
-                'assigned_college' => $this->input->post('assigned_college')
-            );
-
-            $this->SuperAdmin_model->edit_department($id, $department);
+            $this->SuperAdmin_model->edit_department($id, $department_post);
             $this->edit_department($id, "Record successfully edited!");
         }
     }
@@ -788,7 +1233,12 @@ class SuperAdmin extends CI_Controller
 
     public function create_department()
     {
-        $this->form_validation->set_rules('department_code', 'Department Code', 'required|strip_tags|is_unique[department_tbl.department_code]');
+        $this->form_validation->set_rules(
+            'department_code',
+            'Department Code',
+            'required|strip_tags|is_unique[department_tbl.department_code]',
+            array('is_unique' => 'This department already exists!')
+        );
         $this->form_validation->set_rules('department_description', 'Department Description', 'required|strip_tags');
         $this->form_validation->set_rules('assigned_college', 'College assignment', 'required|strip_tags');
 
@@ -944,7 +1394,6 @@ class SuperAdmin extends CI_Controller
 
     public function delete_specialization($id)
     {
-
         if (!$this->SuperAdmin_model->delete_specialization($id)) {
             $this->SuperAdmin_model->delete_specialization($id);
             $this->specialization("Record successfully deleted!", null);
@@ -1055,16 +1504,14 @@ class SuperAdmin extends CI_Controller
         $this->add_course_curriculum($_POST['curriculum_code'], null, null, $message);
     }
 
-    public function edit_curriculum($id, $success_msg = null, $fail_msg = null)
+    public function edit_curriculum($curriculum_code, $success_msg = null, $fail_msg = null)
     {
         // $id = $this->input->post('college_id');
-        $data['curriculum'] = $this->SuperAdmin_model->fetch_curriculum($id);
+        $data['curriculum'] = $this->SuperAdmin_model->fetch_curriculum($curriculum_code);
+
         $data['departments'] = $this->SuperAdmin_model->fetch_all_department();
         $data['success_msg'] = $success_msg;
         $data['fail_msg'] = $fail_msg;
-
-        // print_r($data);
-        // die();
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -1081,17 +1528,16 @@ class SuperAdmin extends CI_Controller
     {
         $this->form_validation->set_rules('curriculum_code', 'Curriculum Code', 'required|strip_tags');
         $this->form_validation->set_rules('assigned_department', 'Department assignment', 'required|strip_tags');
-        $id = $this->input->post('curriculum_code_id');
+        $curriculum_code = $this->input->post('curriculum_code');
         if ($this->form_validation->run() == FALSE) {
-            $this->edit_curriculum($id);
+            $this->edit_curriculum($curriculum_code);
         } else {
             $curriculum = array(
                 'curriculum_code' => $this->input->post('curriculum_code'),
                 'assigned_department' => $this->input->post('assigned_department')
             );
-
-            $this->SuperAdmin_model->edit_curriculum($id, $curriculum);
-            $this->edit_curriculum($id, "Record successfully edited!");
+            $this->SuperAdmin_model->edit_curriculum($curriculum_code, $curriculum);
+            $this->edit_curriculum($curriculum_code, "Record successfully edited!");
         }
     }
 
@@ -1130,11 +1576,11 @@ class SuperAdmin extends CI_Controller
         }
     }
 
-    public function delete_curriculum($id)
+    public function delete_curriculum($curriculum_code)
     {
 
-        if (!$this->SuperAdmin_model->delete_curriculum($id)) {
-            $this->SuperAdmin_model->delete_curriculum($id);
+        if (!$this->SuperAdmin_model->delete_curriculum($curriculum_code)) {
+            $this->SuperAdmin_model->delete_curriculum($curriculum_code);
             $this->curriculum("Record successfully deleted!", null);
         } else {
             $this->curriculum(null, "Failed to delete Record!");
@@ -1411,7 +1857,7 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_accounts/view_admin');
+        $this->load->view('content_super_admin/manage_admins/view_admin');
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
@@ -1424,7 +1870,7 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_accounts/create_admin');
+        $this->load->view('content_super_admin/manage_admins/create_admin');
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
@@ -1456,7 +1902,7 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_accounts/block_admin');
+        $this->load->view('content_super_admin/manage_admins/block_admin');
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
@@ -1469,7 +1915,7 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/manage_accounts/edit_admin');
+        $this->load->view('content_super_admin/manage_admins/edit_admin');
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
@@ -1519,7 +1965,6 @@ class SuperAdmin extends CI_Controller
 
     public function edit_course($id, $success_msg = null, $fail_msg = null)
     {
-        // $id = $this->input->post('college_id');
         $data['course'] = $this->SuperAdmin_model->fetch_course($id);
         $data['laboratories'] = $this->SuperAdmin_model->fetch_all_laboratories();
         $data['departments'] = $this->SuperAdmin_model->fetch_all_department();
@@ -1527,10 +1972,6 @@ class SuperAdmin extends CI_Controller
         $data['prereq_courses'] = $this->SuperAdmin_model->fetch_all_prereq_courses($data['course']->course_code);
         $data['success_msg'] = $success_msg;
         $data['fail_msg'] = $fail_msg;
-        // echo "<pre>";
-        // print_r($data);
-        // echo "</pre>";
-        // die();
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -1550,6 +1991,7 @@ class SuperAdmin extends CI_Controller
         $this->form_validation->set_rules('course_units', 'Course Units', 'required|strip_tags');
         $this->form_validation->set_rules('laboratory_code', 'Laboratory Code', 'required|strip_tags');
         $this->form_validation->set_rules('department_code', 'Department Designation', 'required|strip_tags');
+
         $id = $this->input->post('course_id');
         if ($this->form_validation->run() == FALSE) {
             $this->edit_course($id);
@@ -1936,6 +2378,7 @@ class SuperAdmin extends CI_Controller
         $data['section_count'] = $this->SuperAdmin_model->fetch_section_count();
         $data['curriculum_count'] = $this->SuperAdmin_model->fetch_curriculum_count();
         $data['student_count'] = $this->SuperAdmin_model->fetch_student_count();
+        $data['class_count'] = $this->SuperAdmin_model->fetch_class_count();
 
 
         $this->load->view('includes_super_admin/superadmin_header');

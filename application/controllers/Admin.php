@@ -8,7 +8,7 @@ class Admin extends CI_Controller
 		parent::__construct();
 
 		require 'vendor/autoload.php';
-		date_default_timezone_set("Asia/Singapore");
+		date_default_timezone_set("Asia/Manila");
 
 		$this->load->library('form_validation');
 
@@ -64,6 +64,22 @@ class Admin extends CI_Controller
 			$error['error'] = "Invalid login credentials";
 			$this->load->view('UserAuth/login-admin', $error);
 		}
+
+		// if ($this->session->login) {
+		// 	if ($this->session->acc_status) {
+		// 		if ($this->session->access == 'superadmin' || $this->session->access == 'admin') {
+		// 			redirect('SuperAdmin/school_parameters');
+		// 		} else {
+		// 			redirect('Admin');
+		// 		}
+		// 	} else {
+		// 		$error['error'] = "Your Account has been blocked. Please contact your administrator for details";
+		// 		$this->load->view('UserAuth/login-admin', $error);
+		// 	}
+		// } else {
+		// 	$error['error'] = "Invalid login credentials";
+		// 	$this->load->view('UserAuth/login-admin', $error);
+		// }
 	}
 
 	public function logout()

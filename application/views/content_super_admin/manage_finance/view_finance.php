@@ -3,7 +3,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            <strong><a class="navi" href="<?= base_url() ?>SuperAdmin/college"><span class="fa fa-chevron-left"></span>&nbsp&nbspBack</a></strong>
+            <strong><a class="navi" href="<?= base_url() ?>SuperAdmin/finances"><span class="fa fa-chevron-left"></span>&nbsp&nbspBack</a></strong>
         </h1>
     </section>
 
@@ -24,21 +24,10 @@
             </div>
         <?php endif; ?>
         <div class="container-fluid col-md-9" style="padding-left:0px; padding-right:0px;">
-            <form action="<?= base_url() ?>SuperAdmin/edit_college_function" method="post">
+            <form action="<?= base_url() ?>SuperAdmin/edit_finance_function" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><strong>Edit college</strong></h3>
-                    </div>
-                    <div class="box-body">
-                        <div class="form-group col-md-4">
-                            <label for="curr_code">Code:</label>
-                            <input class="form-control" type="text" name="college_code" id="college_code" value="<?= $college->college_code ?>" value="<?= set_value('college_code') ?>" />
-                        </div>
-                        <div class="form-group col-md-8">
-                            <label for="curr_code">Description:</label>
-                            <input class="form-control" type="text" name="college_description" id="college_description" value="<?= $college->college_description ?>" value="<?= set_value('college_description') ?>" />
-                            <input type="hidden" type="text" name="college_id" id="college_id" value="<?= $college->college_id ?>" />
-                        </div>
+                        <h3 class="box-title"><strong>Edit finance (SY: <?= $school_year->school_year . ' - Term: ' . $school_year->school_term ?>)</strong></h3>
                     </div>
                     <div class="box-footer">
                         <input class="btn btn-success pull-right" type="submit" value="Submit" />
