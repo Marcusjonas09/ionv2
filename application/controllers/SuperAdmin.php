@@ -154,6 +154,7 @@ class SuperAdmin extends CI_Controller
         $data['colleges'] = $this->SuperAdmin_model->fetch_all_college();
         $data['curricula'] = $this->SuperAdmin_model->fetch_all_curricula();
         $data['specs'] = $this->SuperAdmin_model->fetch_all_specializations();
+        $data['current_sy'] = $this->SuperAdmin_model->fetch_current();
         $data['message'] = $message;
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -223,10 +224,6 @@ class SuperAdmin extends CI_Controller
 
     public function create_student()
     {
-        // echo '<pre>';
-        // print_r($_POST);
-        // echo '</pre>';
-        // die();
         $this->form_validation->set_rules('acc_number', 'Student number', 'required|strip_tags|is_unique[accounts_tbl.acc_number]');
         $this->form_validation->set_rules('acc_fname', 'First Name', 'required|strip_tags');
         $this->form_validation->set_rules('acc_mname', 'Middle Name', 'required|strip_tags');
@@ -234,27 +231,31 @@ class SuperAdmin extends CI_Controller
         $this->form_validation->set_rules('acc_program', 'Program designation', 'required|strip_tags');
         $this->form_validation->set_rules('acc_college', 'College designation', 'required|strip_tags');
         $this->form_validation->set_rules('curriculum_code', 'Curriculum code', 'required|strip_tags');
-        $this->form_validation->set_rules('acc_citizenship', 'Citizenship', 'required|strip_tags');
+        $this->form_validation->set_rules('acc_specialization', 'Specialization', 'required|strip_tags');
         $this->form_validation->set_rules('acc_access_level', 'Access level', 'required|strip_tags');
         $this->form_validation->set_rules('acc_citizenship', 'Citizenship', 'required|strip_tags');
+        $data['current_sy'] = $this->SuperAdmin_model->fetch_current();
 
         if ($this->form_validation->run() == FALSE) {
             $this->add_student();
         } else {
-            $program = array(
-                'acc_number' => $this->input->post('acc_number'),
+            $student = array(
+                'acc_number' => substr($data['current_sy']->school_year, 0, 4) . $data['current_sy']->school_term . $this->input->post('acc_number'),
+                'acc_username' => substr($data['current_sy']->school_year, 0, 4) . $data['current_sy']->school_term . $this->input->post('acc_number'),
+                'acc_password' => sha1('itamaraw'),
                 'acc_fname' => $this->input->post('acc_fname'),
                 'acc_mname' => $this->input->post('acc_mname'),
                 'acc_lname' => $this->input->post('acc_lname'),
                 'acc_program' => $this->input->post('acc_program'),
                 'acc_college' => $this->input->post('acc_college'),
+                'acc_specialization' => $this->input->post('acc_specialization'),
                 'curriculum_code' => $this->input->post('curriculum_code'),
                 'acc_citizenship' => $this->input->post('acc_citizenship'),
                 'acc_status' => $this->input->post('acc_status'),
                 'acc_access_level' => $this->input->post('acc_access_level')
             );
 
-            $this->SuperAdmin_model->create_student($program);
+            $this->SuperAdmin_model->create_student($student);
             $message = '
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -446,6 +447,7 @@ class SuperAdmin extends CI_Controller
 
     public function add_sched()
     {
+
         $this->form_validation->set_rules('class_day', 'class day', 'required|strip_tags');
         $this->form_validation->set_rules('class_room', 'class day', 'required|strip_tags');
         $this->form_validation->set_rules('class_start_time', 'class day', 'required|strip_tags');
@@ -455,11 +457,13 @@ class SuperAdmin extends CI_Controller
 
         $class_sched = array(
             'class_day' => $this->input->post('class_day'),
-            'class_start_time' => $this->input->post('class_start_time'),
-            'class_end_time' => $this->input->post('class_end_time'),
+            'class_start_time' => date('H:i', strtotime($this->input->post('class_start_time'))),
+            'class_end_time' => date('H:i', strtotime($this->input->post('class_end_time'))),
             'class_room' => $this->input->post('class_room'),
             'class_sched' => $this->input->post('class_sched')
         );
+
+
 
         if ($this->form_validation->run() == FALSE) {
             $this->edit_class($id);
@@ -2367,7 +2371,7 @@ class SuperAdmin extends CI_Controller
     // SCHOOL PARAMETERS
     // =======================================================================================
 
-    public function school_parameters()
+    public function school_parameters($message = null)
     {
         $data['college_count'] = $this->SuperAdmin_model->fetch_college_count();
         $data['department_count'] = $this->SuperAdmin_model->fetch_department_count();
@@ -2380,6 +2384,9 @@ class SuperAdmin extends CI_Controller
         $data['student_count'] = $this->SuperAdmin_model->fetch_student_count();
         $data['class_count'] = $this->SuperAdmin_model->fetch_class_count();
 
+        $data['message'] = $message;
+
+        $data['current_sy'] = $this->SuperAdmin_model->fetch_current();
 
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -2390,6 +2397,24 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
         $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function change_sy()
+    {
+        $this->form_validation->set_rules('schoolyear', 'School Year', 'required|strip_tags');
+        $this->form_validation->set_rules('schoolterm', 'School Term', 'required|strip_tags');
+
+        $sy_details = array(
+            'school_year' => $this->input->post('schoolyear'),
+            'school_term' => $this->input->post('schoolterm')
+        );
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->school_parameters();
+        } else {
+            $message = $this->SuperAdmin_model->change_sy($sy_details);
+            $this->school_parameters($message);
+        }
     }
 
     // =======================================================================================

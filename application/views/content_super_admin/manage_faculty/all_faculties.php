@@ -20,11 +20,11 @@
                 <div class="box-body">
                     <table class="datatables table table-striped" data-page-length='10'>
                         <thead class="bg-success text-center" style="background-color:#00a65a; color:white;">
-                            <th class="text-center col-md-1">#</th>
-                            <th class="text-center col-md-2">Faculty No</th>
-                            <th class="text-center col-md-4">Full Name</th>
-                            <th class="text-center col-md-1">Department</th>
-                            <th class="text-center col-md-2">       </th>
+                            <th class="text-center" style="width:5%;">#</th>
+                            <th class="text-center" style="width:10%;">Faculty No</th>
+                            <th class="text-center col-md-3">Full Name</th>
+                            <th class="text-center col-md-2">College</th>
+                            <th class="text-center col-md-2">Department</th>
                             <th class="text-center col-md-2">Action</th>
                         </thead>
                         <tbody>
@@ -33,9 +33,9 @@
                                 <tr>
                                     <td class="text-center"><?= $i++ ?></td>
                                     <td class="text-center"><?= $faculty->acc_number ?></td>
-                                    <td><?= $faculty->acc_lname . ', ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?></td>
-                                    <td class="text-center"><?= $faculty->acc_program ?></td>
-                                    <td class="text-center">    </td>
+                                    <td class="text-center"><?= $faculty->acc_lname . ', ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?></td>
+                                    <td class="text-center"><?= $faculty->acc_college ?></td>
+                                    <td class="text-center"><?= strtoupper($faculty->acc_program) ?></td>
                                     <td class="text-center">
                                         <a href="<?= base_url() ?>SuperAdmin/edit_faculty/<?= $faculty->acc_id ?>" class="btn btn-primary"><i class="fa fa-eye"></i></a>
                                     </td>

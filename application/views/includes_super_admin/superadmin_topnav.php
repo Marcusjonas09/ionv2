@@ -28,10 +28,15 @@
 
           <!-- Menu Toggle Button -->
 
-          <a href="<?= base_url() ?>SuperAdmin/profile">
+          <!-- <a href="<?= base_url() ?>SuperAdmin/profile">
 
             <img src="<?= base_url() ?>dist/img/default_avatar.png" class="user-image" alt="User Image">
 
+            <span class="hidden-xs"><?= $this->session->Firstname . ' ' . $this->session->Lastname ?></span>
+          </a> -->
+
+          <a href="#">
+            <img src="<?= base_url() ?>dist/img/default_avatar.png" class="user-image" alt="User Image">
             <span class="hidden-xs"><?= $this->session->Firstname . ' ' . $this->session->Lastname ?></span>
           </a>
 
