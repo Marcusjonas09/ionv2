@@ -8,7 +8,7 @@
     </section>
 
     <!-- Main content -->
-    <section class="content container-fluid">
+    <section class="content container-fluid" style="padding-left:0px; padding-right:0px;">
         <div class="col-md-5">
             <div class="box box-success">
                 <!-- /.box-header -->
@@ -27,12 +27,12 @@
                                     <td><?= $balance->bal_year ?></td>
                                     <td>
                                         <?php if ($balance->bal_status == 0) {
-                                                echo "Not Registered";
-                                            } elseif ($balance->bal_status == 1) {
-                                                echo "Enrolled";
-                                            } else {
-                                                echo "Unknown";
-                                            } ?>
+                                            echo "Not Registered";
+                                        } elseif ($balance->bal_status == 1) {
+                                            echo "Enrolled";
+                                        } else {
+                                            echo "Unknown";
+                                        } ?>
                                     </td>
                                     <td><a href="<?= base_url() ?>Student/assessment/<?= $balance->bal_term ?>/<?= $balance->bal_year ?>" class="btn btn-warning btn-sm"><span class="fa fa-search"></span></a></td>
                                 </tr>
@@ -76,75 +76,77 @@
                             <td></td>
                             <td></td>
                         </tr>
-
-                        <tr>
-                            <td>Beginning Balance</td>
-                            <td>
-                                <?php if ($bal->bal_beginning >= 0) {
-                                    echo '(' . $bal->bal_beginning . ')';
-                                } else {
-                                    echo abs($bal->bal_beginning);
-                                }  ?>
-                            </td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Total Assessment</td>
-                            <td><?= $bal->bal_total_assessment ?></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>Payments</td>
-                        </tr>
-                        <?php if ($bal->bal_beginning > 0) : ?>
+                        <?php if (isset($bal)) : ?>
                             <tr>
-                                <td></td>
+                                <td>Beginning Balance</td>
                                 <td>
-                                    <?= '(' . $bal->bal_beginning . ')' ?>
+                                    <?php if ($bal->bal_beginning >= 0) {
+                                        echo '(' . $bal->bal_beginning . ')';
+                                    } else {
+                                        echo abs($bal->bal_beginning);
+                                    }  ?>
                                 </td>
-                                <td>Beginning Balance (Forwarded)</td>
+                                <td></td>
                             </tr>
-                        <?php endif; ?>
-
-                        <?php $totalpayment = 0.00; ?>
-
-                        <?php foreach ($payments as $payment) : ?>
-                            <?php if ($payment) : ?>
+                            <tr>
+                                <td>Total Assessment</td>
+                                <td><?= $bal->bal_total_assessment ?></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Payments</td>
+                            </tr>
+                            <?php if ($bal->bal_beginning > 0) : ?>
                                 <tr>
                                     <td></td>
-                                    <td><?= '(' . $payment->payment . ')' ?></td>
-                                    <td>OR# <?= $payment->or_number ?>
-                                        <?= date(' - Y-m-d', $payment->pay_date) ?>
-                                        <?php if ($payment->pay_type == 0) {
-                                                    echo "(elink)";
-                                                } else {
-                                                    echo "(cash)";
-                                                } ?>
+                                    <td>
+                                        <?= '(' . $bal->bal_beginning . ')' ?>
                                     </td>
+                                    <td>Beginning Balance (Forwarded)</td>
                                 </tr>
-                                <?php $totalpayment += $payment->payment; ?>
                             <?php endif; ?>
-                        <?php endforeach; ?>
-                        <tr style="background-color:#00a65a; color:white;">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <h4>Remaining Balance</h4>
-                            </td>
-                            <?php $remaining =  $bal->bal_total_assessment - $totalpayment - $bal->bal_beginning; ?>
-                            <?php  ?>
-                            <td><?php if ($remaining >= 0.00) {
-                                    $remaining = abs($remaining);
-                                    echo '<h4><strong>' . number_format((float) $remaining, 2, '.', '') . '</strong></h4>';
-                                } else {
-                                    $remaining = abs($remaining);
-                                    echo '<h4><strong>(' . number_format((float) $remaining, 2, '.', '') . ')</strong></h4>';
-                                } ?></td>
-                            <td></td>
-                        </tr>
+
+                            <?php $totalpayment = 0.00; ?>
+
+                            <?php foreach ($payments as $payment) : ?>
+                                <?php if ($payment) : ?>
+                                    <tr>
+                                        <td></td>
+                                        <td><?= '(' . $payment->payment . ')' ?></td>
+                                        <td>OR# <?= $payment->or_number ?>
+                                            <?= date(' - Y-m-d', $payment->pay_date) ?>
+                                            <?php if ($payment->pay_type == 0) {
+                                                echo "(elink)";
+                                            } else {
+                                                echo "(cash)";
+                                            } ?>
+                                        </td>
+                                    </tr>
+                                    <?php $totalpayment += $payment->payment; ?>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                            <tr style="background-color:#00a65a; color:white;">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h4>Remaining Balance</h4>
+                                </td>
+                                <?php $remaining =  $bal->bal_total_assessment - $totalpayment - $bal->bal_beginning; ?>
+                                <?php  ?>
+                                <td><?php if ($remaining >= 0.00) {
+                                        $remaining = abs($remaining);
+                                        echo '<h4><strong>' . number_format((float) $remaining, 2, '.', '') . '</strong></h4>';
+                                    } else {
+                                        $remaining = abs($remaining);
+                                        echo '<h4><strong>(' . number_format((float) $remaining, 2, '.', '') . ')</strong></h4>';
+                                    } ?></td>
+                                <td></td>
+                            </tr>
+
+                        <?php endif; ?>
                     </table>
                 </div>
                 <!-- /.box-body -->

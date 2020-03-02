@@ -165,6 +165,7 @@ class Petition_model extends CI_Model
             'stud_number' => $stud_number,
             'petition_unique' => $petition_unique,
         );
+
         $this->db->delete('petitioners_tbl', $petitioner);
 
         $this->db->select('petitioner_count');
@@ -172,9 +173,12 @@ class Petition_model extends CI_Model
         $this->db->where('petition_unique', $petition_unique);
         $query = $this->db->get();
         $current_count = $query->result();
-        $this->db->set('petitioner_count', $current_count[0]->petitioner_count - 1);
-        $this->db->where('petition_unique', $petition_unique);
-        $this->db->update('petitions_tbl');
+        if ($current_count[0]->petitioner_count > 0) {
+            $this->db->set('petitioner_count', $current_count[0]->petitioner_count - 1);
+            $this->db->where('petition_unique', $petition_unique);
+            $this->db->update('petitions_tbl');
+        }
+
         // return true;
     }
 

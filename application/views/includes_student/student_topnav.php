@@ -42,7 +42,6 @@
                     <a href="<?= base_url() ?>Student/profile">
 
                         <img src="<?= base_url() ?>dist/img/default_avatar.png" class="user-image" alt="User Image">
-
                         <span class="hidden-xs"><?= $this->session->Firstname . ' ' . $this->session->Lastname ?></span>
                     </a>
 

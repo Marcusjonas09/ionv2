@@ -31,7 +31,11 @@
                             <div class="col-md-6">
                                 <div class="form-group col-md-12">
                                     <label for="curr_code">Student Number:</label>
-                                    <input class="form-control" type="number" name="acc_number" id="acc_number" placeholder="Enter student Number">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><?= substr($current_sy->school_year, 0, 4) . $current_sy->school_term ?></span>
+                                        <input type="number" name="acc_number" class="form-control" placeholder="Student Number">
+                                    </div>
+                                    <!-- <input class="form-control" type="number" name="acc_number" id="acc_number" placeholder="Enter student Number"> -->
                                 </div>
                                 <div class="form-group col-md-12">
                                     <label for="curr_code">First Name:</label>

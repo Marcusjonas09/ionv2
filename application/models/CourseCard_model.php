@@ -15,7 +15,7 @@ class CourseCard_model extends CI_Model
 
     public function fetch_year()
     {
-        $this->db->distinct();  
+        $this->db->distinct();
         $this->db->select('cc_year');
         $this->db->where(array('course_card_tbl.cc_stud_number' => $this->session->acc_number));
         $this->db->order_by("cc_year", "desc");

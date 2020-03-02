@@ -267,42 +267,42 @@
 
 
 <script type="text/javascript">
-    var progress = "<?php echo $totalunitspassed / $totalunits; ?>";
-    var bar = new ProgressBar.Circle(container, {
-        color: '#1f5',
-        strokeWidth: 10,
-        trailWidth: 7,
-        easing: 'easeInOut',
-        duration: 2000,
-        text: {
-            autoStyleContainer: false
-        },
-        from: {
-            color: '#1f5',
-            width: 10
-        },
-        to: {
-            color: '#1f5',
-            width: 10
-        },
-        // Set default step function for all animate calls
-        step: function(state, circle) {
-            circle.path.setAttribute('stroke', state.color);
-            circle.path.setAttribute('stroke-width', state.width);
+    // var progress = "<?php echo $totalunitspassed / $totalunits; ?>";
+    // var bar = new ProgressBar.Circle(container, {
+    //     color: '#1f5',
+    //     strokeWidth: 10,
+    //     trailWidth: 7,
+    //     easing: 'easeInOut',
+    //     duration: 2000,
+    //     text: {
+    //         autoStyleContainer: false
+    //     },
+    //     from: {
+    //         color: '#1f5',
+    //         width: 10
+    //     },
+    //     to: {
+    //         color: '#1f5',
+    //         width: 10
+    //     },
+    //     // Set default step function for all animate calls
+    //     step: function(state, circle) {
+    //         circle.path.setAttribute('stroke', state.color);
+    //         circle.path.setAttribute('stroke-width', state.width);
 
-            var value = Math.round(circle.value() * 100);
-            if (value === 0) {
-                circle.setText('');
-            } else {
-                circle.setText(value + '%');
-            }
+    //         var value = Math.round(circle.value() * 100);
+    //         if (value === 0) {
+    //             circle.setText('');
+    //         } else {
+    //             circle.setText(value + '%');
+    //         }
 
-        }
-    });
-    bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
-    bar.text.style.fontSize = '2rem';
+    //     }
+    // });
+    // bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+    // bar.text.style.fontSize = '2rem';
 
-    bar.animate(progress); // Number from 0.0 to 1.0
+    // bar.animate(progress); // Number from 0.0 to 1.0
 
 
 

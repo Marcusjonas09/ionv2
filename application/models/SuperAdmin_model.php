@@ -1614,6 +1614,28 @@ class SuperAdmin_model extends CI_Model
         return $query->row();
     }
 
+    public function fetch_current()
+    {
+        $this->db->select('*');
+        $this->db->from('settings_tbl');
+        $this->db->order_by('settings_ID', 'DESC');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function change_sy($sy_details)
+    {
+        $this->db->insert('settings_tbl', $sy_details);
+        $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Success!</h4>
+            <p>Record successfully added!</p>
+        </div>
+        ';
+        return $message;
+    }
+
     // =======================================================================================
     // END OF SCHOOL YEAR
     // =======================================================================================
