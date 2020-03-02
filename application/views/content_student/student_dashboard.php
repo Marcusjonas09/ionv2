@@ -94,16 +94,17 @@ $totalunitspassed = $coursepassed + $labpassed;
                         <tr>
                             <td><strong>Name: </strong><?= $this->session->Lastname . ', ' . $this->session->Firstname . ' ' . $this->session->Middlename ?></td>
                             <td><strong>Year Level: </strong><?php if ($totalunitspassed >= 3 && $totalunitspassed <= 56) {
-                                                                        echo "1";
-                                                                    } else if ($totalunitspassed >= 57 && $totalunitspassed <= 116) {
-                                                                        echo "2";
-                                                                    } else if ($totalunitspassed >= 117 && $totalunitspassed <= 173) {
-                                                                        echo "3";
-                                                                    } else if ($totalunitspassed >= 174 && $totalunitspassed <= ($totalunits - 18)) {
-                                                                        echo "4";
-                                                                    } else if (($totalunits - $totalunitspassed) <= 18) {
-                                                                        echo "GRADUATING";
-                                                                    } else { } ?></td>
+                                                                    echo "1";
+                                                                } else if ($totalunitspassed >= 57 && $totalunitspassed <= 116) {
+                                                                    echo "2";
+                                                                } else if ($totalunitspassed >= 117 && $totalunitspassed <= 173) {
+                                                                    echo "3";
+                                                                } else if ($totalunitspassed >= 174 && $totalunitspassed <= ($totalunits - 18)) {
+                                                                    echo "4";
+                                                                } else if (($totalunits - $totalunitspassed) <= 18) {
+                                                                    echo "GRADUATING";
+                                                                } else {
+                                                                } ?></td>
                         </tr>
                     </table>
                     <table class="table">
@@ -118,30 +119,30 @@ $totalunitspassed = $coursepassed + $labpassed;
                         </tr>
                         <tbody>
                             <?php $total = 0;
-                                foreach ($cor as $record) : ?>
+                            foreach ($cor as $record) : ?>
                                 <?php if ($record->cc_status != "credited") : ?>
                                     <tr>
                                         <td><?= strtoupper($record->cc_course) ?></td>
                                         <td>
                                             <?php if (strtoupper($record->cc_course) == strtoupper($record->course_code)) {
-                                                            echo strtoupper($record->course_title);
-                                                        } else if (strtoupper($record->cc_course) == strtoupper($record->laboratory_code)) {
-                                                            echo strtoupper($record->laboratory_title);
-                                                        } else {
-                                                            echo '';
-                                                        } ?>
+                                                echo strtoupper($record->course_title);
+                                            } else if (strtoupper($record->cc_course) == strtoupper($record->laboratory_code)) {
+                                                echo strtoupper($record->laboratory_title);
+                                            } else {
+                                                echo '';
+                                            } ?>
                                         </td>
                                         <td><?= strtoupper($record->cc_section) ?></td>
                                         <td class="text-center">
                                             <?php if (strtoupper($record->cc_course) == strtoupper($record->course_code)) {
-                                                            echo strtoupper($record->course_units);
-                                                            $total += $record->course_units;
-                                                        } else if (strtoupper($record->cc_course) == strtoupper($record->laboratory_code)) {
-                                                            echo strtoupper($record->laboratory_units);
-                                                            $total += $record->laboratory_units;
-                                                        } else {
-                                                            echo '';
-                                                        } ?>
+                                                echo strtoupper($record->course_units);
+                                                $total += $record->course_units;
+                                            } else if (strtoupper($record->cc_course) == strtoupper($record->laboratory_code)) {
+                                                echo strtoupper($record->laboratory_units);
+                                                $total += $record->laboratory_units;
+                                            } else {
+                                                echo '';
+                                            } ?>
                                         </td>
                                         <?php foreach ($offerings as $offering) : ?>
                                             <?php if ($record->cc_course == $offering->offering_course_code && $record->cc_section == $offering->offering_course_section) : ?>

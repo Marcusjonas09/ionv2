@@ -107,6 +107,8 @@ class Student extends CI_Controller
 		$data['offerings'] = $this->Dashboard_model->fetchOffering();
 		$data['cor'] = $this->CourseCard_model->fetch_current_COR();
 
+
+
 		$this->load->view('content_student/student_dashboard', $data);
 
 		$this->load->view('includes_student/student_contentFooter');
