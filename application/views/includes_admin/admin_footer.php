@@ -249,90 +249,148 @@
         var petition_unique = $("#petition_unique").val();
 
         $("#approve_petition").click(function() {
-            $.post("<?= base_url() ?>Admin/approve_petition", {
-                    petitionID: petition_ID,
-                    petitionUnique: petition_unique
-                }).done(function(data) {
-                    var obj = JSON.parse(data);
-                    if (obj.context == "success") {
-                        swal(obj.message, {
-                            title: "Success",
-                            icon: "success",
-                        });
-                    } else {
-                        swal(obj.message, {
-                            title: "Error!",
-                            icon: "error",
-                        });
-                    }
+            // $.post("<?= base_url() ?>Admin/approve_petition", {
+            //         petitionID: petition_ID,
+            //         petitionUnique: petition_unique
+            //     }).done(function(data) {
+            //         var obj = JSON.parse(data);
+            //         if (obj.context == "success") {
+            //             Swal.fire(
+            //                 'Success!',
+            //                 obj.message,
+            //                 'success'
+            //             )
+            //         } else {
+            //             Swal.fire(
+            //                 'Error!',
+            //                 obj.message,
+            //                 'error'
+            //             )
+            //         }
 
-                    $.post("<?= base_url() ?>Admin/fetch_updated_petition_status", {
-                        petitionUnique: petition_unique
-                    }).done(function(data) {
-                        var obj = JSON.parse(data);
-                        $('#petition_status_badge').text('');
-                        if (obj.petition_status == 1) {
-                            $("#petition_status_badge").append("Petition Status: <span class='label label-success'>Approved</span>");
-                        } else if (obj.petition_status == 2) {
-                            $("#petition_status_badge").append("Petition Status: <span class='label label-warning'>Pending</span>");
-                        } else {
-                            $("#petition_status_badge").append("Petition Status: <span class='label label-danger'>Denied</span>");
-                        }
-                    });
-                })
-                .fail(function() {
-                    swal("Failed to process petition, Please check your network connection!", {
-                        icon: "error",
-                    });
-                });
-        });
+            //         $.post("<?= base_url() ?>Admin/fetch_updated_petition_status", {
+            //             petitionUnique: petition_unique
+            //         }).done(function(data) {
+            //             var obj = JSON.parse(data);
+            //             $('#petition_status_badge').text('');
+            //             if (obj.petition_status == 1) {
+            //                 $("#petition_status_badge").append("Petition Status: <span class='label label-success'>Approved</span>");
+            //             } else if (obj.petition_status == 2) {
+            //                 $("#petition_status_badge").append("Petition Status: <span class='label label-warning'>Pending</span>");
+            //             } else {
+            //                 $("#petition_status_badge").append("Petition Status: <span class='label label-danger'>Denied</span>");
+            //             }
+            //         });
+            //     })
+            //     .fail(function() {
+            //         swal("Failed to process petition, Please check your network connection!", {
+            //             icon: "error",
+            //         });
+            //     });
 
-        $("#decline_petition").click(function() {
-            swal({
-                    title: "Are you sure?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        $.post("<?= base_url() ?>Admin/decline_petition", {
-                                petitionID: petition_ID,
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    $.post("<?= base_url() ?>Admin/approve_petition", {
+                            petitionID: petition_ID,
+                            petitionUnique: petition_unique
+                        }).done(function(data) {
+                            var obj = JSON.parse(data);
+                            if (obj.context == "success") {
+                                Swal.fire(
+                                    'Success!',
+                                    obj.message,
+                                    'success'
+                                )
+                            } else {
+                                Swal.fire(
+                                    'Error!',
+                                    obj.message,
+                                    'error'
+                                )
+                            }
+                            $.post("<?= base_url() ?>Admin/fetch_updated_petition_status", {
                                 petitionUnique: petition_unique
                             }).done(function(data) {
                                 var obj = JSON.parse(data);
-                                if (obj.context == "success") {
-                                    swal(obj.message, {
-                                        title: "Success!",
-                                        icon: "success",
-                                    });
+                                $('#petition_status_badge').text('');
+                                if (obj.petition_status == 1) {
+                                    $("#petition_status_badge").append("Petition Status: <span class='label label-success'>Approved</span>");
+                                } else if (obj.petition_status == 2) {
+                                    $("#petition_status_badge").append("Petition Status: <span class='label label-warning'>Pending</span>");
                                 } else {
-                                    swal(obj.message, {
-                                        title: "Error!",
-                                        icon: "error",
-                                    });
+                                    $("#petition_status_badge").append("Petition Status: <span class='label label-danger'>Denied</span>");
                                 }
-                                $.post("<?= base_url() ?>Admin/fetch_updated_petition_status", {
-                                    petitionUnique: petition_unique
-                                }).done(function(data) {
-                                    var obj = JSON.parse(data);
-                                    $('#petition_status_badge').text('');
-                                    if (obj.petition_status == 1) {
-                                        $("#petition_status_badge").append("Petition Status: <span class='label label-success'>Approved</span>");
-                                    } else if (obj.petition_status == 2) {
-                                        $("#petition_status_badge").append("Petition Status: <span class='label label-warning'>Pending</span>");
-                                    } else {
-                                        $("#petition_status_badge").append("Petition Status: <span class='label label-danger'>Denied</span>");
-                                    }
-                                });
-                            })
-                            .fail(function() {
-                                swal("Failed to process petition, Please check your network connection!", {
-                                    icon: "error",
-                                });
                             });
-                    }
-                });
+                        })
+                        .fail(function() {
+                            Swal.fire(
+                                'Failed to process petition, Please check your network connection!',
+                                'error'
+                            )
+                        });
+                }
+            })
+        });
+
+        $("#decline_petition").click(function() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    $.post("<?= base_url() ?>Admin/decline_petition", {
+                            petitionID: petition_ID,
+                            petitionUnique: petition_unique
+                        }).done(function(data) {
+                            var obj = JSON.parse(data);
+                            if (obj.context == "success") {
+                                Swal.fire(
+                                    'Success!',
+                                    obj.message,
+                                    'success'
+                                )
+                            } else {
+                                Swal.fire(
+                                    'Error!',
+                                    obj.message,
+                                    'error'
+                                )
+                            }
+                            $.post("<?= base_url() ?>Admin/fetch_updated_petition_status", {
+                                petitionUnique: petition_unique
+                            }).done(function(data) {
+                                var obj = JSON.parse(data);
+                                $('#petition_status_badge').text('');
+                                if (obj.petition_status == 1) {
+                                    $("#petition_status_badge").append("Petition Status: <span class='label label-success'>Approved</span>");
+                                } else if (obj.petition_status == 2) {
+                                    $("#petition_status_badge").append("Petition Status: <span class='label label-warning'>Pending</span>");
+                                } else {
+                                    $("#petition_status_badge").append("Petition Status: <span class='label label-danger'>Denied</span>");
+                                }
+                            });
+                        })
+                        .fail(function() {
+                            Swal.fire(
+                                'Failed to process petition, Please check your network connection!',
+                                'error'
+                            )
+                        });
+                }
+            })
         });
 
         // =======================================================================================
