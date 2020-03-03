@@ -752,7 +752,7 @@ class Admin extends CI_Controller
 	{
 		$data['cor'] = $this->Overload_underload_model->fetch_course_card_admin($stud_number, $term, $year);
 		$data['student'] = $this->Overload_underload_model->fetch_user($stud_number);
-		$data['courses'] = $this->Overload_underload_model->fetch_courses();
+		// $data['courses'] = $this->Overload_underload_model->fetch_courses();
 		$data['offerings'] = $this->Overload_underload_model->fetchOffering();
 		$data['underload'] = $this->Overload_underload_model->fetch_underload($stud_number, $term, $year);
 
@@ -819,7 +819,7 @@ class Admin extends CI_Controller
 
 		$data['cor'] = $this->Overload_underload_model->fetch_course_card_admin($stud_number, $term, $year);
 		$data['student'] = $this->Overload_underload_model->fetch_user($stud_number);
-		$data['courses'] = $this->Overload_underload_model->fetch_courses();
+		// $data['courses'] = $this->Overload_underload_model->fetch_courses();
 		$data['offerings'] = $this->Overload_underload_model->fetchOffering();
 		$data['overload'] = $this->Overload_underload_model->fetch_overload($stud_number, $term, $year);
 
