@@ -479,6 +479,9 @@ class Student extends CI_Controller
 		$data['years'] = $this->Academics_model->fetch_year();
 		$data['terms'] = $this->Academics_model->fetch_term();
 		$data['offering'] = $this->Academics_model->fetchOffering($year, $term);
+		$data['classes'] = $this->Academics_model->fetchClass(20192020, 1);
+		// $this->dd($data['classes']);
+		// $data['sched'] = $this->Academics_model->fetchScheds($year, $term);
 		// $data['offeringSched'] = $this->Academics_model->fetchOfferingSched();
 
 		$this->load->view('content_student/student_course_offerings', $data);

@@ -52,7 +52,7 @@
                             <th class="text-center">TIME</th>
                         </thead>
                         <tbody>
-                            <?php foreach ($offering as $of) : ?>
+                            <!-- <?php foreach ($offering as $of) : ?>
                                 <tr class="<?php if ($of->offering_course_slot == 0) {
                                                 echo "bg-danger";
                                             } else {
@@ -63,6 +63,20 @@
                                     <td class="col-md-1"><?= $of->offering_course_slot ?></td>
                                     <td class="col-md-2"><?= $of->offering_course_day ?></td>
                                     <td class="col-md-7"><?= $of->offering_course_time ?></td>
+                                </tr>
+                            <?php endforeach; ?> -->
+
+                            <?php foreach ($classes as $class) : ?>
+                                <tr class="<?php if ($class['class_capacity'] == 0) {
+                                                echo "bg-danger";
+                                            } else {
+                                                echo "bg-default";
+                                            } ?>">
+                                    <td class="col-md-1"><?= $class['class_code'] ?></td>
+                                    <td class="col-md-1"><?= $class['class_section'] ?></td>
+                                    <td class="col-md-1"><?= $class['class_capacity'] ?></td>
+                                    <td class="col-md-2"><?= $class['sched_day'] ?></td>
+                                    <td class="col-md-7"><?= $class['sched_time'] ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

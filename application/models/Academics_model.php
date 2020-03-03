@@ -165,4 +165,72 @@ class Academics_model extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function fetchClass($year, $term)
+    {
+        $this->db->select('*');
+        $this->db->from('classes_tbl');
+        $this->db->where(array(
+            'school_year' => $year,
+            'school_term' => $term
+        ));
+        $query = $this->db->get();
+        $all_classes = $query->result();
+
+        $classes = array();
+        $day = "";
+        $time = "";
+        $room = "";
+        foreach ($all_classes as $class) {
+            $class_scheds = $this->fetchScheds($class->class_sched, $year, $term);
+            foreach ($class_scheds as $class_sched) {
+                $day .= $class_sched->class_day . '/';
+                $time .= $class_sched->class_start_time . ' - ' . $class_sched->class_start_time . '/';
+                $room .= $class_sched->class_room . '/';
+            }
+            array_push($classes, array(
+                'class_code' => $class->class_code,
+                'class_section' => $class->class_section,
+                'class_faculty' => $class->class_faculty,
+                'class_sched' => $class->class_sched,
+                'class_capacity' => $class->class_capacity,
+                'school_year' => $class->school_year,
+                'school_term' => $class->school_term,
+                'school_term' => $class->school_term,
+                'school_term' => $class->school_term,
+                'sched_day' => substr($day, 0, -1),
+                'sched_time' => substr($time, 0, -1),
+                'sched_room' => substr($room, 0, -1),
+            ));
+            $day = "";
+            $time = "";
+            $room = "";
+        }
+
+        return $classes;
+    }
+
+
+
+    public function fetchScheds($class_sched, $year, $term)
+    {
+        $this->db->select('*');
+        $this->db->from('class_schedule_tbl');
+        $this->db->where(array(
+            'class_sched' => $class_sched,
+            'school_year' => $year,
+            'school_term' => $term
+        ));
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function fetch_current()
+    {
+        $this->db->select('*');
+        $this->db->from('settings_tbl');
+        $this->db->order_by('settings_ID', 'DESC');
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
