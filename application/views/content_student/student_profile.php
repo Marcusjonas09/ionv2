@@ -195,7 +195,7 @@ $totalunitspassed = $coursepassed + $labpassed;
                                         </tr>
 
                                         <?php foreach ($curr as $cur) : ?>
-                                            <?php if ($cur->Year == $y && $cur->Term == $t) : ?>
+                                            <?php if ($cur->year == $y && $cur->term == $t) : ?>
                                                 <tr class="<?php foreach ($grades as $grade) {
                                                                 if ($grade->cc_course == $cur->course_code) {
                                                                     echo "bg-success";
@@ -207,7 +207,7 @@ $totalunitspassed = $coursepassed + $labpassed;
                                                     <td class="text-center"><?= $cur->course_units ?></td>
                                                     <td><?= $cur->laboratory_code ?></td>
                                                     <td class="text-center"><?= $cur->laboratory_units ?></td>
-                                                    <td><?= $cur->pr_requisite ?></td>
+                                                    <td></td>
                                                 </tr>
                                             <?php endif; ?>
 

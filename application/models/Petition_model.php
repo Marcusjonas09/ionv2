@@ -8,6 +8,12 @@ class Petition_model extends CI_Model
     // ADMIN FUNCTIONS
     // =======================================================================================
 
+    public function add_petition_to_offering($petition_ID)
+    {
+        $q = $this->db->get_where('petitions_tbl', $petition_ID);
+        $petition = $q->row();
+    }
+
     public function fetchPetitionsAdmin($per_page, $end_page)
     {
         $this->db->limit($per_page, $end_page);
@@ -40,7 +46,7 @@ class Petition_model extends CI_Model
 
     public function fetchCoursesAdmin()
     {
-        $query = $this->db->get('courses_tbl');
+        $query = $this->db->get('courses_tbl_v2');
         return $query->result();
     }
 
@@ -195,8 +201,8 @@ class Petition_model extends CI_Model
     public function fetchCourses()
     {
         $this->db->select('*');
-        $this->db->where(array('curriculum_code' => $this->session->Curriculum_code));
-        $this->db->from('courses_tbl');
+        // $this->db->where(array('curriculum_code' => $this->session->Curriculum_code));
+        $this->db->from('courses_tbl_v2');
         $query = $this->db->get();
         return $query->result();
     }

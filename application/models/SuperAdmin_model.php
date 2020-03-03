@@ -1356,7 +1356,6 @@ class SuperAdmin_model extends CI_Model
 
     public function create_class($data)
     {
-
         $this->db->insert('classes_tbl', $data);
     }
 
@@ -1375,7 +1374,9 @@ class SuperAdmin_model extends CI_Model
             'class_day' => $data['class_day'],
             'class_start_time' => $data['class_start_time'],
             'class_end_time' => $data['class_end_time'],
-            'class_sched' => $data['class_sched']
+            'class_sched' => $data['class_sched'],
+            'school_year' => $data['school_year'],
+            'school_term' => $data['school_term']
         );
 
         // $q2 = $this->db->get_where('class_schedule_tbl', array(
@@ -1580,6 +1581,10 @@ class SuperAdmin_model extends CI_Model
 
     public function delete_class($id)
     {
+        $class_sched = $this->fetch_class($id);
+        if (isset($class_sched)) {
+            $this->db->delete('class_schedule_tbl', array('class_sched' => $class_sched->class_sched));
+        }
         $this->db->delete('classes_tbl', array('class_id' => $id));
     }
 

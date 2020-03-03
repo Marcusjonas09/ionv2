@@ -25,7 +25,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 */
 // $config['base_url'] = 'http://192.168.137.1/ION/';
 $config['base_url'] = 'http://localhost/ION/';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3f08283e5f67e836811fd5ed85f974facaf04897
 // $config['base_url'] = 'http://192.168.137.1/ION/';
 
 /*

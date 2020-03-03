@@ -65,14 +65,14 @@
                                   </tr>
 
                                   <?php foreach ($curr as $cur) : ?>
-                                      <?php if ($cur->Year == $y && $cur->Term == $t) : ?>
+                                      <?php if ($cur->year == $y && $cur->term == $t) : ?>
                                           <tr>
                                               <td><?= $cur->course_code ?></td>
                                               <td><?= $cur->course_title ?></td>
                                               <td class="text-center"><?= $cur->course_units ?></td>
                                               <td><?= $cur->laboratory_code ?></td>
                                               <td class="text-center"><?= $cur->laboratory_units ?></td>
-                                              <td><?= $cur->pr_requisite ?></td>
+                                              <td></td>
                                           </tr>
                                       <?php endif; ?>
 

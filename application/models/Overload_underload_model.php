@@ -87,7 +87,7 @@ class Overload_underload_model extends CI_Model
             'course_card_tbl.cc_term' => $term
         ));
         $this->db->from('course_card_tbl');
-        $this->db->join('courses_tbl', 'course_card_tbl.cc_course = courses_tbl.course_code', 'LEFT');
+        $this->db->join('courses_tbl_v2', 'course_card_tbl.cc_course = courses_tbl_v2.course_code', 'LEFT');
         $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = course_card_tbl.cc_course', 'LEFT');
         $this->db->order_by('course_card_tbl.cc_course', 'ASC');
         $query = $this->db->get();
@@ -98,7 +98,7 @@ class Overload_underload_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->where(array('curriculum_code' => $this->session->Curriculum_code));
-        $this->db->from('courses_tbl');
+        $this->db->from('courses_tbl_v2');
         $query = $this->db->get();
         return $query->result();
     }

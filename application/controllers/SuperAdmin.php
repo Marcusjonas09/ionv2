@@ -331,12 +331,15 @@ class SuperAdmin extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->add_class();
         } else {
+            $current_sy = $this->SuperAdmin_model->fetch_current();
             $class = array(
                 'class_code' => $this->input->post('class_code'),
                 'class_section' => $this->input->post('section_code'),
                 'class_faculty' => $this->input->post('faculty_id'),
                 'class_sched' => $this->input->post('class_code') . $this->input->post('section_code'),
-                'class_capacity' => $this->input->post('class_capacity')
+                'class_capacity' => $this->input->post('class_capacity'),
+                'school_year' => $current_sy->school_year,
+                'school_term' => $current_sy->school_term
             );
 
             if ($this->SuperAdmin_model->fetch_specific_class($class['class_sched']) > 0) {
@@ -454,16 +457,17 @@ class SuperAdmin extends CI_Controller
         $this->form_validation->set_rules('class_end_time', 'class day', 'required|strip_tags');
 
         $id = $this->input->post('class_id');
+        $current_sy = $this->SuperAdmin_model->fetch_current();
 
         $class_sched = array(
             'class_day' => $this->input->post('class_day'),
             'class_start_time' => date('H:i', strtotime($this->input->post('class_start_time'))),
             'class_end_time' => date('H:i', strtotime($this->input->post('class_end_time'))),
             'class_room' => $this->input->post('class_room'),
-            'class_sched' => $this->input->post('class_sched')
+            'class_sched' => $this->input->post('class_sched'),
+            'school_year' => $current_sy->school_year,
+            'school_term' => $current_sy->school_term
         );
-
-
 
         if ($this->form_validation->run() == FALSE) {
             $this->edit_class($id);

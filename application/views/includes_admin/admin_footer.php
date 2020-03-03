@@ -16,7 +16,7 @@
 <script src="<?= base_url() ?>dist/js/adminlte.min.js"></script>
 <!-- Pusher JS -->
 <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <!-- Full Calendar JS -->
 <script src="<?= base_url() ?>bower_components/moment/moment.js"></script>
@@ -249,90 +249,148 @@
         var petition_unique = $("#petition_unique").val();
 
         $("#approve_petition").click(function() {
-            $.post("<?= base_url() ?>Admin/approve_petition", {
-                    petitionID: petition_ID,
-                    petitionUnique: petition_unique
-                }).done(function(data) {
-                    var obj = JSON.parse(data);
-                    if (obj.context == "success") {
-                        swal(obj.message, {
-                            title: "Success",
-                            icon: "success",
-                        });
-                    } else {
-                        swal(obj.message, {
-                            title: "Error!",
-                            icon: "error",
-                        });
-                    }
+            // $.post("<?= base_url() ?>Admin/approve_petition", {
+            //         petitionID: petition_ID,
+            //         petitionUnique: petition_unique
+            //     }).done(function(data) {
+            //         var obj = JSON.parse(data);
+            //         if (obj.context == "success") {
+            //             Swal.fire(
+            //                 'Success!',
+            //                 obj.message,
+            //                 'success'
+            //             )
+            //         } else {
+            //             Swal.fire(
+            //                 'Error!',
+            //                 obj.message,
+            //                 'error'
+            //             )
+            //         }
 
-                    $.post("<?= base_url() ?>Admin/fetch_updated_petition_status", {
-                        petitionUnique: petition_unique
-                    }).done(function(data) {
-                        var obj = JSON.parse(data);
-                        $('#petition_status_badge').text('');
-                        if (obj.petition_status == 1) {
-                            $("#petition_status_badge").append("Petition Status: <span class='label label-success'>Approved</span>");
-                        } else if (obj.petition_status == 2) {
-                            $("#petition_status_badge").append("Petition Status: <span class='label label-warning'>Pending</span>");
-                        } else {
-                            $("#petition_status_badge").append("Petition Status: <span class='label label-danger'>Denied</span>");
-                        }
-                    });
-                })
-                .fail(function() {
-                    swal("Failed to process petition, Please check your network connection!", {
-                        icon: "error",
-                    });
-                });
-        });
+            //         $.post("<?= base_url() ?>Admin/fetch_updated_petition_status", {
+            //             petitionUnique: petition_unique
+            //         }).done(function(data) {
+            //             var obj = JSON.parse(data);
+            //             $('#petition_status_badge').text('');
+            //             if (obj.petition_status == 1) {
+            //                 $("#petition_status_badge").append("Petition Status: <span class='label label-success'>Approved</span>");
+            //             } else if (obj.petition_status == 2) {
+            //                 $("#petition_status_badge").append("Petition Status: <span class='label label-warning'>Pending</span>");
+            //             } else {
+            //                 $("#petition_status_badge").append("Petition Status: <span class='label label-danger'>Denied</span>");
+            //             }
+            //         });
+            //     })
+            //     .fail(function() {
+            //         swal("Failed to process petition, Please check your network connection!", {
+            //             icon: "error",
+            //         });
+            //     });
 
-        $("#decline_petition").click(function() {
-            swal({
-                    title: "Are you sure?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        $.post("<?= base_url() ?>Admin/decline_petition", {
-                                petitionID: petition_ID,
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    $.post("<?= base_url() ?>Admin/approve_petition", {
+                            petitionID: petition_ID,
+                            petitionUnique: petition_unique
+                        }).done(function(data) {
+                            var obj = JSON.parse(data);
+                            if (obj.context == "success") {
+                                Swal.fire(
+                                    'Success!',
+                                    obj.message,
+                                    'success'
+                                )
+                            } else {
+                                Swal.fire(
+                                    'Error!',
+                                    obj.message,
+                                    'error'
+                                )
+                            }
+                            $.post("<?= base_url() ?>Admin/fetch_updated_petition_status", {
                                 petitionUnique: petition_unique
                             }).done(function(data) {
                                 var obj = JSON.parse(data);
-                                if (obj.context == "success") {
-                                    swal(obj.message, {
-                                        title: "Success!",
-                                        icon: "success",
-                                    });
+                                $('#petition_status_badge').text('');
+                                if (obj.petition_status == 1) {
+                                    $("#petition_status_badge").append("Petition Status: <span class='label label-success'>Approved</span>");
+                                } else if (obj.petition_status == 2) {
+                                    $("#petition_status_badge").append("Petition Status: <span class='label label-warning'>Pending</span>");
                                 } else {
-                                    swal(obj.message, {
-                                        title: "Error!",
-                                        icon: "error",
-                                    });
+                                    $("#petition_status_badge").append("Petition Status: <span class='label label-danger'>Denied</span>");
                                 }
-                                $.post("<?= base_url() ?>Admin/fetch_updated_petition_status", {
-                                    petitionUnique: petition_unique
-                                }).done(function(data) {
-                                    var obj = JSON.parse(data);
-                                    $('#petition_status_badge').text('');
-                                    if (obj.petition_status == 1) {
-                                        $("#petition_status_badge").append("Petition Status: <span class='label label-success'>Approved</span>");
-                                    } else if (obj.petition_status == 2) {
-                                        $("#petition_status_badge").append("Petition Status: <span class='label label-warning'>Pending</span>");
-                                    } else {
-                                        $("#petition_status_badge").append("Petition Status: <span class='label label-danger'>Denied</span>");
-                                    }
-                                });
-                            })
-                            .fail(function() {
-                                swal("Failed to process petition, Please check your network connection!", {
-                                    icon: "error",
-                                });
                             });
-                    }
-                });
+                        })
+                        .fail(function() {
+                            Swal.fire(
+                                'Failed to process petition, Please check your network connection!',
+                                'error'
+                            )
+                        });
+                }
+            })
+        });
+
+        $("#decline_petition").click(function() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.value) {
+                    $.post("<?= base_url() ?>Admin/decline_petition", {
+                            petitionID: petition_ID,
+                            petitionUnique: petition_unique
+                        }).done(function(data) {
+                            var obj = JSON.parse(data);
+                            if (obj.context == "success") {
+                                Swal.fire(
+                                    'Success!',
+                                    obj.message,
+                                    'success'
+                                )
+                            } else {
+                                Swal.fire(
+                                    'Error!',
+                                    obj.message,
+                                    'error'
+                                )
+                            }
+                            $.post("<?= base_url() ?>Admin/fetch_updated_petition_status", {
+                                petitionUnique: petition_unique
+                            }).done(function(data) {
+                                var obj = JSON.parse(data);
+                                $('#petition_status_badge').text('');
+                                if (obj.petition_status == 1) {
+                                    $("#petition_status_badge").append("Petition Status: <span class='label label-success'>Approved</span>");
+                                } else if (obj.petition_status == 2) {
+                                    $("#petition_status_badge").append("Petition Status: <span class='label label-warning'>Pending</span>");
+                                } else {
+                                    $("#petition_status_badge").append("Petition Status: <span class='label label-danger'>Denied</span>");
+                                }
+                            });
+                        })
+                        .fail(function() {
+                            Swal.fire(
+                                'Failed to process petition, Please check your network connection!',
+                                'error'
+                            )
+                        });
+                }
+            })
         });
 
         // =======================================================================================
@@ -357,177 +415,175 @@
 
         var date_last_clicked = null;
 
-    $('#calendar').fullCalendar({
-        header: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'month,listMonth'
-        },
-        
-        eventSources: [
-           {
-           events: function(start, end, timezone, callback) {
-                $.ajax({
-                    url: '<?php echo base_url() ?>Admin/get_events',
-                    dataType: 'json',
-                    data: {
-                        // our hypothetical feed requires UNIX timestamps
-                        start: start.unix(),
-                        end: end.unix()
-                    },
-                    success: function(msg) {
-                        var events = msg.events;
-                        callback(events);
-                    }
-                });
-              }
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,listMonth'
             },
-        ],
-        dayClick: function(date, jsEvent, view) {
-            // date_last_clicked = $(this);
-            var now = new Date();
-            var selected_date = new Date(date);
-            
-            // if (now.getTime() > selected_date.getTime()){
 
-            if (selected_date < now ){
-                Swal.fire({
-                icon: 'warning',
-                title: 'TRY AGAIN ',
-                text: 'YOU CLICKED A PAST DATE!',
-                })
-            }else{
-                var add_selected_date = date.format('YYYY/MM/DD')
-                $('#add_start_date').val(add_selected_date);
+            eventSources: [{
+                events: function(start, end, timezone, callback) {
+                    $.ajax({
+                        url: '<?php echo base_url() ?>Admin/get_events',
+                        dataType: 'json',
+                        data: {
+                            // our hypothetical feed requires UNIX timestamps
+                            start: start.unix(),
+                            end: end.unix()
+                        },
+                        success: function(msg) {
+                            var events = msg.events;
+                            callback(events);
+                        }
+                    });
+                }
+            }, ],
+            dayClick: function(date, jsEvent, view) {
+                // date_last_clicked = $(this);
+                var now = new Date();
+                var selected_date = new Date(date);
 
-                $('#add_end_date').datepicker({
-                    changeMonth: true,
-                    dateFormat: "yy/mm/dd",
-                    autoclose: true,
-                    minDate: add_selected_date
-                })
+                // if (now.getTime() > selected_date.getTime()){
 
-                // /* ADDING EVENTS */
-                // var currColor = '#3c8dbc' //Red by default
-                //         //Color chooser button
-                //         var colorChooser = $('#color-chooser-btn')
-                //         $('#color-chooser > li > a').click(function (e) {
-                //         e.preventDefault()
-                //         //Save color
-                //         currColor = $(this).css('color')
-                //         //Add color effect to button
-                //         $('#add_calendar_event').css({ 'background-color': currColor, 'border-color': currColor })
-                //         })
-                //         $('#add_calendar_event').click(function (e) {
-                //         e.preventDefault()
-                //         //Get value and make sure it is not null
-                //         var val = $('#add_calendar_event').val()
-                //         if (val.length == 0) {
-                //             return
-                //         }
+                if (selected_date < now) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'TRY AGAIN ',
+                        text: 'YOU CLICKED A PAST DATE!',
+                    })
+                } else {
+                    var add_selected_date = date.format('YYYY/MM/DD')
+                    $('#add_start_date').val(add_selected_date);
 
-                //         //Create events
-                //         var event = $('<div />')
-                //         event.css({
-                //             'background-color': currColor,
-                //             'border-color'    : currColor,
-                //             'color'           : '#fff'
-                //         }).addClass('external-event')
-                //         event.html(val)
-                //         $('#external-events').prepend(event)
+                    $('#add_end_date').datepicker({
+                        changeMonth: true,
+                        dateFormat: "yy/mm/dd",
+                        autoclose: true,
+                        minDate: add_selected_date
+                    })
 
-                //         //Add draggable funtionality
-                //         init_events(event)
+                    // /* ADDING EVENTS */
+                    // var currColor = '#3c8dbc' //Red by default
+                    //         //Color chooser button
+                    //         var colorChooser = $('#color-chooser-btn')
+                    //         $('#color-chooser > li > a').click(function (e) {
+                    //         e.preventDefault()
+                    //         //Save color
+                    //         currColor = $(this).css('color')
+                    //         //Add color effect to button
+                    //         $('#add_calendar_event').css({ 'background-color': currColor, 'border-color': currColor })
+                    //         })
+                    //         $('#add_calendar_event').click(function (e) {
+                    //         e.preventDefault()
+                    //         //Get value and make sure it is not null
+                    //         var val = $('#add_calendar_event').val()
+                    //         if (val.length == 0) {
+                    //             return
+                    //         }
 
-                //         //Remove event from text input
-                //         $('#new-event').val('')
-                //         })
-                
-                $('#addModal').modal(
-                        $('#add_calendar_event').click(function(e){
+                    //         //Create events
+                    //         var event = $('<div />')
+                    //         event.css({
+                    //             'background-color': currColor,
+                    //             'border-color'    : currColor,
+                    //             'color'           : '#fff'
+                    //         }).addClass('external-event')
+                    //         event.html(val)
+                    //         $('#external-events').prepend(event)
+
+                    //         //Add draggable funtionality
+                    //         init_events(event)
+
+                    //         //Remove event from text input
+                    //         $('#new-event').val('')
+                    //         })
+
+                    $('#addModal').modal(
+                        $('#add_calendar_event').click(function(e) {
                             var valid = this.form.checkValidity();
-                            if(valid){
+                            if (valid) {
                                 Swal.fire(
-                                'Good job!',
-                                'You clicked the button!',
-                                'success'
+                                    'Good job!',
+                                    'You clicked the button!',
+                                    'success'
                                 )
-                            }else{
-                                
+                            } else {
+
                             }
                         })
-                );
+                    );
 
-            }
+                }
 
-           
-            
-        },
-        eventClick: function(event, jsEvent, view) {
-    
-            var now = new Date();
-            var dateFormat = "yy/mm/dd",
-                from = $( "#start_date" )
+
+
+            },
+            eventClick: function(event, jsEvent, view) {
+
+                var now = new Date();
+                var dateFormat = "yy/mm/dd",
+                    from = $("#start_date")
                     .datepicker({
                         dateFormat: "yy/mm/dd",
                         defaultDate: "+1w",
                         changeMonth: true,
                         minDate: now
                     })
-                    .on( "change", function() {
-                        to.datepicker( "option", "minDate", getDate( this ) );
+                    .on("change", function() {
+                        to.datepicker("option", "minDate", getDate(this));
                     }),
-                to = $( "#end_date" ).datepicker({
-                    dateFormat: "yy/mm/dd",
-                    defaultDate: "+1w",
-                    changeMonth: true,
-                    minDate: now
-                })
-                .on( "change", function() {
-                    from.datepicker( "option", "maxDate", getDate( this ) );
-                });
+                    to = $("#end_date").datepicker({
+                        dateFormat: "yy/mm/dd",
+                        defaultDate: "+1w",
+                        changeMonth: true,
+                        minDate: now
+                    })
+                    .on("change", function() {
+                        from.datepicker("option", "maxDate", getDate(this));
+                    });
 
-            function getDate( element ) {
-                var date;
-                try {
-                    date = $.datepicker.parseDate( dateFormat, element.value );
-                } catch( error ) {
-                    date = null;
+                function getDate(element) {
+                    var date;
+                    try {
+                        date = $.datepicker.parseDate(dateFormat, element.value);
+                    } catch (error) {
+                        date = null;
+                    }
+
+                    return date;
                 }
 
-                return date;
-            }
-    
 
 
 
-            $('#editname').val(event.title);
-            $('#editdescription').val(event.description);
-            $('#start_date').val(moment(event.start).format('YYYY/MM/DD'));
-            if(event.end) {
-                $('#end_date').val(moment(event.end).format('YYYY/MM/DD'));
-            }else {
-                $('#end_date').val(moment(event.start).format('YYYY/MM/DD'));
-            }
-            $('#event_id').val(event.id);
-            
+                $('#editname').val(event.title);
+                $('#editdescription').val(event.description);
+                $('#start_date').val(moment(event.start).format('YYYY/MM/DD'));
+                if (event.end) {
+                    $('#end_date').val(moment(event.end).format('YYYY/MM/DD'));
+                } else {
+                    $('#end_date').val(moment(event.start).format('YYYY/MM/DD'));
+                }
+                $('#event_id').val(event.id);
 
-          $('#editModal').modal(
-            $('#edit_calendar_event').click(function(e){
-                            var valid = this.form.checkValidity();
-                            if(valid){
-                                Swal.fire(
+
+                $('#editModal').modal(
+                    $('#edit_calendar_event').click(function(e) {
+                        var valid = this.form.checkValidity();
+                        if (valid) {
+                            Swal.fire(
                                 'Updated!',
                                 'Details succesfully updated!',
                                 'success'
-                                )
-                            }else{
-                                
-                            }
-                        })
-          );
-       },
-    });
+                            )
+                        } else {
+
+                        }
+                    })
+                );
+            },
+        });
     });
 </script>
 

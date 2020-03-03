@@ -272,9 +272,13 @@ class Admin extends CI_Controller
 	{
 		$term = $this->input->post('term');
 		$year = $this->input->post('year');
+		$submit = $this->input->post('submit');
+		$data['Y'] = $year;
+		$data['T'] = $term;
 		$data['years'] = $this->Academics_model->fetch_year();
 		$data['terms'] = $this->Academics_model->fetch_term();
 		$data['offering'] = $this->Academics_model->fetchOffering($year, $term);
+		$data['classes'] = $this->Academics_model->fetchClass($year, $term);
 
 		$this->load->view('includes_admin/admin_header');
 
@@ -349,7 +353,7 @@ class Admin extends CI_Controller
 	// CALENDAR MODULE
 	// =======================================================================================
 
-	
+
 
 	public function academic_calendar($success = null, $error = null) // | Display Academic Calendar |
 	{
@@ -440,7 +444,7 @@ class Admin extends CI_Controller
 		$eventid = intval($this->input->post("eventid"));
 		$event = $this->Calendar_model->get_event($eventid);
 		if ($event->num_rows() == 0) {
-			echo('Invalid');
+			echo ('Invalid');
 			exit();
 		}
 		$event->row();
@@ -748,7 +752,7 @@ class Admin extends CI_Controller
 	{
 		$data['cor'] = $this->Overload_underload_model->fetch_course_card_admin($stud_number, $term, $year);
 		$data['student'] = $this->Overload_underload_model->fetch_user($stud_number);
-		$data['courses'] = $this->Overload_underload_model->fetch_courses();
+		// $data['courses'] = $this->Overload_underload_model->fetch_courses();
 		$data['offerings'] = $this->Overload_underload_model->fetchOffering();
 		$data['underload'] = $this->Overload_underload_model->fetch_underload($stud_number, $term, $year);
 
@@ -815,7 +819,7 @@ class Admin extends CI_Controller
 
 		$data['cor'] = $this->Overload_underload_model->fetch_course_card_admin($stud_number, $term, $year);
 		$data['student'] = $this->Overload_underload_model->fetch_user($stud_number);
-		$data['courses'] = $this->Overload_underload_model->fetch_courses();
+		// $data['courses'] = $this->Overload_underload_model->fetch_courses();
 		$data['offerings'] = $this->Overload_underload_model->fetchOffering();
 		$data['overload'] = $this->Overload_underload_model->fetch_overload($stud_number, $term, $year);
 
@@ -1020,6 +1024,7 @@ class Admin extends CI_Controller
 			$link = base_url() . "Student/petitionView/" . $petitionID . "/" . $petition_unique;
 			$this->send_notifications($recipients, $notif_message, $link);
 			$this->Petition_model->approve_petition($petition_unique);
+			$this->Petition_model->add_petition_to_offering($petitionID);
 		} else {
 			$message['message'] = 'Insufficient number of petitioners!';
 			$message['context'] = 'failed';
