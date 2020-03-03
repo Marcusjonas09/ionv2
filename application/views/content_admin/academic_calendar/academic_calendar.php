@@ -1,44 +1,44 @@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        <strong>School Calendar</strong>
-        <small>Administrator</small>
-      </h1>
-    </section>
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <h1>
+      <strong>School Calendar</strong>
+      <small>Administrator</small>
+    </h1>
+  </section>
 
-    <!-- Main content -->
-  <section class="content container-fluid">
-    <!-- /.col -->
-    <div class="col-md-12">
-        <!-- THE CALENDAR -->
-        <div class="col-md-8">
-          <div class="box box-solid">
-            <div class="box-body no-padding">
-              <!-- THE CALENDAR -->
-              <div id="calendar"></div>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /. box -->
+  <!-- Main content -->
+  <section class="content container-fluid" style="padding-left:0px; padding-right:0px;">
+    <!-- THE CALENDAR -->
+    <div class="col-md-7">
+      <div class="box box-solid">
+        <div class="box-body ">
+          <!-- THE CALENDAR -->
+          <div id="calendar"></div>
         </div>
-        <!-- /.col -->
+        <!-- /.box-body -->
+      </div>
+      <!-- /. box -->
+    </div>
+    <!-- /.col -->
 
 
-        <div class="col-md-4">
-          <div class="box box-solid">
-            <div class="box-body no-padding">
-              <!-- THE CALENDAR -->
-              <h1>All Events</h1>
-            <table class="table table-hover">
-              <tr>
-                <th>Event</th>
-                <th>Description</th>
-                <th>Start</th>
-                <th>End</th>
-              </tr>
-
+    <div class="col-md-5" style="padding-left:0px;">
+      <div class="box box-solid ">
+        <h3 class="box-header" style="margin-top:0px; margin-bottom:0px;">
+          <strong>All Events</strong>
+        </h3>
+        <div class="box-body">
+          <!-- THE CALENDAR -->
+          <table class="table table-hover table-responsive">
+            <thead>
+              <th>Event</th>
+              <th>Description</th>
+              <th>Start</th>
+              <th>End</th>
+            </thead>
+            <tbody>
               <?php foreach ($events as $event) : ?>
                 <tr>
                   <td><?= $event->title ?></td>
@@ -47,55 +47,51 @@
                   <td><?= $event->end ?></td>
                 </tr>
               <?php endforeach ?>
-            </table>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /. box -->
+            </tbody>
+          </table>
         </div>
-        <!-- /.col -->
-
-          
- 
+        <!-- /.box-body -->
+      </div>
+      <!-- /. box -->
     </div>
     <!-- /.col -->
   </section>
   <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
+</div>
+<!-- /.content-wrapper -->
 
-  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Add Calendar Event</h4>
       </div>
       <div class="modal-body">
-      <?php echo form_open(site_url("Admin/add_event"), array("class" => "form-horizontal")) ?>
-      <div class="form-group">
-                <label for="p-in" class="col-md-4 label-heading">Event Name</label>
-                <div class="col-md-8 ui-front">
-                    <input required type="text" class="form-control" name="name" id="name">
-                </div>
+        <?php echo form_open(site_url("Admin/add_event"), array("class" => "form-horizontal")) ?>
+        <div class="form-group">
+          <label for="p-in" class="col-md-4 label-heading">Event Name</label>
+          <div class="col-md-8 ui-front">
+            <input required type="text" class="form-control" name="name" id="name">
+          </div>
         </div>
         <div class="form-group">
-                <label for="p-in" class="col-md-4 label-heading">Description</label>
-                <div class="col-md-8 ui-front">
-                    <input type="text" class="form-control" name="description" id="description">
-                </div>
+          <label for="p-in" class="col-md-4 label-heading">Description</label>
+          <div class="col-md-8 ui-front">
+            <input type="text" class="form-control" name="description" id="description">
+          </div>
         </div>
         <div class="form-group">
-                <label for="p-in" class="col-md-4 label-heading">Start Date</label>
-                <div class="col-md-8">
-                    <input required type="text" class="form-control" name="start_date" id="add_start_date" readonly >
-                </div>
+          <label for="p-in" class="col-md-4 label-heading">Start Date</label>
+          <div class="col-md-8">
+            <input required type="text" class="form-control" name="start_date" id="add_start_date" readonly>
+          </div>
         </div>
         <div class="form-group">
-                <label for="p-in" class="col-md-4 label-heading">End Date</label>
-                <div class="col-md-8">
-                    <input required type="text" class="form-control" name="end_date" id="add_end_date">
-                </div>
+          <label for="p-in" class="col-md-4 label-heading">End Date</label>
+          <div class="col-md-8">
+            <input required type="text" class="form-control" name="end_date" id="add_end_date">
+          </div>
         </div>
 
         <!-- <div class="form-group">
@@ -118,12 +114,12 @@
                     </ul>
                 </div>
         </div> -->
-        
-        
+
+
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <input type="submit" class="btn btn-primary" value="Add Event" id="add_calendar_event">
         <?php echo form_close() ?>
       </div>
@@ -131,7 +127,7 @@
   </div>
 </div>
 
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -139,43 +135,43 @@
         <h4 class="modal-title" id="myModalLabel">Update Calendar Event</h4>
       </div>
       <div class="modal-body">
-      <?php echo form_open(site_url("Admin/edit_event"), array("class" => "form-horizontal")) ?>
+        <?php echo form_open(site_url("Admin/edit_event"), array("class" => "form-horizontal")) ?>
 
 
         <!-- <textarea id="myTextarea" rows="5" cols="60" placeholder="Type something here..."></textarea> -->
 
-      <div class="output"></div>
-      <div class="form-group">
-                <label for="p-in" class="col-md-4 label-heading">Event Name</label>
-                <div class="col-md-8 ui-front">
-                    <input type="text" class="form-control" name="name"  id="editname" required>
-                </div>
+        <div class="output"></div>
+        <div class="form-group">
+          <label for="p-in" class="col-md-4 label-heading">Event Name</label>
+          <div class="col-md-8 ui-front">
+            <input type="text" class="form-control" name="name" id="editname" required>
+          </div>
         </div>
         <div class="form-group">
-                <label for="p-in" class="col-md-4 label-heading">Description</label>
-                <div class="col-md-8 ui-front">
-                    <input type="text" class="form-control" name="description" id="editdescription">
-                </div>
+          <label for="p-in" class="col-md-4 label-heading">Description</label>
+          <div class="col-md-8 ui-front">
+            <input type="text" class="form-control" name="description" id="editdescription">
+          </div>
         </div>
         <div class="form-group">
-                <label for="p-in" class="col-md-4 label-heading">Start Date</label>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" name="start_date" id="start_date" required readonly> 
-                </div>
+          <label for="p-in" class="col-md-4 label-heading">Start Date</label>
+          <div class="col-md-8">
+            <input type="text" class="form-control" name="start_date" id="start_date" required readonly>
+          </div>
         </div>
         <div class="form-group">
-                <label for="p-in" class="col-md-4 label-heading">End Date</label>
-                <div class="col-md-8">
-                    <input required type="text" class="form-control" name="end_date" id="end_date" readonly>
-                </div>
+          <label for="p-in" class="col-md-4 label-heading">End Date</label>
+          <div class="col-md-8">
+            <input required type="text" class="form-control" name="end_date" id="end_date" readonly>
+          </div>
         </div>
         <div class="form-group">
-                    <label for="p-in" class="col-md-4 label-heading">Delete Event</label>
-                    <div class="col-md-8">
-                        <input type="checkbox" name="delete" value="1">
-                    </div>
-            </div>
-            <input type="hidden" name="eventid" id="event_id" value="0" />
+          <label for="p-in" class="col-md-4 label-heading">Delete Event</label>
+          <div class="col-md-8">
+            <input type="checkbox" name="delete" value="1">
+          </div>
+        </div>
+        <input type="hidden" name="eventid" id="event_id" value="0" />
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
