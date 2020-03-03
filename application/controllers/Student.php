@@ -103,7 +103,7 @@ class Student extends CI_Controller
 
 		$data['curr'] = $this->Student_model->fetch_curriculum();
 		$data['grades'] = $this->Dashboard_model->fetchProgress();
-		$data['courses'] = $this->CourseCard_model->fetch_courses();
+		// $data['courses'] = $this->CourseCard_model->fetch_courses();
 		$data['offerings'] = $this->Dashboard_model->fetchOffering();
 		$data['cor'] = $this->CourseCard_model->fetch_current_COR();
 
@@ -268,7 +268,7 @@ class Student extends CI_Controller
 		$data['account'] = $this->Account_model->view_user($this->session->acc_number);
 		$data['curr'] = $this->Academics_model->fetch_curriculum_student();
 		$data['grades'] = $this->Academics_model->fetch_progress_student();
-		$data['courses'] = $this->CourseCard_model->fetch_courses();
+		// $data['courses'] = $this->CourseCard_model->fetch_courses();
 		$data['offerings'] = $this->Dashboard_model->fetchOffering();
 		$data['cor'] = $this->CourseCard_model->fetch_current_COR();
 		$data['success'] = $success;
@@ -354,7 +354,6 @@ class Student extends CI_Controller
 	public function course_card()
 	{
 		$this->load->view('includes_student/student_header');
-
 		$this->load->view('includes_student/student_topnav');
 		$this->load->view('includes_student/student_sidebar');
 
@@ -363,7 +362,7 @@ class Student extends CI_Controller
 		$data['terms'] = $this->CourseCard_model->fetch_term();
 		$data['years'] = $this->CourseCard_model->fetch_year();
 		$data['course_card'] = $this->CourseCard_model->fetch_course_card($year, $term);
-		$data['courses'] = $this->CourseCard_model->fetch_courses();
+		// $data['courses'] = $this->CourseCard_model->fetch_courses();
 
 		// echo json_encode($data);
 
@@ -394,7 +393,7 @@ class Student extends CI_Controller
 		$data['terms'] = $this->COR_model->fetch_term();
 		$data['years'] = $this->COR_model->fetch_year();
 		$data['cor'] = $this->COR_model->fetch_course_card($year, $term);
-		$data['courses'] = $this->COR_model->fetch_courses();
+		// $data['courses'] = $this->COR_model->fetch_courses();
 		$data['offerings'] = $this->COR_model->fetchOffering($year, $term);
 
 		// echo json_encode($data);
@@ -476,10 +475,14 @@ class Student extends CI_Controller
 
 		$term = $this->input->post('term');
 		$year = $this->input->post('year');
+		$submit = $this->input->post('submit');
+		$data['Y'] = $year;
+		$data['T'] = $term;
 		$data['years'] = $this->Academics_model->fetch_year();
 		$data['terms'] = $this->Academics_model->fetch_term();
 		$data['offering'] = $this->Academics_model->fetchOffering($year, $term);
-		$data['classes'] = $this->Academics_model->fetchClass(20192020, 1);
+		$data['classes'] = $this->Academics_model->fetchClass($year, $term);
+
 		// $this->dd($data['classes']);
 		// $data['sched'] = $this->Academics_model->fetchScheds($year, $term);
 		// $data['offeringSched'] = $this->Academics_model->fetchOfferingSched();
@@ -527,14 +530,13 @@ class Student extends CI_Controller
 	public function underload_request($stud_number)
 	{
 		$this->load->view('includes_student/student_header');
-
 		$this->load->view('includes_student/student_topnav');
 		$this->load->view('includes_student/student_sidebar');
 
 		$data['curr'] = $this->Dashboard_model->fetch_curriculum();
 		$data['grades'] = $this->Dashboard_model->fetchProgress();
 		$data['cor'] = $this->CourseCard_model->fetch_course_card_admin($stud_number);
-		$data['courses'] = $this->CourseCard_model->fetch_courses();
+		// $data['courses'] = $this->CourseCard_model->fetch_courses();
 		$data['offerings'] = $this->Dashboard_model->fetchOffering();
 		$data['underload'] = $this->Overload_underload_model->fetch_underload($stud_number, $this->session->curr_term, $this->session->curr_year);
 
@@ -579,7 +581,7 @@ class Student extends CI_Controller
 		$data['curr'] = $this->Dashboard_model->fetch_curriculum();
 		$data['grades'] = $this->Dashboard_model->fetchProgress();
 		$data['cor'] = $this->CourseCard_model->fetch_course_card_admin($stud_number);
-		$data['courses'] = $this->CourseCard_model->fetch_courses();
+		// $data['courses'] = $this->CourseCard_model->fetch_courses();
 		$data['offerings'] = $this->Dashboard_model->fetchOffering();
 		$data['overload'] = $this->Overload_underload_model->fetch_overload($stud_number, $this->session->curr_term, $this->session->curr_year);
 
@@ -625,7 +627,7 @@ class Student extends CI_Controller
 
 		$data['curr'] = $this->Dashboard_model->fetch_curriculum();
 		$data['grades'] = $this->Dashboard_model->fetchProgress();
-		$data['courses'] = $this->CourseCard_model->fetch_courses();
+		// $data['courses'] = $this->CourseCard_model->fetch_courses();
 		$data['offerings'] = $this->Dashboard_model->fetchOffering();
 		$data['cor'] = $this->CourseCard_model->fetch_current_COR();
 
@@ -647,7 +649,6 @@ class Student extends CI_Controller
 	public function petitions($success = null, $error = null)
 	{
 		$this->load->view('includes_student/student_header');
-
 		$this->load->view('includes_student/student_topnav');
 		$this->load->view('includes_student/student_sidebar');
 
@@ -679,7 +680,7 @@ class Student extends CI_Controller
 		$this->pagination->initialize($config); // model function
 
 		$data['petitions'] = $this->Petition_model->fetchPetitions($per_page, $end_page);
-		$data['courses'] = $this->Petition_model->fetchCourses();
+		// $data['courses'] = $this->Petition_model->fetchCourses();
 		$data['petition_suggestions'] = $this->Courseflow_model->suggest_what_to_petition();
 		$data['petitions_available'] = $this->Courseflow_model->suggested_petitions_available();
 		$data['petitioners'] = $this->Petition_model->fetchAllPetitioners();
@@ -893,7 +894,6 @@ class Student extends CI_Controller
 	public function check_units($stud_number)
 	{
 		$this->load->view('includes_student/student_header');
-
 		$this->load->view('includes_student/student_topnav');
 		$this->load->view('includes_student/student_sidebar');
 
@@ -948,6 +948,7 @@ class Student extends CI_Controller
 				}
 			}
 		}
+
 		$totalunits = $course_units + $lab_units;
 		$totalunitspassed = $coursepassed + $labpassed;
 

@@ -272,9 +272,13 @@ class Admin extends CI_Controller
 	{
 		$term = $this->input->post('term');
 		$year = $this->input->post('year');
+		$submit = $this->input->post('submit');
+		$data['Y'] = $year;
+		$data['T'] = $term;
 		$data['years'] = $this->Academics_model->fetch_year();
 		$data['terms'] = $this->Academics_model->fetch_term();
 		$data['offering'] = $this->Academics_model->fetchOffering($year, $term);
+		$data['classes'] = $this->Academics_model->fetchClass($year, $term);
 
 		$this->load->view('includes_admin/admin_header');
 

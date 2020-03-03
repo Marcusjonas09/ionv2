@@ -46,7 +46,7 @@ class Petition_model extends CI_Model
 
     public function fetchCoursesAdmin()
     {
-        $query = $this->db->get('courses_tbl');
+        $query = $this->db->get('courses_tbl_v2');
         return $query->result();
     }
 
@@ -202,7 +202,7 @@ class Petition_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->where(array('curriculum_code' => $this->session->Curriculum_code));
-        $this->db->from('courses_tbl');
+        $this->db->from('courses_tbl_v2');
         $query = $this->db->get();
         return $query->result();
     }

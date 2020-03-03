@@ -11,12 +11,11 @@ class Academics_model extends CI_Model
     public function fetch_curriculum_admin($curriculum_code)
     {
         $this->db->select('*');
-        $this->db->where(array(
-            'courses_tbl.curriculum_code' => $curriculum_code,
-        ));
-        $this->db->from('courses_tbl');
-        $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = courses_tbl.laboratory_code', 'LEFT');
-        $this->db->order_by('courses_tbl.course_code', 'ASC');
+        $this->db->where(array('curriculum_tbl.curriculum_code' => $curriculum_code));
+        $this->db->from('curriculum_tbl');
+        $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = curriculum_tbl.laboratory_code', 'left');
+        $this->db->join('courses_tbl_v2', 'courses_tbl_v2.course_code = curriculum_tbl.course_code', 'left');
+        $this->db->order_by('courses_tbl_v2.course_code', 'ASC');
         $query = $this->db->get();
         return $query->result();
     }
@@ -75,15 +74,27 @@ class Academics_model extends CI_Model
         return $query->result();
     }
 
+    // public function fetch_curriculum_student()
+    // {
+    //     $this->db->select('*');
+    //     $this->db->where(array(
+    //         'courses_tbl_v2.curriculum_code' => $this->session->Curriculum_code,
+    //     ));
+    //     $this->db->from('courses_tbl_v2');
+    //     $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = courses_tbl_v2.laboratory_code', 'LEFT');
+    //     $this->db->order_by('courses_tbl_v2.course_code', 'ASC');
+    //     $query = $this->db->get();
+    //     return $query->result();
+    // }
+
     public function fetch_curriculum_student()
     {
         $this->db->select('*');
-        $this->db->where(array(
-            'courses_tbl.curriculum_code' => $this->session->Curriculum_code,
-        ));
-        $this->db->from('courses_tbl');
-        $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = courses_tbl.laboratory_code', 'LEFT');
-        $this->db->order_by('courses_tbl.course_code', 'ASC');
+        $this->db->where(array('curriculum_tbl.curriculum_code' => $this->session->Curriculum_code));
+        $this->db->from('curriculum_tbl');
+        $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = curriculum_tbl.laboratory_code', 'left');
+        $this->db->join('courses_tbl_v2', 'courses_tbl_v2.course_code = curriculum_tbl.course_code', 'left');
+        $this->db->order_by('courses_tbl_v2.course_code', 'ASC');
         $query = $this->db->get();
         return $query->result();
     }
@@ -91,11 +102,11 @@ class Academics_model extends CI_Model
     // public function fetch_sample()
     // {
     //     $this->db->select('*');
-    //     // $this->db->where(array('courses_tbl.curriculum_code' => $curriculum_code));
+    //     // $this->db->where(array('courses_tbl_v2.curriculum_code' => $curriculum_code));
     //     $this->db->from('curriculum_tbl');
     //     $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_id = curriculum_tbl.laboratory_id');
-    //     $this->db->join('courses_tbl', 'courses_tbl.course_id = curriculum_tbl.course_id');
-    //     $this->db->order_by('courses_tbl.course_code', 'ASC');
+    //     $this->db->join('courses_tbl_v2', 'courses_tbl_v2.course_id = curriculum_tbl.course_id');
+    //     $this->db->order_by('courses_tbl_v2.course_code', 'ASC');
     //     $query = $this->db->get();
     //     return $query->result();
     // }
@@ -134,7 +145,7 @@ class Academics_model extends CI_Model
             'course_card_tbl.cc_term' => $this->session->curr_term
         ));
         $this->db->from('course_card_tbl');
-        $this->db->join('courses_tbl', 'course_card_tbl.cc_course = courses_tbl.course_code', 'LEFT');
+        $this->db->join('courses_tbl_v2', 'course_card_tbl.cc_course = courses_tbl_v2.course_code', 'LEFT');
         $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = course_card_tbl.cc_course', 'LEFT');
         $this->db->order_by('course_card_tbl.cc_course', 'ASC');
         $query = $this->db->get();
@@ -145,7 +156,7 @@ class Academics_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->where(array('curriculum_code' => $curriculum_code));
-        $this->db->from('courses_tbl');
+        $this->db->from('courses_tbl_v2');
         $query = $this->db->get();
         return $query->result();
     }
@@ -153,7 +164,7 @@ class Academics_model extends CI_Model
     public function fetch_all_courses()
     {
         $this->db->select('*');
-        $this->db->from('courses_tbl');
+        $this->db->from('courses_tbl_v2');
         $query = $this->db->get();
         return $query->result();
     }
@@ -184,9 +195,9 @@ class Academics_model extends CI_Model
         foreach ($all_classes as $class) {
             $class_scheds = $this->fetchScheds($class->class_sched, $year, $term);
             foreach ($class_scheds as $class_sched) {
-                $day .= $class_sched->class_day . '/';
-                $time .= $class_sched->class_start_time . ' - ' . $class_sched->class_start_time . '/';
-                $room .= $class_sched->class_room . '/';
+                $day .= ' ' . $class_sched->class_day . ' /';
+                $time .= ' ' . date('H:i:s', strtotime($class_sched->class_start_time)) . '-' . date('H:i:s', strtotime($class_sched->class_end_time)) . ' /';
+                $room .= ' ' . $class_sched->class_room . ' /';
             }
             array_push($classes, array(
                 'class_code' => $class->class_code,
