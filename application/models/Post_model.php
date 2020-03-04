@@ -11,7 +11,7 @@ class Post_model extends CI_Model
         $this->db->select('*');
         $this->db->from('posts_tbl');
         $this->db->join('accounts_tbl', 'accounts_tbl.acc_number = posts_tbl.post_account_id');
-        $this->db->order_by('post_created', 'DESC');
+        $this->db->order_by('post_edited', 'desc');
         $query = $this->db->get();
 
         return $query->result();

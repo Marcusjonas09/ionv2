@@ -563,7 +563,8 @@ class Admin extends CI_Controller
 					$data1 = array(
 						'post_account_id' => $this->session->acc_number,
 						'post_caption' => $this->input->post('caption'),
-						'post_created' => time()
+						'post_created' => time(),
+						'post_edited' => time()
 					);
 					$this->Post_model->create_post($data1);
 				} else {
@@ -575,7 +576,8 @@ class Admin extends CI_Controller
 						'post_account_id' => $this->session->acc_number,
 						'post_caption' => $this->input->post('caption'),
 						'post_image' => $filename,
-						'post_created' => time()
+						'post_created' => time(),
+						'post_edited' => time()
 					);
 
 					$this->Post_model->create_post($data1);
