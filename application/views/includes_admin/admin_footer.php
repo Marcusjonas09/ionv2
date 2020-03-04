@@ -295,7 +295,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Approve!'
             }).then((result) => {
                 if (result.value) {
                     $.post("<?= base_url() ?>Admin/approve_petition", {
@@ -348,7 +348,7 @@
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: 'Decline!'
             }).then((result) => {
                 if (result.value) {
                     $.post("<?= base_url() ?>Admin/decline_petition", {
