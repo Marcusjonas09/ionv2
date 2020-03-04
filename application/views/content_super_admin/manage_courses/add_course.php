@@ -33,7 +33,7 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="course_units">Units:</label>
-                                <input class="form-control" type="number" name="course_units" id="course_units" placeholder="Enter units" />
+                                <input class="form-control" type="number" step="0.5" min="0" name="course_units" id="course_units" placeholder="Enter units" />
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Laboratory Code:</label>
