@@ -527,7 +527,7 @@ class Student extends CI_Controller
 	// UNDERLOAD
 	// =======================================================================================
 
-	public function underload_request($stud_number)
+	public function underload_request()
 	{
 		$this->load->view('includes_student/student_header');
 		$this->load->view('includes_student/student_topnav');
@@ -535,10 +535,10 @@ class Student extends CI_Controller
 
 		$data['curr'] = $this->Dashboard_model->fetch_curriculum();
 		$data['grades'] = $this->Dashboard_model->fetchProgress();
-		$data['cor'] = $this->CourseCard_model->fetch_course_card_admin($stud_number);
+		$data['cor'] = $this->CourseCard_model->fetch_course_card_admin($this->session->acc_number);
 		// $data['courses'] = $this->CourseCard_model->fetch_courses();
 		$data['offerings'] = $this->Dashboard_model->fetchOffering();
-		$data['underload'] = $this->Overload_underload_model->fetch_underload($stud_number, $this->session->curr_term, $this->session->curr_year);
+		$data['underload'] = $this->Overload_underload_model->fetch_underload($this->session->acc_number, $this->session->curr_term, $this->session->curr_year);
 
 		$this->load->view('content_student/student_underload', $data);
 
@@ -561,7 +561,7 @@ class Student extends CI_Controller
 		$link = base_url() . "Admin/underload_view/" . $stud_number . "/" . $curr_term . "/" . $curr_year . "/";
 
 		$this->send_notifications($recipients, $message, $link);
-		$this->underload_request($stud_number);
+		redirect('Student/underload_request');
 	}
 	// =======================================================================================
 	// END OF UNDERLOAD
@@ -571,7 +571,7 @@ class Student extends CI_Controller
 	// OVERLOAD
 	// =======================================================================================
 
-	public function overload_request($stud_number)
+	public function overload_request()
 	{
 		$this->load->view('includes_student/student_header');
 
@@ -580,10 +580,10 @@ class Student extends CI_Controller
 
 		$data['curr'] = $this->Dashboard_model->fetch_curriculum();
 		$data['grades'] = $this->Dashboard_model->fetchProgress();
-		$data['cor'] = $this->CourseCard_model->fetch_course_card_admin($stud_number);
+		$data['cor'] = $this->CourseCard_model->fetch_course_card_admin($this->session->acc_number);
 		// $data['courses'] = $this->CourseCard_model->fetch_courses();
 		$data['offerings'] = $this->Dashboard_model->fetchOffering();
-		$data['overload'] = $this->Overload_underload_model->fetch_overload($stud_number, $this->session->curr_term, $this->session->curr_year);
+		$data['overload'] = $this->Overload_underload_model->fetch_overload($this->session->acc_number, $this->session->curr_term, $this->session->curr_year);
 
 		$this->load->view('content_student/student_overload', $data);
 
@@ -606,7 +606,7 @@ class Student extends CI_Controller
 		$link = base_url() . "Admin/overload_view/" . $stud_number . "/" . $curr_term . "/" . $curr_year . "/";
 
 		$this->send_notifications($recipients, $message, $link);
-		$this->overload_request($stud_number);
+		redirect('Student/overload_request');
 	}
 
 	// =======================================================================================
@@ -891,23 +891,23 @@ class Student extends CI_Controller
 	// OTHER
 	// =======================================================================================
 
-	public function check_units($stud_number)
+	public function check_units()
 	{
 		$this->load->view('includes_student/student_header');
 		$this->load->view('includes_student/student_topnav');
 		$this->load->view('includes_student/student_sidebar');
 
 		$totalunits = 0;
-		$data = $this->CourseCard_model->fetch_course_card_admin($stud_number);
+		$data = $this->CourseCard_model->fetch_course_card_admin($this->session->acc_number);
 		$array = json_decode(json_encode($data));
 		foreach ($array as $arr) {
 			$totalunits += ($arr->course_units + $arr->laboratory_units);
 		}
 		// echo $totalunits;
 		if ($totalunits < 12 && $totalunits > 0) {
-			$this->underload_request($stud_number);
+			redirect('Student/underload_request');
 		} else if ($totalunits > 0 && $totalunits > 21 && $totalunits <= 24) {
-			$this->overload_request($stud_number);
+			redirect('Student/overload_request');
 		} else {
 			$this->load->view('content_student/not_qualified');
 

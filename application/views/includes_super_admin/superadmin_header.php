@@ -1,23 +1,24 @@
 <?php
 if (!$this->session->login) {
       session_destroy();
-      redirect('SuperAdmin');
-}
-if ($this->session->access == 'admin') {
-      redirect('Admin/dashboard');
-} else if ($this->session->access == 'student') {
-      redirect('Student/Dashboard');
-} else if ($this->session->access == 'superadmin') {
-} else {
-      redirect('SuperAdmin');
+      redirect('Admin');
 }
 
-// if ($this->session->access == 'student') {
+// if ($this->session->access == 'admin') {
+//       redirect('Admin/dashboard');
+// } else if ($this->session->access == 'student') {
 //       redirect('Student/Dashboard');
-// } else if ($this->session->access == 'superadmin' || $this->session->access == 'admin') {
+// } else if ($this->session->access == 'superadmin') {
 // } else {
 //       redirect('SuperAdmin');
 // }
+
+if ($this->session->access == 'student') {
+      redirect('Student/Dashboard');
+} else if ($this->session->access == 'superadmin' || $this->session->access == 'admin') {
+} else {
+      redirect('SuperAdmin');
+}
 
 ?>
 
@@ -44,6 +45,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- CSS -->
       <!-- Select2 -->
       <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
+      <!-- fullCalendar -->
+      <link rel="stylesheet" href="<?= base_url() ?>bower_components/fullcalendar/dist/fullcalendar.min.css">
+      <link rel="application/javascript" href="<?= base_url() ?>bower_components/fullcalendar/dist/fullcalendar.min.js">
+      <link rel="stylesheet" href="<?= base_url() ?>bower_components/fullcalendar/dist/fullcalendar.print.min.css" media="print">
+      <!-- daterange picker -->
+      <link rel="stylesheet" href="<?= base_url() ?>bower_components/bootstrap-daterangepicker/daterangepicker.css">
+      <!-- bootstrap datepicker -->
+      <link rel="stylesheet" href="<?= base_url() ?>bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
       <!-- Bootstrap time Picker -->
       <link rel="stylesheet" href="<?= base_url() ?>plugins/timepicker/bootstrap-timepicker.min.css">
       <!-- data tables -->
@@ -63,6 +72,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Google Font -->
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
+      <link rel="stylesheet" href="<?= base_url() ?>folder/jquery-ui.css">
+      <link rel="stylesheet" href="<?= base_url() ?>folder/style.css">
+      <script src="<?= base_url() ?>folder/jquery-1.12.4.js.download"></script>
+      <script src="<?= base_url() ?>folder/jquery-ui.js.download"></script>
+
       <style>
             a.navi:link {
                   color: black;
@@ -81,6 +95,26 @@ scratch. This page gets rid of all links and provides the needed markup only.
             /* selected link */
             a.navi:active {
                   color: gray;
+            }
+
+            /* width */
+            ::-webkit-scrollbar {
+                  width: 10px;
+            }
+
+            /* Track */
+            ::-webkit-scrollbar-track {
+                  background: #f1f1f1;
+            }
+
+            /* Handle */
+            ::-webkit-scrollbar-thumb {
+                  background: #888;
+            }
+
+            /* Handle on hover */
+            ::-webkit-scrollbar-thumb:hover {
+                  background: #555;
             }
       </style>
 </head>

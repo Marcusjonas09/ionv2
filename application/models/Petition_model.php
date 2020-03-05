@@ -3,15 +3,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Petition_model extends CI_Model
 {
+    public function dd($data)
+    {
+        echo "<pre>";
+        print_r($data);
+        echo "<pre>";
+        die();
+    }
 
     // =======================================================================================
     // ADMIN FUNCTIONS
     // =======================================================================================
 
-    public function add_petition_to_offering($petition_ID)
+    public function add_petition_to_offering($petition_ID, $petition_section)
     {
         $q = $this->db->get_where('petitions_tbl', $petition_ID);
         $petition = $q->row();
+        // $this->db->insert('classes_tbl', $class);
     }
 
     public function fetchPetitionsAdmin($per_page, $end_page)

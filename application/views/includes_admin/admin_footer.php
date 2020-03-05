@@ -16,8 +16,7 @@
 <script src="<?= base_url() ?>dist/js/adminlte.min.js"></script>
 <!-- Pusher JS -->
 <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
-<!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 <!-- Full Calendar JS -->
 <script src="<?= base_url() ?>bower_components/moment/moment.js"></script>
 <script src="<?= base_url() ?>bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
@@ -29,6 +28,8 @@
 <script src="<?= base_url() ?>bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <!-- Datepicker disable date JS -->
 <script src="<?= base_url() ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!-- SWAL JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 
 
@@ -249,45 +250,6 @@
         var petition_unique = $("#petition_unique").val();
 
         $("#approve_petition").click(function() {
-            // $.post("<?= base_url() ?>Admin/approve_petition", {
-            //         petitionID: petition_ID,
-            //         petitionUnique: petition_unique
-            //     }).done(function(data) {
-            //         var obj = JSON.parse(data);
-            //         if (obj.context == "success") {
-            //             Swal.fire(
-            //                 'Success!',
-            //                 obj.message,
-            //                 'success'
-            //             )
-            //         } else {
-            //             Swal.fire(
-            //                 'Error!',
-            //                 obj.message,
-            //                 'error'
-            //             )
-            //         }
-
-            //         $.post("<?= base_url() ?>Admin/fetch_updated_petition_status", {
-            //             petitionUnique: petition_unique
-            //         }).done(function(data) {
-            //             var obj = JSON.parse(data);
-            //             $('#petition_status_badge').text('');
-            //             if (obj.petition_status == 1) {
-            //                 $("#petition_status_badge").append("Petition Status: <span class='label label-success'>Approved</span>");
-            //             } else if (obj.petition_status == 2) {
-            //                 $("#petition_status_badge").append("Petition Status: <span class='label label-warning'>Pending</span>");
-            //             } else {
-            //                 $("#petition_status_badge").append("Petition Status: <span class='label label-danger'>Denied</span>");
-            //             }
-            //         });
-            //     })
-            //     .fail(function() {
-            //         swal("Failed to process petition, Please check your network connection!", {
-            //             icon: "error",
-            //         });
-            //     });
-
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -393,26 +355,6 @@
             })
         });
 
-        // =======================================================================================
-        // end of petitioning module
-        // =======================================================================================
-
-        // =======================================================================================
-        // overload module
-        // =======================================================================================
-
-        // =======================================================================================
-        // end of overload module
-        // =======================================================================================
-
-        // =======================================================================================
-        // underload module
-        // =======================================================================================
-
-        // =======================================================================================
-        // end of underload module
-        // =======================================================================================
-
         var date_last_clicked = null;
 
         $('#calendar').fullCalendar({
@@ -462,42 +404,6 @@
                         autoclose: true,
                         minDate: add_selected_date
                     })
-
-                    // /* ADDING EVENTS */
-                    // var currColor = '#3c8dbc' //Red by default
-                    //         //Color chooser button
-                    //         var colorChooser = $('#color-chooser-btn')
-                    //         $('#color-chooser > li > a').click(function (e) {
-                    //         e.preventDefault()
-                    //         //Save color
-                    //         currColor = $(this).css('color')
-                    //         //Add color effect to button
-                    //         $('#add_calendar_event').css({ 'background-color': currColor, 'border-color': currColor })
-                    //         })
-                    //         $('#add_calendar_event').click(function (e) {
-                    //         e.preventDefault()
-                    //         //Get value and make sure it is not null
-                    //         var val = $('#add_calendar_event').val()
-                    //         if (val.length == 0) {
-                    //             return
-                    //         }
-
-                    //         //Create events
-                    //         var event = $('<div />')
-                    //         event.css({
-                    //             'background-color': currColor,
-                    //             'border-color'    : currColor,
-                    //             'color'           : '#fff'
-                    //         }).addClass('external-event')
-                    //         event.html(val)
-                    //         $('#external-events').prepend(event)
-
-                    //         //Add draggable funtionality
-                    //         init_events(event)
-
-                    //         //Remove event from text input
-                    //         $('#new-event').val('')
-                    //         })
 
                     $('#addModal').modal(
                         $('#add_calendar_event').click(function(e) {
