@@ -2,13 +2,23 @@
 if (!$this->session->login) {
     session_destroy();
 }
-if ($this->session->access == 'admin') {
-    redirect('Admin/dashboard');
-} else if ($this->session->access == 'student') {
+// if ($this->session->access == 'admin') {
+//     redirect('Admin/dashboard');
+// } else if ($this->session->access == 'student') {
+//     redirect('Student/dashboard');
+// } else if ($this->session->access == 'superadmin') {
+//     redirect('SuperAdmin/school_parameters');
+// } else {
+// }
+
+if ($this->session->access == 'student') {
     redirect('Student/dashboard');
-} else if ($this->session->access == 'superadmin') {
-    redirect('SuperAdmin/school_parameters');
-} else {
+}
+if ($this->session->access == 'superadmin') {
+    redirect('SuperAdmin/admin');
+}
+if ($this->session->access == 'admin') {
+    redirect('SuperAdmin/dashboard');
 }
 ?>
 
@@ -27,6 +37,28 @@ if ($this->session->access == 'admin') {
     <link rel="stylesheet" href="<?= base_url() ?>dist/css/AdminLTE.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>dist/css/skins/skin-green.min.css">
     <link rel="stylesheet" href="<?= base_url() ?>dist/css/override.css?date=577d89ebe25ec3af2b99d89af4ebac57">
+
+    <style>
+        /* width */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
 </head>
 
 <body class="hold-transition login-page">

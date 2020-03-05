@@ -30,14 +30,7 @@ class User_model extends CI_Model
             } else {
                 $this->session->set_userdata('login', false);
             }
-            $log_details = array(
-                'log_user' => $user->acc_number,
-                'log_type' => 'login',
-                'log_time' => time()
-            );
-            $this->db->insert('account_logs', $log_details);
         } else {
-
             return false;
         }
     }
@@ -62,6 +55,11 @@ class User_model extends CI_Model
                 $this->session->set_userdata('Program', $user->acc_program);
                 $this->session->set_userdata('curr_term', $settings->school_term);
                 $this->session->set_userdata('curr_year', $settings->school_year);
+                if ($user->UsesCollege || $user->UsesDepartment || $user->UsesProgram || $user->UsesSpec || $user->UsesCourse || $user->UsesLab || $user->UsesSection || $user->UsesCurriculum || $user->UsesParallel || $user->UsesFaculty || $user->UsesStudent || $user->UsesClass || $user->UsesFinance) {
+                    $this->session->set_userdata('has_school_parameters', TRUE);
+                } else {
+                    $this->session->set_userdata('has_school_parameters', FALSE);
+                }
                 $this->session->set_userdata('access', 'superadmin');
             } else if ($user->acc_access_level == 2) { // IF ADMIN
                 $this->session->set_userdata('login', true);
@@ -74,16 +72,15 @@ class User_model extends CI_Model
                 $this->session->set_userdata('Program', $user->acc_program);
                 $this->session->set_userdata('curr_term', $settings->school_term);
                 $this->session->set_userdata('curr_year', $settings->school_year);
+                if ($user->UsesCollege || $user->UsesDepartment || $user->UsesProgram || $user->UsesSpec || $user->UsesCourse || $user->UsesLab || $user->UsesSection || $user->UsesCurriculum || $user->UsesParallel || $user->UsesFaculty || $user->UsesStudent || $user->UsesClass || $user->UsesFinance) {
+                    $this->session->set_userdata('has_school_parameters', TRUE);
+                } else {
+                    $this->session->set_userdata('has_school_parameters', FALSE);
+                }
                 $this->session->set_userdata('access', 'admin');
             } else {
                 $this->session->set_userdata('login', false);
             }
-            $log_details = array(
-                'log_user' => $user->acc_number,
-                'log_type' => 'login',
-                'log_time' => time()
-            );
-            $this->db->insert('account_logs', $log_details);
         } else {
             return false;
         }
@@ -103,5 +100,13 @@ class User_model extends CI_Model
         $this->db->set('acc_password', $old);
         $this->db->where('acc_number', $studNumber);
         $this->db->update('accounts_tbl');
+    }
+
+    public function dd($data)
+    {
+        echo "<pre>";
+        print_r($data);
+        echo "<pre>";
+        die();
     }
 }

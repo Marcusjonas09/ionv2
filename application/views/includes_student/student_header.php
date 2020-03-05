@@ -57,8 +57,8 @@ if ($this->session->access == 'admin') {
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
   <link rel="stylesheet" href="<?= base_url() ?>folder/jquery-ui.css">
-	<link rel="stylesheet" href="<?= base_url() ?>folder/style.css">
-	<script src="<?= base_url() ?>folder/jquery-1.12.4.js.download"></script>
+  <link rel="stylesheet" href="<?= base_url() ?>folder/style.css">
+  <script src="<?= base_url() ?>folder/jquery-1.12.4.js.download"></script>
   <script src="<?= base_url() ?>folder/jquery-ui.js.download"></script>
 
   <style>
@@ -86,6 +86,26 @@ if ($this->session->access == 'admin') {
       width: 200px;
       height: 200px;
       position: relative;
+    }
+
+    /* width */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
     }
   </style>
 </head>

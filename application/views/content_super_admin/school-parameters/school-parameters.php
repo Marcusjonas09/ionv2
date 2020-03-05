@@ -110,7 +110,7 @@
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3 id="simul_number"><?= $college_count ?></h3>
+                                    <h3><?= $college_count ?></h3>
 
                                     <p>College/s</p>
                                 </div>
@@ -129,7 +129,7 @@
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3 id="simul_number"><?= $department_count ?></h3>
+                                    <h3><?= $department_count ?></h3>
 
                                     <p>Department/s</p>
                                 </div>
@@ -148,7 +148,7 @@
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3 id="simul_number"><?= $program_count ?></h3>
+                                    <h3><?= $program_count ?></h3>
 
                                     <p>Program/s</p>
                                 </div>
@@ -167,7 +167,7 @@
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3 id="simul_number"><?= $specialization_count ?></h3>
+                                    <h3><?= $specialization_count ?></h3>
 
                                     <p>Specialization/s</p>
                                 </div>
@@ -181,13 +181,12 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin') : ?>
+                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3 id="simul_number"><?= $course_count ?></h3>
-
+                                    <h3><?= $course_count ?></h3>
                                     <p>Course/s</p>
                                 </div>
                                 <div class="icon">
@@ -200,12 +199,12 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin') : ?>
+                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3 id="simul_number"><?= $lab_count ?></h3>
+                                    <h3><?= $lab_count ?></h3>
 
                                     <p>Laboratory</p>
                                 </div>
@@ -219,28 +218,12 @@
                         </div>
                     <?php endif; ?>
 
-                    <!-- <div class="col-lg-3 col-xs-6">
-                        small box
-                        <div class="small-box bg-yellow">
-                            <div class="inner">
-                                <h3 id="simul_number">0</h3>
-
-                                <p>Pre Requisite</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fa fa-shopping-cart"></i>
-                            </div>
-                            <a href="<?= base_url() ?>SuperAdmin/laboratories" class="small-box-footer">
-                                More info <i class="fa fa-arrow-circle-right"></i>
-                            </a>
-                        </div>
-                    </div> -->
-                    <?php if ($this->session->access == 'superadmin') : ?>
+                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3 id="simul_number"><?= $section_count ?></h3>
+                                    <h3><?= $section_count ?></h3>
 
                                     <p>Section/s</p>
                                 </div>
@@ -254,12 +237,12 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin') : ?>
+                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3 id="simul_number"><?= $curriculum_count ?></h3>
+                                    <h3><?= $curriculum_count ?></h3>
 
                                     <p>Curriculum</p>
                                 </div>
@@ -273,12 +256,12 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin') : ?>
+                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-yellow">
                                 <div class="inner">
-                                    <h3 id="simul_number">0</h3>
+                                    <h3>0</h3>
 
                                     <p>Parallel Courses</p>
                                 </div>
@@ -297,7 +280,7 @@
                             <!-- small box -->
                             <div class="small-box bg-yellow">
                                 <div class="inner">
-                                    <h3 id="simul_number">0</h3>
+                                    <h3>0</h3>
 
                                     <p>Faculty</p>
                                 </div>
@@ -311,12 +294,12 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin') : ?>
+                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3 id="simul_number"><?= $student_count ?></h3>
+                                    <h3><?= $student_count ?></h3>
                                     <p>Student/s</p>
                                 </div>
                                 <div class="icon">
@@ -329,12 +312,12 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin') : ?>
+                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
                                 <div class="inner">
-                                    <h3 id="simul_number"><?= $class_count ?></h3>
+                                    <h3><?= $class_count ?></h3>
 
                                     <p>Class Schedule</p>
                                 </div>
@@ -353,7 +336,7 @@
                             <!-- small box -->
                             <div class="small-box bg-yellow">
                                 <div class="inner">
-                                    <h3 id="simul_number">0</h3>
+                                    <h3>0</h3>
 
                                     <p>Finance</p>
                                 </div>

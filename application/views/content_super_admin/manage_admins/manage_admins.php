@@ -16,11 +16,11 @@
                         <h3 class="box-title">Administrator Accounts</h3>
                         <!-- <a class="btn btn-success pull-right" href="<?= base_url() ?>SuperAdmin/create_admin">Add Account</a> -->
 
-                        <button class="btn btn-success pull-right" data-toggle="modal" data-target="#add_admin">Add Account</button>
+                        <a href="<?= base_url() ?>SuperAdmin/create_admin" class="btn btn-success pull-right">Add Account</a>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table class="table table-stripedadmin">
+                        <table class="table table-striped datatables">
                             <thead class="bg-success">
                                 <th>Faculty ID</th>
                                 <th>Full Name</th>
@@ -59,30 +59,3 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
-<!-- Modal -->
-<div class="modal fade" id="add_admin" tabindex="-1" role="dialog" aria-labelledby="add_admin_label">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="add_admin_label">Account Details</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group col-md-4">
-                    <label for="curr_code">Faculty:</label>
-                    <select class="form-control js-example-basic-single" name="Faculty" id="Faculty">
-                        <option value="">none</option>
-                        <?php foreach ($colleges as $college) : ?>
-                            <option value="<?= $college->college_code ?>"><?= $college->college_code . ' - ' . $college->college_description ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
