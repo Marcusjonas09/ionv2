@@ -32,7 +32,9 @@
 <!-- DataTables -->
 <script src="<?= base_url() ?>bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="<?= base_url() ?>bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-
+<!-- Datepicker disable date JS -->
+<script src="<?= base_url() ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!-- SWAL JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
 <script type="text/javascript">

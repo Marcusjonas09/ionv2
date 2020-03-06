@@ -70,3 +70,56 @@
       <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
+
+
+
+
+
+
+
+
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog bd-example-modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-green" >
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel">Update Calendar Event</h3>
+      </div>
+      <div class="modal-body">
+        <?php echo form_open(site_url(""), array("class" => "form-horizontal")) ?>
+
+        <div class="output"></div>
+        <div class="form-group">
+          <label for="p-in" class="col-md-4 label-heading">Event Name</label>
+          <div class="col-md-8 ui-front ">
+            <input type="text" class="form-control" name="name" id="editname" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="p-in" class="col-md-4 label-heading">Description</label>
+          <div class="col-md-8 ui-front">
+            <textarea id="editdescription" rows="8" class="col-md-12" name="description" disabled></textarea>
+            <!-- <input type="text" class="form-control" name="description" id="editdescription" readonly> -->
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="p-in" class="col-md-4 label-heading">Start Date</label>
+          <div class="col-md-8">
+            <input type="text" class="form-control" name="start_date" id="start_date" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="p-in" class="col-md-4 label-heading">End Date</label>
+          <div class="col-md-8">
+            <input required type="text" class="form-control" name="end_date" id="end_date" readonly>
+          </div>
+        </div>
+        <input type="hidden" name="eventid" id="event_id" value="0" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
