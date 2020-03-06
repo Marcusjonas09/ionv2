@@ -240,12 +240,11 @@
                 center: 'title',
                 right: 'month,listMonth'
             },
-            
-            eventSources: [
-            {
-            events: function(start, end, timezone, callback) {
+
+            eventSources: [{
+                events: function(start, end, timezone, callback) {
                     $.ajax({
-                        url: '<?php echo base_url() ?>Admin/get_events',
+                        url: '<?php echo base_url() ?>Student/get_events',
                         dataType: 'json',
                         data: {
                             // our hypothetical feed requires UNIX timestamps
@@ -258,10 +257,22 @@
                         }
                     });
                 }
-                },
-            ],
-            
-            });
+            }, ],
+            eventClick: function(event, jsEvent, view) {
+                $('#editname').val(event.title);
+                $('#editdescription').val(event.description);
+                $('#start_date').val(moment(event.start).format('YYYY/MM/DD'));
+                if (event.end) {
+                    $('#end_date').val(moment(event.end).format('YYYY/MM/DD'));
+                } else {
+                    $('#end_date').val(moment(event.start).format('YYYY/MM/DD'));
+                }
+                $('#event_id').val(event.id);
+
+
+                $('#editModal').modal();
+            },
+        });
 });
 </script>
 

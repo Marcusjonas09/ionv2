@@ -175,84 +175,26 @@ class Student extends CI_Controller
 		exit();
 	}
 
-	// =======================================================================================
-	// END OF ANNOUNCEMENTS MODULE
-	// =======================================================================================
-
-	// =======================================================================================
-	// CALENDAR MODULE
-	// =======================================================================================
-
-	public function calendar()
+	public function edit_event()
 	{
-		$this->load->view('includes_student/student_header');
+		$eventid = intval($this->input->post("eventid"));
+		$event = $this->Calendar_model->get_event($eventid);
+		if ($event->num_rows() == 0) {
+			echo ('Invalid');
+			exit();
+		}
+		$event->row();
 
-		$this->load->view('includes_student/student_topnav');
-		$this->load->view('includes_student/student_sidebar');
+		/* Our calendar data */
+		$name = $this->input->post("name");
+		$desc = $this->input->post("description");
+		$start_date = $this->input->post("start_date");
+		$end_date = $this->input->post("end_date");
 
-		$year = $this->uri->segment(3);
-		$month = $this->uri->segment(4);
-		$prefs = array(
-			'start_day'    => 'saturday',
-			'month_type'   => 'long',
-			'day_type'     => 'short',
-			'show_next_prev'  => TRUE,
-			'next_prev_url'   => 'http://card-indusstries.info/Student/calendar/'
-		);
-
-
-		$prefs['template'] = '
-
-		        {table_open}<table class="table text-center" border="0" cellpadding="0" cellspacing="0">{/table_open}
-
-		        {heading_row_start}<tr>{/heading_row_start}
-
-		        {heading_previous_cell}<th><h3><strong><a href="{previous_url}" class="navi"><span class="fa fa-chevron-left"></span></a></strong></h3></th>{/heading_previous_cell}
-		        {heading_title_cell}<th colspan="5"><h3><strong>{heading}</strong></h3></th>{/heading_title_cell}
-		        {heading_next_cell}<th><h3><strong><a href="{next_url}" class="navi"><span class="fa fa-chevron-right"></span></a></strong></h3></th>{/heading_next_cell}
-
-		        {heading_row_end}</tr>{/heading_row_end}
-
-		        {week_row_start}<tr style="background-color:#efefef;">{/week_row_start}
-		        {week_day_cell}<td>{week_day}</td>{/week_day_cell}
-		        {week_row_end}</tr>{/week_row_end}
-
-		        {cal_row_start}<tr>{/cal_row_start}
-		        {cal_cell_start}<td>{/cal_cell_start}
-		        {cal_cell_start_today}<td>{/cal_cell_start_today}
-		        {cal_cell_start_other}<td class="other-month">{/cal_cell_start_other}
-
-		        {cal_cell_content}<a href="{content}">{day}</a>{/cal_cell_content}
-		        {cal_cell_content_today}<div class="highlight"><a href="{content}">{day}</a></div>{/cal_cell_content_today}
-
-		        {cal_cell_no_content}{day}{/cal_cell_no_content}
-		        {cal_cell_no_content_today}<div class="highlight">{day}</div>{/cal_cell_no_content_today}
-
-		        {cal_cell_blank}&nbsp;{/cal_cell_blank}
-
-		        {cal_cell_other}{day}{/cal_cel_other}
-
-		        {cal_cell_end}</td>{/cal_cell_end}
-		        {cal_cell_end_today}</td>{/cal_cell_end_today}
-		        {cal_cell_end_other}</td>{/cal_cell_end_other}
-		        {cal_row_end}</tr>{/cal_row_end}
-
-		        {table_close}</table>{/table_close}
-		';
-
-		$this->load->library('calendar', $prefs);
-
-		$data['my_calendar'] = $this->calendar->generate($year, $month);
-
-		$this->load->view('content_student/student_calendar', $data);
-
-		$this->load->view('includes_student/student_contentFooter');
-		$this->load->view('includes_student/student_rightnav');
-		$this->load->view('includes_student/student_footer');
 	}
 
 	// =======================================================================================
-	// END OF CALENDAR MODULE
+	// END OF ANNOUNCEMENTS MODULE
 	// =======================================================================================
 
 	// =======================================================================================
