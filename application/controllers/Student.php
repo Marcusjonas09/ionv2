@@ -19,6 +19,7 @@ class Student extends CI_Controller
 		$this->load->model('Courseflow_model');
 		$this->load->model('Post_model');
 		$this->load->model('Petition_model');
+		$this->load->model('Simul_model');
 		$this->load->model('Notification_model');
 		$this->load->model('CourseCard_model');
 		$this->load->model('COR_model');
@@ -636,6 +637,97 @@ class Student extends CI_Controller
 		$this->load->view('includes_student/student_contentFooter');
 		$this->load->view('includes_student/student_rightnav');
 		$this->load->view('includes_student/student_footer');
+	}
+
+	public function sample_simul()
+	{
+		$this->load->view('includes_student/student_header');
+
+		$this->load->view('includes_student/student_topnav');
+		$this->load->view('includes_student/student_sidebar');
+
+		$data['curr'] = $this->Dashboard_model->fetch_curriculum();
+		$data['grades'] = $this->Dashboard_model->fetchProgress();
+		// $data['courses'] = $this->CourseCard_model->fetch_courses();
+		$data['offerings'] = $this->Dashboard_model->fetchOffering();
+		$data['cor'] = $this->CourseCard_model->fetch_current_COR();
+		$data['status'] = $this->Simul_model->fetch_simul_status($this->session->acc_number);
+
+		$this->load->view('content_student/student_simul', $data);
+
+		$this->load->view('includes_student/student_contentFooter');
+		$this->load->view('includes_student/student_rightnav');
+		$this->load->view('includes_student/student_footer');
+	}
+
+	// public function submit_simul()
+	// {
+	// 	$this->dd($_FILES);
+	// 	$config['upload_path']          = './uploads/';
+	// 	$config['allowed_types']        = 'gif|jpg|png';
+	// 	$config['max_size']             = 1000;
+	// 	$config['max_width']            = 4000;
+	// 	$config['max_height']           = 4000;
+
+	// 	$this->load->library('upload', $config);
+
+	// 	if (!$this->upload->do_upload('LetterOfIntent')) {
+	// 		$error = array('error' => $this->upload->display_errors());
+	// 		$this->dd($error);
+	// 		// $this->load->view('upload_form', $error);
+	// 	} else {
+	// 		$data = array('upload_data' => $this->upload->data());
+	// 		$this->dd($data);
+	// 		// $this->load->view('upload_success', $data);
+	// 	}
+	// }
+
+	public function submit_simul()
+	{
+		$uploaded = $this->upload_requirement();
+
+		$sample = array(
+			'LetterOfIntent' => $uploaded['LetterOfIntent'],
+			'ScholasticRecords' => $uploaded['ScholasticRecords'],
+			'LetterFromCompany' => $uploaded['LetterFromCompany'],
+			'StudentNumber' => $this->input->post('acc_number'),
+			'date_submitted' => date('Y-m-d H:i:s', time())
+		);
+		$this->Simul_model->submit_simul($sample);
+
+		// $error = array('error' => $this->upload->display_errors());
+		redirect('Student/sample_simul');
+		// $this->dd($sample);
+	}
+
+	public function upload_requirement()
+	{
+		$config['upload_path']          = './simul_requirements/';
+		$config['allowed_types']        = 'pdf';
+		$config['max_size']             = 10000;
+		$config['file_name'] 			= 'requirement';
+
+		$this->load->library('upload', $config);
+		$LetterOfIntent = "";
+		$ScholasticRescords = "";
+		$LetterFromCompany = "";
+		if ($this->upload->do_upload('LetterOfIntent')) {
+			$data = array('upload_data' => $this->upload->data());
+			$LetterOfIntent = $data['upload_data']['file_name'];
+		}
+		if ($this->upload->do_upload('ScholasticRecords')) {
+			$data = array('upload_data' => $this->upload->data());
+			$ScholasticRecords = $data['upload_data']['file_name'];
+		}
+		if ($this->upload->do_upload('LetterFromCompany')) {
+			$data = array('upload_data' => $this->upload->data());
+			$LetterFromCompany = $data['upload_data']['file_name'];
+		}
+		return array(
+			'LetterOfIntent' => $LetterOfIntent,
+			'ScholasticRecords' => $ScholasticRecords,
+			'LetterFromCompany' => $LetterFromCompany
+		);
 	}
 
 	// =======================================================================================

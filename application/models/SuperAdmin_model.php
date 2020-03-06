@@ -238,7 +238,7 @@ class SuperAdmin_model extends CI_Model
     public function fetch_all_faculty()
     {
         $this->db->select('*');
-        $this->db->where(array('acc_access_level' => 10));
+        $this->db->where(array('acc_access_level' => 2));
         $this->db->from('accounts_tbl');
         $this->db->order_by('acc_lname', 'ASC');
         $query = $this->db->get();
@@ -1689,10 +1689,13 @@ class SuperAdmin_model extends CI_Model
         return $query->num_rows();
     }
 
-    public function edit_admin($acc_number, $data)
+    public function edit_admin($id, $modules)
     {
-        $query = $this->db->get_where('accounts_tbl', array('acc_access_level' => 2));
-        return $query->num_rows();
+        $this->db->set($modules);
+        $this->db->where(array(
+            'acc_id' => $id
+        ));
+        $this->db->update('accounts_tbl');
     }
 
     public function view_admin($acc_number)
@@ -1703,6 +1706,28 @@ class SuperAdmin_model extends CI_Model
 
     // =======================================================================================
     // END OF ADMIN MANAGEMENT FUNCTIONS
+    // =======================================================================================
+
+    // =======================================================================================
+    // STUDENT MANAGEMENT FUNCTIONS
+    // =======================================================================================
+
+    public function fetch_last_student_number()
+    {
+        // $current = substr($this->session->curr_year, 0, 4) . ($this->session->curr_term < 3 ? $this->session->curr_term + 1 : 1);
+
+        $this->db->select('acc_number');
+        $this->db->from('accounts_tbl');
+        $this->db->where(array(
+            'acc_access_level' => 3
+        ));
+        $this->db->order_by('acc_number', 'desc');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    // =======================================================================================
+    // STUDENT MANAGEMENT FUNCTIONS
     // =======================================================================================
 
     // =======================================================================================

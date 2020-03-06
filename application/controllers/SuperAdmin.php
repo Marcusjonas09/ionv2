@@ -14,6 +14,7 @@ class SuperAdmin extends CI_Controller
         $this->load->model('User_model');
         $this->load->model('Academics_model');
         $this->load->model('Petition_model');
+        $this->load->model('Simul_model');
         $this->load->model('Curriculum_model');
         $this->load->model('CourseCard_model');
         $this->load->model('Dashboard_model');
@@ -452,6 +453,7 @@ class SuperAdmin extends CI_Controller
             '880418',
             $options
         );
+
         $config['upload_path']          = './images/posts/';
         $config['allowed_types']        = 'gif|jpg|png|JPG';
         $config['max_size']             = 512;
@@ -461,6 +463,7 @@ class SuperAdmin extends CI_Controller
         $this->load->library('upload', $config);
 
         $this->form_validation->set_rules('caption', 'Caption', 'strip_tags');
+
         if (empty($this->input->post('caption')) && !$this->upload->do_upload('attachment')) {
             redirect('SuperAdmin/school_announcements');
         } else {
@@ -780,12 +783,35 @@ class SuperAdmin extends CI_Controller
 
     public function simul() // | Display all simul request |
     {
+        $data['requests'] = $this->Simul_model->fetch_all_simul();
         $this->load->view('includes_super_admin/superadmin_header');
-
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
-        $this->load->view('content_super_admin/simul/simul');
+        $this->load->view('content_super_admin/simul/simul', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function view_simul($id) // | Display one simul request |
+    {
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $data['details'] = $this->Simul_model->fetch_simul($id);
+        // $this->dd($request);
+
+        $data['curr'] = $this->Simul_model->fetch_curriculum($data['details']->curriculum_code);
+        $data['grades'] = $this->Simul_model->fetchProgress($data['details']->acc_number);
+        // $data['courses'] = $this->CourseCard_model->fetch_courses();
+        $data['offerings'] = $this->Simul_model->fetchOffering();
+        $data['cor'] = $this->Simul_model->fetch_current_COR($data['details']->acc_number);
+        $data['status'] = $this->Simul_model->fetch_simul_status($data['details']->acc_number);
+        // $this->dd($data['details']);
+        $this->load->view('content_super_admin/simul/view_simul', $data);
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
@@ -1224,6 +1250,62 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
+
+    public function fetch_last_student_number()
+    {
+        $last = $this->SuperAdmin_model->fetch_last_student_number();
+
+        if (isset($last)) {
+            $current = substr($this->session->curr_year, 0, 4) . ($this->session->curr_term);
+        } else {
+            $current = substr($this->session->curr_year, 0, 4) . ($this->session->curr_term + 1) * 10000;
+            $current = $current + 1;
+        }
+        // $this->dd($current);
+        return $current;
+    }
+
+    public function generate_stud_number()
+    {
+        $current_sy = $this->SuperAdmin_model->fetch_current();
+
+        $curr_year = $current_sy->school_year;
+        $curr_term = $current_sy->school_term;
+
+        $result = $this->SuperAdmin_model->fetch_last_student_number();
+        // $current_term = substr($curr_year, 0, 4) . $curr_term;
+
+        // $result = (object) array(
+        //     'acc_number' => 201920185
+        // );
+
+        $current_prefix = substr($curr_year, 0, 4) . $curr_term; // YYYYT
+
+        $last_entry = $result->acc_number; // YYYYTXXXXX
+
+        $last_prefix = substr($last_entry, 0, 5); // YYYYT
+
+        // IF NEW STUDENT
+        if ($curr_term < 3) {
+            $stud_prefix = (substr($curr_year, 0, 4) . ($curr_term + 1));
+        } else {
+            $stud_prefix = ((substr($curr_year, 0, 4) + 1) . 1);
+        }
+
+        if ($last_prefix == $current_prefix) {
+            $assigned = $last_entry + 1;
+        } else if ($last_prefix < $current_prefix) {
+            $assigned = ($stud_prefix * 10000) + 1;
+        } else {
+            $assigned  = 'error';
+        }
+
+        return $assigned;
+        // $this->dd($assigned);
+        // die();
+    }
+
+
     public function add_student($message = null)
     {
         // $data['colleges'] = $this->SuperAdmin_model->fetch_all_college();
@@ -1231,13 +1313,36 @@ class SuperAdmin extends CI_Controller
         $data['colleges'] = $this->SuperAdmin_model->fetch_all_college();
         $data['curricula'] = $this->SuperAdmin_model->fetch_all_curricula();
         $data['specs'] = $this->SuperAdmin_model->fetch_all_specializations();
-        $data['current_sy'] = $this->SuperAdmin_model->fetch_current();
+
         $data['message'] = $message;
+        // $data['stud_number'] = $this->generate_stud_number();
+
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
         $this->load->view('content_super_admin/manage_student/add_student', $data);
+
+        $this->load->view('includes_super_admin/superadmin_contentFooter');
+        $this->load->view('includes_super_admin/superadmin_rightnav');
+        $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function view_student($id, $success_msg = null, $fail_msg = null)
+    {
+        $data['departments'] = $this->SuperAdmin_model->fetch_all_department();
+        $data['student'] = $this->SuperAdmin_model->fetch_student($id);
+        $data['success_msg'] = $success_msg;
+        $data['fail_msg'] = $fail_msg;
+
+        // print_r($data);
+        // die();
+
+        $this->load->view('includes_super_admin/superadmin_header');
+        $this->load->view('includes_super_admin/superadmin_topnav');
+        $this->load->view('includes_super_admin/superadmin_sidebar');
+
+        $this->load->view('content_super_admin/manage_student/view_student', $data);
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
@@ -1301,7 +1406,10 @@ class SuperAdmin extends CI_Controller
 
     public function create_student()
     {
-        $this->form_validation->set_rules('acc_number', 'Student number', 'required|strip_tags|is_unique[accounts_tbl.acc_number]');
+        // $this->dd($_POST);
+        // $this->dd(substr($current_sy->school_year, 0, 4) . ($current_sy->school_term < 3 ? $current_sy->school_term + 1 : 1) . $last_number);
+        // $this->form_validation->set_rules('acc_number', 'Student number', 'required|strip_tags|is_unique[accounts_tbl.acc_number]');
+
         $this->form_validation->set_rules('acc_fname', 'First Name', 'required|strip_tags');
         $this->form_validation->set_rules('acc_mname', 'Middle Name', 'required|strip_tags');
         $this->form_validation->set_rules('acc_lname', 'Last Name', 'required|strip_tags');
@@ -1311,14 +1419,16 @@ class SuperAdmin extends CI_Controller
         $this->form_validation->set_rules('acc_specialization', 'Specialization', 'required|strip_tags');
         $this->form_validation->set_rules('acc_access_level', 'Access level', 'required|strip_tags');
         $this->form_validation->set_rules('acc_citizenship', 'Citizenship', 'required|strip_tags');
+
         $data['current_sy'] = $this->SuperAdmin_model->fetch_current();
 
         if ($this->form_validation->run() == FALSE) {
             $this->add_student();
         } else {
+            $studNumber = $this->generate_stud_number();
             $student = array(
-                'acc_number' => substr($data['current_sy']->school_year, 0, 4) . $data['current_sy']->school_term . $this->input->post('acc_number'),
-                'acc_username' => substr($data['current_sy']->school_year, 0, 4) . $data['current_sy']->school_term . $this->input->post('acc_number'),
+                'acc_number' => $studNumber,
+                'acc_username' => $studNumber,
                 'acc_password' => sha1('itamaraw'),
                 'acc_fname' => $this->input->post('acc_fname'),
                 'acc_mname' => $this->input->post('acc_mname'),
@@ -1333,13 +1443,16 @@ class SuperAdmin extends CI_Controller
             );
 
             $this->SuperAdmin_model->create_student($student);
+
             $message = '
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            <h4><i class="icon fa fa-warning"></i>Success!</h4>
-            <p>Record successfully added!</p>
-        </div>
-        ';
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-warning"></i>Success!</h4>
+                    <p>Record successfully added!</p>
+                    <p>Please successfully added!</p>
+                </div>
+                ';
+
             $this->add_student($message);
         }
     }
@@ -2969,11 +3082,12 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
-    public function edit_admin($id)
+    public function edit_admin($id, $message = null)
     {
         $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
-        $data['admin'] = $id;
-        $this->dd($data);
+        $data['acc_details'] = $this->SuperAdmin_model->fetch_faculty($id);
+        $data['message'] = $message;
+        // $this->dd($message);
         $this->load->view('includes_super_admin/superadmin_header');
         $this->load->view('includes_super_admin/superadmin_topnav');
         $this->load->view('includes_super_admin/superadmin_sidebar');
@@ -2983,6 +3097,48 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
         $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    //EDIT ADMIN FUNCTION
+    public function edit_admin_function()
+    {
+        // $this->dd($_POST);
+        //here are the validation entry
+        $this->form_validation->set_rules('acc_id', 'Faculty Assignment', 'required|strip_tags');
+
+        $id = $this->input->post('acc_id');
+
+        // $this->dd($modules);
+        if ($this->form_validation->run() == FALSE) {
+            // $this->dd('true');
+            $this->edit_admin($id);
+        } else {
+            // $this->dd('false');
+            $modules = array(
+                'UsesCollege' => $this->input->post('UsesCollege'),
+                'UsesDepartment' => $this->input->post('UsesDepartment'),
+                'UsesProgram' => $this->input->post('UsesProgram'),
+                'UsesSpec' => $this->input->post('UsesSpec'),
+                'UsesCourse' => $this->input->post('UsesCourse'),
+                'UsesLab' => $this->input->post('UsesLab'),
+                'UsesSection' => $this->input->post('UsesSection'),
+                'UsesCurriculum' => $this->input->post('UsesCurriculum'),
+                'UsesParallel' => $this->input->post('UsesParallel'),
+                'UsesFaculty' => $this->input->post('UsesFaculty'),
+                'UsesStudent' => $this->input->post('UsesStudent'),
+                'UsesClass' => $this->input->post('UsesClass'),
+                'UsesFinance' => $this->input->post('UsesFinance')
+            );
+            $this->SuperAdmin_model->edit_admin($id, $modules);
+            $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-check"></i>Success!</h4>
+            <p>Permissions have been set!</p>
+        </div>
+        ';
+            $this->edit_admin($id, $message);
+        }
     }
 
     // =======================================================================================
@@ -3432,7 +3588,7 @@ class SuperAdmin extends CI_Controller
 
     public function school_parameters($message = null)
     {
-        if ($this->uri->segment(2) == 'school_parameters' && $this->session->has_school_parameters == TRUE) {
+        if ($this->session->has_school_parameters == TRUE) {
         } else {
             redirect('SuperAdmin/dashboard');
         }

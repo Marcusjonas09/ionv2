@@ -34,10 +34,12 @@
                                     <td class="text-center"><?= $i++ ?></td>
                                     <td class="text-center"><?= $student->acc_number ?></td>
                                     <td><?= $student->acc_lname . ', ' . $student->acc_fname . ' ' . $student->acc_mname ?></td>
-                                    <td class="text-center"><?= $student->acc_program ?></td>
+                                    <td class="text-center"><?= $student->acc_program . $student->acc_specialization ?></td>
                                     <td class="text-center"><?= $student->curriculum_code ?></td>
                                     <td class="text-center">
-                                        <a href="<?= base_url() ?>SuperAdmin/edit_student/<?= $student->acc_id ?>" class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                        <a href="<?= base_url() ?>SuperAdmin/view_student/<?= $student->acc_id ?>" class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                        <a href="<?= base_url() ?>SuperAdmin/edit_student/<?= $student->acc_id ?>" class="btn btn-warning"><i class="fa fa-pencil"></i></a>
+                                        <a href="<?= base_url() ?>SuperAdmin/edit_student/<?= $student->acc_id ?>" class="btn btn-danger"><i class="fa fa-ban"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

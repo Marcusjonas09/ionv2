@@ -37,9 +37,6 @@ class Student_model extends CI_Model
         $this->db->join('courses_tbl_v2', 'courses_tbl_v2.course_code = enrolment_tbl.course_code');
         $query = $this->db->get();
         return $query->result();
-        // }
-        // $query = $this->db->get_where('enrolment_tbl', array('stud_number' => $stud_number, 'school_year' => $year, 'school_term' => $term));
-        // return $query->result();
     }
 
     public function fetchTerm()

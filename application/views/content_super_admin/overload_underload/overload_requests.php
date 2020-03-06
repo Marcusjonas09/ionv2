@@ -18,7 +18,7 @@
               <!-- /.box-header -->
               <div class="box-body">
                   <div class="box-body table-responsive no-padding">
-                      <table id="petitionTable" class="table table-striped">
+                      <table class="table table-striped datatables">
                           <thead>
                               <th>Student Number</th>
                               <th>Student Name</th>

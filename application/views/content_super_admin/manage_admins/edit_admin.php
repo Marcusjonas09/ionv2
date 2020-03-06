@@ -15,6 +15,9 @@
                 <?php echo validation_errors(); ?>
             </div>
         <?php endif; ?>
+        <?php if (isset($message)) : ?>
+            <?php echo $message; ?>
+        <?php endif; ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="box">
@@ -28,71 +31,93 @@
                                 <div class="box-body">
                                     <div class="form-group col-md-4">
                                         <label for="faculty">Faculty</label>
-                                        <select class="form-control js-example-basic-single" name="faculty" id="faculty">
+                                        <select disabled class="form-control js-example-basic-single" name="faculty" id="faculty">
                                             <option value="">--</option>
                                             <?php foreach ($faculties as $faculty) : ?>
-                                                <option <?php if ($faculty->acc_number == $admin) {
+                                                <option <?php if ($faculty->acc_number == $acc_details->acc_number) {
                                                             echo "selected";
                                                         } ?> value="<?= $faculty->acc_number ?>"><?= $faculty->acc_lname . ', ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?></option>
                                             <?php endforeach; ?>
-                                            <!-- <?php foreach ($colleges as $college) : ?>
-                                                <option <?php if ($college->college_code == $department->assigned_college) {
-                                                            echo "selected";
-                                                        } ?> value="<?= $college->college_code ?>"><?= $college->college_code . ' - ' . $college->college_description ?></option>
-                                            <?php endforeach; ?> -->
                                         </select>
+                                        <input type="hidden" name="acc_id" value="<?= $acc_details->acc_id ?>">
                                     </div>
 
                                     <div class="form-group col-md-8">
                                         <div class="row">
-                                            <label class="col-md-12" for="faculty">Modules</label><br>
+                                            <label class="col-md-12">Modules</label><br>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <label class="checkbox-inline col-md-12" style="margin:0px;">
-                                                    <input <?php echo set_checkbox('UsesCollege', '1'); ?> type="checkbox" id="UsesCollege" name="UsesCollege" value="1"> College/s
+                                                    <input <?php if ($acc_details->UsesCollege) {
+                                                                echo "checked";
+                                                            } ?> value="1" type="checkbox" id="UsesCollege" name="UsesCollege"> College/s
                                                 </label>
                                                 <label class="checkbox-inline col-md-12" style="margin:0px;">
-                                                    <input <?php echo set_checkbox('UsesDepartment', '1'); ?> type="checkbox" id="UsesDepartment" name="UsesDepartment" value="1"> Department/s
+                                                    <input <?php if ($acc_details->UsesDepartment) {
+                                                                echo "checked";
+                                                            } ?> value="1" type="checkbox" id="UsesDepartment" name="UsesDepartment"> Department/s
                                                 </label>
                                                 <label class="checkbox-inline col-md-12" style="margin:0px;">
-                                                    <input <?php echo set_checkbox('UsesProgram', '1'); ?> type="checkbox" id="UsesProgram" name="UsesProgram" value="1"> Program/s
+                                                    <input <?php if ($acc_details->UsesProgram) {
+                                                                echo "checked";
+                                                            } ?> value="1" type="checkbox" id="UsesProgram" name="UsesProgram"> Program/s
                                                 </label>
                                                 <label class="checkbox-inline col-md-12" style="margin:0px;">
-                                                    <input <?php echo set_checkbox('UsesSpec', '1'); ?> type="checkbox" id="UsesSpec" name="UsesSpec" value="1"> Specialization/s
-                                                </label>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="checkbox-inline col-md-12" style="margin:0px;">
-                                                    <input <?php echo set_checkbox('UsesCourse', '1'); ?> type="checkbox" id="UsesCourse" name="UsesCourse" value="1"> Course/s
-                                                </label>
-                                                <label class="checkbox-inline col-md-12" style="margin:0px;">
-                                                    <input <?php echo set_checkbox('UsesLab', '1'); ?> type="checkbox" id="UsesLab" name="UsesLab" value="1"> Laboratory
-                                                </label>
-                                                <label class="checkbox-inline col-md-12" style="margin:0px;">
-                                                    <input <?php echo set_checkbox('UsesSection', '1'); ?> type="checkbox" id="UsesSection" name="UsesSection" value="1"> Section
-                                                </label>
-                                                <label class="checkbox-inline col-md-12" style="margin:0px;">
-                                                    <input <?php echo set_checkbox('UsesCurriculum', '1'); ?> type="checkbox" id="UsesCurriculum" name="UsesCurriculum" value="1"> Curriculum
+                                                    <input <?php if ($acc_details->UsesSpec) {
+                                                                echo "checked";
+                                                            } ?> value="1" type="checkbox" id="UsesSpec" name="UsesSpec"> Specialization/s
                                                 </label>
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="checkbox-inline col-md-12" style="margin:0px;">
-                                                    <input <?php echo set_checkbox('UsesParallel', '1'); ?> type="checkbox" id="UsesParallel" name="UsesParallel" value="1"> Parallel Course/s
+                                                    <input <?php if ($acc_details->UsesCourse) {
+                                                                echo "checked";
+                                                            } ?> value="1" type="checkbox" id="UsesCourse" name="UsesCourse"> Course/s
                                                 </label>
                                                 <label class="checkbox-inline col-md-12" style="margin:0px;">
-                                                    <input <?php echo set_checkbox('UsesFaculty', '1'); ?> type="checkbox" id="UsesFaculty" name="UsesFaculty" value="1"> Faculty
+                                                    <input <?php if ($acc_details->UsesLab) {
+                                                                echo "checked";
+                                                            } ?> value="1" type="checkbox" id="UsesLab" name="UsesLab"> Laboratory
                                                 </label>
                                                 <label class="checkbox-inline col-md-12" style="margin:0px;">
-                                                    <input <?php echo set_checkbox('UsesStudent', '1'); ?> type="checkbox" id="UsesStudent" name="UsesStudent" value="1"> Student
+                                                    <input <?php if ($acc_details->UsesSection) {
+                                                                echo "checked";
+                                                            } ?> value="1" type="checkbox" id="UsesSection" name="UsesSection"> Section
                                                 </label>
                                                 <label class="checkbox-inline col-md-12" style="margin:0px;">
-                                                    <input <?php echo set_checkbox('UsesClass', '1'); ?> type="checkbox" id="UsesClass" name="UsesClass" value="1"> Class Schedule/s
+                                                    <input <?php if ($acc_details->UsesCurriculum) {
+                                                                echo "checked";
+                                                            } ?> value="1" type="checkbox" id="UsesCurriculum" name="UsesCurriculum"> Curriculum
                                                 </label>
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="checkbox-inline col-md-12" style="margin:0px;">
-                                                    <input <?php echo set_checkbox('UsesFinance', '1'); ?> type="checkbox" id="UsesFinance" name="UsesFinance" value="1"> Finance/s
+                                                    <input <?php if ($acc_details->UsesParallel) {
+                                                                echo "checked";
+                                                            } ?> value="1" type="checkbox" id="UsesParallel" name="UsesParallel"> Parallel Course/s
+                                                </label>
+                                                <label class="checkbox-inline col-md-12" style="margin:0px;">
+                                                    <input <?php if ($acc_details->UsesFaculty) {
+                                                                echo "checked";
+                                                            } ?> value="1" type="checkbox" id="UsesFaculty" name="UsesFaculty"> Faculty
+                                                </label>
+                                                <label class="checkbox-inline col-md-12" style="margin:0px;">
+                                                    <input <?php if ($acc_details->UsesStudent) {
+                                                                echo "checked";
+                                                            } ?> value="1" type="checkbox" id="UsesStudent" name="UsesStudent"> Student
+                                                </label>
+                                                <label class="checkbox-inline col-md-12" style="margin:0px;">
+                                                    <input <?php if ($acc_details->UsesClass) {
+                                                                echo "checked";
+                                                            } ?> value="1" type="checkbox" id="UsesClass" name="UsesClass"> Class Schedule/s
+                                                </label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="checkbox-inline col-md-12" style="margin:0px;">
+                                                    <input <?php if ($acc_details->UsesFinance) {
+                                                                echo "checked";
+                                                            } ?> value="1" type="checkbox" id="UsesFinance" name="UsesFinance"> Finance/s
                                                 </label>
                                             </div>
                                         </div>

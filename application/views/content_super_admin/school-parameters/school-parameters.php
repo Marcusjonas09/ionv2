@@ -105,7 +105,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <?php if ($this->session->access == 'superadmin') : ?>
+                    <?php if ($this->session->UsesCollege) : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
@@ -124,7 +124,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin') : ?>
+                    <?php if ($this->session->UsesDepartment) : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
@@ -143,7 +143,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin') : ?>
+                    <?php if ($this->session->UsesProgram) : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
@@ -162,7 +162,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin') : ?>
+                    <?php if ($this->session->UsesSpec) : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
@@ -181,7 +181,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
+                    <?php if ($this->session->UsesCourse) : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
@@ -199,7 +199,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
+                    <?php if ($this->session->UsesLab) : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
@@ -218,7 +218,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
+                    <?php if ($this->session->UsesSection) : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
@@ -237,7 +237,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
+                    <?php if ($this->session->UsesCurriculum) : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
@@ -256,7 +256,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
+                    <?php if ($this->session->UsesParallel) : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-yellow">
@@ -275,7 +275,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin') : ?>
+                    <?php if ($this->session->UsesFaculty) : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-yellow">
@@ -294,7 +294,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
+                    <?php if ($this->session->UsesStudent) : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
@@ -312,7 +312,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin' || $this->session->access == 'admin') : ?>
+                    <?php if ($this->session->UsesClass) : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-green">
@@ -331,7 +331,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if ($this->session->access == 'superadmin') : ?>
+                    <?php if ($this->session->UsesFinance) : ?>
                         <div class="col-lg-3 col-xs-6">
                             <!-- small box -->
                             <div class="small-box bg-yellow">

@@ -18,7 +18,7 @@
               <!-- /.box-header -->
               <div class="box-body">
                   <div class="box-body table-responsive no-padding">
-                      <table id="petitionTable" class="table table-striped">
+                      <table class="table table-striped datatables">
                           <thead>
                               <th>Student Number</th>
                               <th>Student Name</th>
@@ -34,12 +34,12 @@
                                       <td><?= date("F j, Y, g:i a", $underload->ou_date_posted) ?></td>
                                       <td>
                                           <?php if ($underload->ou_status == 1) {
-                                                    echo "<span class='label label-success'>Approved</span>";
-                                                } elseif ($underload->ou_status == 2) {
-                                                    echo "<span class='label label-warning'>Pending</span>";
-                                                } else {
-                                                    echo "<span class='label label-danger'>Denied</span>";
-                                                } ?>
+                                                echo "<span class='label label-success'>Approved</span>";
+                                            } elseif ($underload->ou_status == 2) {
+                                                echo "<span class='label label-warning'>Pending</span>";
+                                            } else {
+                                                echo "<span class='label label-danger'>Denied</span>";
+                                            } ?>
                                       </td>
                                       <td><a href="<?= base_url() ?>SuperAdmin/underload_view/<?= $underload->ou_stud_number ?>/<?= $underload->ou_term ?>/<?= $underload->ou_year ?>" class="btn btn-warning btn-sm"><span class="fa fa-eye"></span> View</a></td>
                                   </tr>

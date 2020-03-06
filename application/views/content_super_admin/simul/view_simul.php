@@ -69,12 +69,12 @@ $totalunitspassed = $coursepassed + $labpassed;
                 <?php if ($cor) : ?>
                     <table class="table">
                         <tr>
-                            <td><strong>Student #: </strong><?= $this->session->acc_number ?></td>
-                            <td><strong>College: </strong> <?= $this->session->College ?></td>
-                            <td><strong>Program: </strong><?= $this->session->Program ?></td>
+                            <td><strong>Student #: </strong><?= $details->acc_number ?></td>
+                            <td><strong>College: </strong> <?= $details->acc_college ?></td>
+                            <td><strong>Program: </strong><?= $details->acc_program ?></td>
                         </tr>
                         <tr>
-                            <td><strong>Name: </strong><?= $this->session->Lastname . ', ' . $this->session->Firstname . ' ' . $this->session->Middlename ?></td>
+                            <td><strong>Name: </strong><?= $details->acc_lname . ', ' . $details->acc_fname . ' ' . $details->acc_mname ?></td>
                             <td><strong>Year Level: </strong><?php if ($totalunitspassed >= 3 && $totalunitspassed <= 56) {
                                                                     echo "1";
                                                                 } else if ($totalunitspassed >= 57 && $totalunitspassed <= 116) {
@@ -188,8 +188,8 @@ $totalunitspassed = $coursepassed + $labpassed;
                     </div>
                 </div>
                 <div class="box-footer">
-                    <button <?= $status ? 'disabled' : ''; ?> type="submit" class="btn btn-success pull-right col-md-1">Submit</button>
-                    <a href="<?= base_url() ?>Student" class="btn btn-default pull-right col-md-1" style="margin-right:10px;">Cancel</a>
+                    <button type="submit" class="btn btn-success pull-right col-md-1">Approve</button>
+                    <a href="<?= base_url() ?>Student" class="btn btn-danger pull-right col-md-1" style="margin-right:10px;">Decline</a>
                     <!-- <a href="<?= base_url() ?>/Student/submit_simul" class="btn btn-success pull-right col-md-1 <?php if ($overload) {
                                                                                                                             if ($overload->ou_stud_number == $this->session->acc_number) echo "disabled";
                                                                                                                         } ?>">Submit</a>

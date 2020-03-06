@@ -20,7 +20,7 @@
             <?php echo $message; ?>
         <?php endif; ?>
         <div class="container-fluid col-md-9" style="padding:0px;">
-            <form action="<?= base_url() ?>SuperAdmin/create_student" method="post" enctype="multipart/form-data">
+            <form action="<?= base_url() ?>SuperAdmin/create_student" method="post">
                 <div class="box box-success">
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong>Add New Student</strong></h3>
@@ -29,14 +29,14 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group col-md-12">
+                                <!-- <div class="form-group col-md-12">
                                     <label for="curr_code">Student Number:</label>
                                     <div class="input-group">
-                                        <span class="input-group-addon"><?= substr($current_sy->school_year, 0, 4) . $current_sy->school_term ?></span>
-                                        <input type="number" name="acc_number" class="form-control" placeholder="Student Number">
+                                        <span class="input-group-addon"><?= substr($stud_number, 0, 5) ?></span>
+                                        <input disabled type="number" value="<?= substr($stud_number, 5, 4) ?>" class="form-control" placeholder="Student Number">
+                                        <input type="hidden" name="acc_number" value="<?php $stud_number ?>">
                                     </div>
-                                    <!-- <input class="form-control" type="number" name="acc_number" id="acc_number" placeholder="Enter student Number"> -->
-                                </div>
+                                </div> -->
                                 <div class="form-group col-md-12">
                                     <label for="curr_code">First Name:</label>
                                     <input class="form-control" type="text" name="acc_fname" id="acc_fname" placeholder="Enter first name">
@@ -56,6 +56,7 @@
                                     <input type="hidden" name="acc_access_level" value="3">
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <div class="form-group col-md-12">
                                     <label for="curr_code">College:</label>
@@ -67,7 +68,7 @@
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-12">
                                     <label for="curr_code">Program:</label>
                                     <select class="form-control js-example-basic-single" name="acc_program" id="acc_program">
                                         <option value="">--</option>
@@ -77,7 +78,7 @@
                                     </select>
                                 </div>
 
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-12">
                                     <label for="curr_code">Specialization:</label>
                                     <select class="form-control js-example-basic-single" name="acc_specialization" id="acc_specialization">
                                         <option value="">--</option>

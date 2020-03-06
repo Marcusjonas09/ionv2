@@ -9,63 +9,88 @@
 
     <!-- Main content -->
     <section class="content container-fluid">
-        <div class="container-fluid col-md-9" style="padding:0px;">
+        <div class="container-fluid col-md-12" style="padding:0px;">
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Student details</strong></h3>
                 </div>
                 <div class="box-body">
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group col-md-12">
-                                <label for="curr_code">Student Number:</label>
-                                <input disabled class="form-control" type="number" name="stud_number" id="stud_number" value="<?= $student->acc_number ?>" placeholder="Enter student Number">
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="curr_code">First Name:</label>
-                                <input disabled class="form-control" type="text" name="acc_fname" id="acc_fname" value="<?= $student->acc_fname ?>" placeholder="Enter first name">
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="curr_code">Middle Name:</label>
-                                <input disabled class="form-control" type="text" name="acc_mname" id="acc_mname" value="<?= $student->acc_mname ?>" placeholder="Enter middle Name">
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="curr_code">Last Name:</label>
-                                <input disabled class="form-control" type="text" name="acc_lname" id="acc_lname" value="<?= $student->acc_lname ?>" placeholder="Enter last name">
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="curr_code">Citizenship:</label>
-                                <input disabled class="form-control" type="text" name="citizenship" id="citizenship" value="<?= $student->acc_citizenship ?>" placeholder="Enter citizenship">
-                            </div>
+                        <div class="form-group col-md-4">
+                            <label for="curr_code">Student Number:</label>
+                            <input disabled class="form-control" type="text" value="<?= $student->acc_number ?>" placeholder="Enter student Number">
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group col-md-12">
-                                <label for="curr_code">College:</label>
-                                <input disabled class="form-control" type="text" name="college" id="college" value="<?= $student->acc_college ?>" placeholder="Enter college">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="curr_code">Program:</label>
-                                <input disabled class="form-control" type="text" name="program" id="program" value="<?= $student->acc_program ?>" placeholder="Enter program">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="curr_code">Program:</label>
-                                <input disabled class="form-control" type="text" name="specialization" id="specialization" value="<?= $student->acc_specialization ?>" placeholder="Enter program">
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label for="curr_code">Curriculum:</label>
-                                <input disabled class="form-control" type="text" name="curr_code" id="curr_code" value="<?= $student->curriculum_code ?>" placeholder="Enter first name">
-                            </div>
+                        <div class="form-group col-md-4">
+                            <label for="curr_code">College:</label>
+                            <input disabled class="form-control" type="text" value="<?= $student->acc_college ?>" placeholder="Enter college">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="curr_code">Program:</label>
+                            <input disabled class="form-control" type="text" value="<?= $student->acc_program . '' . $student->acc_specialization ?>" placeholder="Enter college">
                         </div>
                     </div>
-
-
-
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label for="curr_code">Full Name:</label>
+                            <input disabled class="form-control" type="text" value="<?= strtoupper($student->acc_lname . ', ' . $student->acc_fname . ' ' . $student->acc_mname) ?>" placeholder="Enter first name">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="curr_code">Citizenship:</label>
+                            <input disabled class="form-control" type="text" value="<?= $student->acc_citizenship ?>" placeholder="Enter citizenship">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="curr_code">Curriculum:</label>
+                            <input disabled class="form-control" type="text" name="curr_code" id="curr_code" value="<?= $student->curriculum_code ?>" placeholder="Enter first name">
+                        </div>
+                    </div>
                 </div>
-                <div class="box-footer">
-                    <!-- <input class="btn btn-success pull-right" type="submit" value="Submit" /> -->
+            </div>
+        </div>
+        <div class="container-fluid col-md-12" style="padding:0px;">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><strong>Add Course Load</strong></h3>
+                    <button class="btn btn-success pull-right" data-toggle="modal" data-target="#addCourseModal">Add Course</a>
+                </div>
+                <div class="box-body">
+                    <table class="table">
+                        <thead>
+                            <th>Course Code</th>
+                            <th>Course Title</th>
+                            <th>Section</th>
+                            <th>Day</th>
+                            <th>Time</th>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </section>
 </div>
 <!-- /.content-wrapper -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="addCourseModal" tabindex="-1" role="dialog" aria-labelledby="addCourseLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addCourseLabel">Add Course</h4>
+            </div>
+            <form action="<?= base_url() ?>SuperAdmin/add_course_to_student" method="post">
+                <div class="modal-body">
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success col-md-2 pull-right">Add</button>
+                    <button type="button" class="btn btn-default col-md-2 pull-right" style="margin-right:10px;" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

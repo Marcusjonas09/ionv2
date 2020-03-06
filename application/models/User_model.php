@@ -57,8 +57,36 @@ class User_model extends CI_Model
                 $this->session->set_userdata('curr_year', $settings->school_year);
                 if ($user->UsesCollege || $user->UsesDepartment || $user->UsesProgram || $user->UsesSpec || $user->UsesCourse || $user->UsesLab || $user->UsesSection || $user->UsesCurriculum || $user->UsesParallel || $user->UsesFaculty || $user->UsesStudent || $user->UsesClass || $user->UsesFinance) {
                     $this->session->set_userdata('has_school_parameters', TRUE);
+
+                    $this->session->set_userdata('UsesCollege', $user->UsesCollege);
+                    $this->session->set_userdata('UsesDepartment', $user->UsesDepartment);
+                    $this->session->set_userdata('UsesProgram', $user->UsesProgram);
+                    $this->session->set_userdata('UsesSpec', $user->UsesSpec);
+                    $this->session->set_userdata('UsesCourse', $user->UsesCourse);
+                    $this->session->set_userdata('UsesLab', $user->UsesLab);
+                    $this->session->set_userdata('UsesSection', $user->UsesSection);
+                    $this->session->set_userdata('UsesCurriculum', $user->UsesCurriculum);
+                    $this->session->set_userdata('UsesParallel', $user->UsesParallel);
+                    $this->session->set_userdata('UsesFaculty', $user->UsesFaculty);
+                    $this->session->set_userdata('UsesStudent', $user->UsesStudent);
+                    $this->session->set_userdata('UsesClass', $user->UsesClass);
+                    $this->session->set_userdata('UsesFinance', $user->UsesFinance);
                 } else {
                     $this->session->set_userdata('has_school_parameters', FALSE);
+
+                    $this->session->set_userdata('UsesCollege', FALSE);
+                    $this->session->set_userdata('UsesDepartment', FALSE);
+                    $this->session->set_userdata('UsesProgram', FALSE);
+                    $this->session->set_userdata('UsesSpec', FALSE);
+                    $this->session->set_userdata('UsesCourse', FALSE);
+                    $this->session->set_userdata('UsesLab', FALSE);
+                    $this->session->set_userdata('UsesSection', FALSE);
+                    $this->session->set_userdata('UsesCurriculum', FALSE);
+                    $this->session->set_userdata('UsesParallel', FALSE);
+                    $this->session->set_userdata('UsesFaculty', FALSE);
+                    $this->session->set_userdata('UsesStudent', FALSE);
+                    $this->session->set_userdata('UsesClass', FALSE);
+                    $this->session->set_userdata('UsesFinance', FALSE);
                 }
                 $this->session->set_userdata('access', 'superadmin');
             } else if ($user->acc_access_level == 2) { // IF ADMIN
@@ -74,8 +102,36 @@ class User_model extends CI_Model
                 $this->session->set_userdata('curr_year', $settings->school_year);
                 if ($user->UsesCollege || $user->UsesDepartment || $user->UsesProgram || $user->UsesSpec || $user->UsesCourse || $user->UsesLab || $user->UsesSection || $user->UsesCurriculum || $user->UsesParallel || $user->UsesFaculty || $user->UsesStudent || $user->UsesClass || $user->UsesFinance) {
                     $this->session->set_userdata('has_school_parameters', TRUE);
+
+                    $this->session->set_userdata('UsesCollege', $user->UsesCollege);
+                    $this->session->set_userdata('UsesDepartment', $user->UsesDepartment);
+                    $this->session->set_userdata('UsesProgram', $user->UsesProgram);
+                    $this->session->set_userdata('UsesSpec', $user->UsesSpec);
+                    $this->session->set_userdata('UsesCourse', $user->UsesCourse);
+                    $this->session->set_userdata('UsesLab', $user->UsesLab);
+                    $this->session->set_userdata('UsesSection', $user->UsesSection);
+                    $this->session->set_userdata('UsesCurriculum', $user->UsesCurriculum);
+                    $this->session->set_userdata('UsesParallel', $user->UsesParallel);
+                    $this->session->set_userdata('UsesFaculty', $user->UsesFaculty);
+                    $this->session->set_userdata('UsesStudent', $user->UsesStudent);
+                    $this->session->set_userdata('UsesClass', $user->UsesClass);
+                    $this->session->set_userdata('UsesFinance', $user->UsesFinance);
                 } else {
                     $this->session->set_userdata('has_school_parameters', FALSE);
+
+                    $this->session->set_userdata('UsesCollege', FALSE);
+                    $this->session->set_userdata('UsesDepartment', FALSE);
+                    $this->session->set_userdata('UsesProgram', FALSE);
+                    $this->session->set_userdata('UsesSpec', FALSE);
+                    $this->session->set_userdata('UsesCourse', FALSE);
+                    $this->session->set_userdata('UsesLab', FALSE);
+                    $this->session->set_userdata('UsesSection', FALSE);
+                    $this->session->set_userdata('UsesCurriculum', FALSE);
+                    $this->session->set_userdata('UsesParallel', FALSE);
+                    $this->session->set_userdata('UsesFaculty', FALSE);
+                    $this->session->set_userdata('UsesStudent', FALSE);
+                    $this->session->set_userdata('UsesClass', FALSE);
+                    $this->session->set_userdata('UsesFinance', FALSE);
                 }
                 $this->session->set_userdata('access', 'admin');
             } else {
