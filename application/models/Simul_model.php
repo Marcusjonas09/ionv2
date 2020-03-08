@@ -90,6 +90,17 @@ class Simul_model extends CI_Model
         return $q->row();
     }
 
+    public function fetch_pdf($stud_number)
+    {
+        $this->db->select('*');
+        $this->db->from('simul_tbl');
+        $this->db->where(array(
+            'StudentNumber' => $stud_number
+        ));
+        $q = $this->db->get();
+        return $q->row();
+    }
+
     // =======================================================================================
     // STUDENT FUNCTIONS
     // =======================================================================================
@@ -97,6 +108,17 @@ class Simul_model extends CI_Model
     public function submit_simul($simul_request)
     {
         $this->db->insert('simul_tbl', $simul_request);
+    }
+
+    public function fetch_simul_student($stud_number, $term, $year)
+    {
+        $this->db->where(array(
+            'StudentNumber' => $stud_number,
+            'school_year' => $year,
+            'school_term' => $term
+        ));
+        $query = $this->db->get('simul_tbl');
+        return $query->row();
     }
 
     public function fetch_simul_status($stud_number)
@@ -107,6 +129,26 @@ class Simul_model extends CI_Model
             'StudentNumber' => $stud_number
         ));
         $q = $this->db->get();
-        return $q->num_rows();
+        return $q->row();
+    }
+
+    public function approve_simul($id)
+    {
+        $this->db->set('IsApproved', 1);
+        $this->db->set('date_processed', time());
+        $this->db->where(array(
+            'simul_id' => $id,
+        ));
+        $this->db->update('simul_tbl');
+    }
+
+    public function decline_simul($id)
+    {
+        $this->db->set('IsApproved', 0);
+        $this->db->set('date_processed', time());
+        $this->db->where(array(
+            'simul_id' => $id,
+        ));
+        $this->db->update('simul_tbl');
     }
 }

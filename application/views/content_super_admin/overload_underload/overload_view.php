@@ -39,12 +39,12 @@
                             <?php $totalunits = 0;
                             foreach ($cor as $record) : ?>
                                 <?php if (strtoupper($record->cc_course) == strtoupper($record->course_code)) {
-                                        $totalunits += $record->course_units;
-                                    } else if (strtoupper($record->cc_course) == strtoupper($record->laboratory_code)) {
-                                        $totalunits += $record->laboratory_units;
-                                    } else {
-                                        echo '';
-                                    } ?>
+                                    $totalunits += $record->course_units;
+                                } else if (strtoupper($record->cc_course) == strtoupper($record->laboratory_code)) {
+                                    $totalunits += $record->laboratory_units;
+                                } else {
+                                    echo '';
+                                } ?>
                             <?php endforeach; ?>
                             <h4>Enrolled Units: <?= $totalunits ?></h4>
                         </div>
@@ -91,22 +91,22 @@
                                     <td><?= strtoupper($record->cc_course) ?></td>
                                     <td>
                                         <?php if (strtoupper($record->cc_course) == strtoupper($record->course_code)) {
-                                                    echo strtoupper($record->course_title);
-                                                } else if (strtoupper($record->cc_course) == strtoupper($record->laboratory_code)) {
-                                                    echo strtoupper($record->laboratory_title);
-                                                } else {
-                                                    echo '';
-                                                } ?>
+                                            echo strtoupper($record->course_title);
+                                        } else if (strtoupper($record->cc_course) == strtoupper($record->laboratory_code)) {
+                                            echo strtoupper($record->laboratory_title);
+                                        } else {
+                                            echo '';
+                                        } ?>
                                     </td>
                                     <td><?= strtoupper($record->cc_section) ?></td>
                                     <td class="text-center">
                                         <?php if (strtoupper($record->cc_course) == strtoupper($record->course_code)) {
-                                                    echo strtoupper($record->course_units);
-                                                } else if (strtoupper($record->cc_course) == strtoupper($record->laboratory_code)) {
-                                                    echo strtoupper($record->laboratory_units);
-                                                } else {
-                                                    echo '';
-                                                } ?>
+                                            echo strtoupper($record->course_units);
+                                        } else if (strtoupper($record->cc_course) == strtoupper($record->laboratory_code)) {
+                                            echo strtoupper($record->laboratory_units);
+                                        } else {
+                                            echo '';
+                                        } ?>
                                     </td>
                                     <?php foreach ($offerings as $offering) : ?>
                                         <?php if ($record->cc_course == $offering->offering_course_code && $record->cc_section == $offering->offering_course_section) : ?>

@@ -34,6 +34,16 @@ $totalunitspassed = $coursepassed + $labpassed;
 
     <!-- Main content -->
     <section class="content container-fluid">
+        <?php if (validation_errors()) : ?>
+            <div class="alert alert-warning alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4><i class="icon fa fa-warning"></i> Alert!</h4>
+                <?php echo validation_errors(); ?>
+            </div>
+        <?php endif; ?>
+        <?php if (isset($message)) : ?>
+            <?php echo $message; ?>
+        <?php endif; ?>
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-success">
@@ -56,13 +66,17 @@ $totalunitspassed = $coursepassed + $labpassed;
         <div class="box box-success">
             <div class="box-header with-border">
                 <h3 class="box-title"><strong>Simul Form</strong>
-                    <?php if ($status  == 1) {
-                        echo "<span class='label label-success'>Approved</span>";
-                    } elseif ($status  == 2) {
-                        echo "<span class='label label-warning'>Pending</span>";
-                    } else {
-                        echo "<span class='label label-danger'>Denied</span>";
-                    } ?></h3>
+                    <?php if ($simul) {
+                        if ($status->IsApproved  == 1) {
+                            echo "<span class='label label-success'>Approved</span>";
+                        } elseif ($status->IsApproved  == 2) {
+                            echo "<span class='label label-warning'>Pending</span>";
+                        } else {
+                            echo "<span class='label label-danger'>Denied</span>";
+                        }
+                    } ?>
+
+                </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -162,21 +176,27 @@ $totalunitspassed = $coursepassed + $labpassed;
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="LetterOfIntent">Letter of intent</label>
-                                                <input type="file" name="LetterOfIntent">
+                                                <?php if (empty($simul)) : ?>
+                                                    <input required type="file" name="LetterOfIntent">
+                                                <?php endif; ?>
                                             </div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="ScholasticRecords">Scholastic record</label>
-                                                <input type="file" name="ScholasticRecords">
+                                                <?php if (empty($simul)) : ?>
+                                                    <input required type="file" name="ScholasticRecords">
+                                                <?php endif; ?>
                                             </div>
                                         </div>
 
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="LetterCompany">Letter from the company (FOR INTERN)</label>
-                                                <input type="file" name="LetterFromCompany">
+                                                <?php if (empty($simul)) : ?>
+                                                    <input type="file" name="LetterFromCompany">
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                         <input type="hidden" name="acc_number" value="<?= $this->session->acc_number ?>">
@@ -187,16 +207,12 @@ $totalunitspassed = $coursepassed + $labpassed;
                         </div>
                     </div>
                 </div>
-                <div class="box-footer">
-                    <button <?= $status ? 'disabled' : ''; ?> type="submit" class="btn btn-success pull-right col-md-1">Submit</button>
-                    <a href="<?= base_url() ?>Student" class="btn btn-default pull-right col-md-1" style="margin-right:10px;">Cancel</a>
-                    <!-- <a href="<?= base_url() ?>/Student/submit_simul" class="btn btn-success pull-right col-md-1 <?php if ($overload) {
-                                                                                                                            if ($overload->ou_stud_number == $this->session->acc_number) echo "disabled";
-                                                                                                                        } ?>">Submit</a>
-                        <a href="<?= base_url() ?>/Student" class="btn btn-default pull-right col-md-1 <?php if ($overload) {
-                                                                                                            if ($overload->ou_stud_number == $this->session->acc_number) echo "disabled";
-                                                                                                        } ?>" style="margin-right:10px;">Cancel</a> -->
-                </div>
+                <?php if (!$status) : ?>
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-success pull-right col-md-1">Submit</button>
+                        <a href="<?= base_url() ?>Student" class="btn btn-default pull-right col-md-1" style="margin-right:10px;">Cancel</a>
+                    </div>
+                <?php endif; ?>
                 </form>
             </div>
             <!-- /.box-body -->

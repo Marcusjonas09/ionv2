@@ -802,20 +802,39 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_sidebar');
 
         $data['details'] = $this->Simul_model->fetch_simul($id);
-        // $this->dd($request);
-
         $data['curr'] = $this->Simul_model->fetch_curriculum($data['details']->curriculum_code);
         $data['grades'] = $this->Simul_model->fetchProgress($data['details']->acc_number);
-        // $data['courses'] = $this->CourseCard_model->fetch_courses();
         $data['offerings'] = $this->Simul_model->fetchOffering();
         $data['cor'] = $this->Simul_model->fetch_current_COR($data['details']->acc_number);
         $data['status'] = $this->Simul_model->fetch_simul_status($data['details']->acc_number);
-        // $this->dd($data['details']);
+        $data['pdf'] = $this->Simul_model->fetch_pdf($data['details']->acc_number);
         $this->load->view('content_super_admin/simul/view_simul', $data);
 
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
         $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function approve_simul($id, $stud_number)
+    {
+        $message = 'Simul request granted!';
+
+        $link = base_url() . "Student/sample_simul/";
+        $this->send_notification($stud_number, $message, $link);
+        $this->Simul_model->approve_simul($id);
+
+        redirect('SuperAdmin/simul');
+    }
+
+    public function decline_simul($id, $stud_number)
+    {
+        $message = 'Simul request declined!';
+
+        $link = base_url() . "Student/sample_simul";
+        $this->send_notification($stud_number, $message, $link);
+        $this->Simul_model->decline_simul($id);
+
+        redirect('SuperAdmin/simul');
     }
 
     // =======================================================================================

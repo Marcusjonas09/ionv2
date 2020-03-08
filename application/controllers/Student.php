@@ -190,7 +190,6 @@ class Student extends CI_Controller
 		$desc = $this->input->post("description");
 		$start_date = $this->input->post("start_date");
 		$end_date = $this->input->post("end_date");
-
 	}
 
 	// =======================================================================================
@@ -594,6 +593,8 @@ class Student extends CI_Controller
 		$data['offerings'] = $this->Dashboard_model->fetchOffering();
 		$data['cor'] = $this->CourseCard_model->fetch_current_COR();
 		$data['status'] = $this->Simul_model->fetch_simul_status($this->session->acc_number);
+		$data['simul'] = $this->Simul_model->fetch_simul_student($this->session->acc_number, $this->session->curr_term, $this->session->curr_year);
+		// $this->dd($data['status']);
 
 		$this->load->view('content_student/student_simul', $data);
 
@@ -602,30 +603,15 @@ class Student extends CI_Controller
 		$this->load->view('includes_student/student_footer');
 	}
 
-	// public function submit_simul()
-	// {
-	// 	$this->dd($_FILES);
-	// 	$config['upload_path']          = './uploads/';
-	// 	$config['allowed_types']        = 'gif|jpg|png';
-	// 	$config['max_size']             = 1000;
-	// 	$config['max_width']            = 4000;
-	// 	$config['max_height']           = 4000;
-
-	// 	$this->load->library('upload', $config);
-
-	// 	if (!$this->upload->do_upload('LetterOfIntent')) {
-	// 		$error = array('error' => $this->upload->display_errors());
-	// 		$this->dd($error);
-	// 		// $this->load->view('upload_form', $error);
-	// 	} else {
-	// 		$data = array('upload_data' => $this->upload->data());
-	// 		$this->dd($data);
-	// 		// $this->load->view('upload_success', $data);
-	// 	}
-	// }
-
 	public function submit_simul()
 	{
+
+		// $this->form_validation->set_rules('LetterOfIntent', 'Letter Of Intent', 'required');
+		// $this->form_validation->set_rules('ScholasticRecords', 'Scholastic Records', 'required');
+		// $this->form_validation->set_rules('LetterFromCompany', 'Letter From the Company', 'required');
+		// if ($this->form_validation->run() == FALSE) {
+		$this->sample_simul();
+		// } else {
 		$uploaded = $this->upload_requirement();
 
 		$sample = array(
@@ -633,14 +619,15 @@ class Student extends CI_Controller
 			'ScholasticRecords' => $uploaded['ScholasticRecords'],
 			'LetterFromCompany' => $uploaded['LetterFromCompany'],
 			'StudentNumber' => $this->input->post('acc_number'),
-			'date_submitted' => date('Y-m-d H:i:s', time())
+			'date_submitted' => date('Y-m-d H:i:s', time()),
+			'school_year' => $this->session->curr_year,
+			'school_term' => $this->session->curr_term
 		);
 		$this->Simul_model->submit_simul($sample);
-
-		// $error = array('error' => $this->upload->display_errors());
 		redirect('Student/sample_simul');
-		// $this->dd($sample);
+		// }
 	}
+
 
 	public function upload_requirement()
 	{

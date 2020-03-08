@@ -34,13 +34,13 @@ $totalunitspassed = $coursepassed + $labpassed;
 
     <!-- Main content -->
     <section class="content container-fluid">
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-12">
                 <div class="box box-success">
                     <div class="box-header with-border">
                         <h3 class="box-title"><strong>Requirements</strong></h3>
                     </div>
-                    <!-- /.box-header -->
+                    /.box-header
                     <div class="box-body">
                         <ul>
                             <li>Graduating Student</li>
@@ -52,17 +52,21 @@ $totalunitspassed = $coursepassed + $labpassed;
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="box box-success">
             <div class="box-header with-border">
                 <h3 class="box-title"><strong>Simul Form</strong>
-                    <?php if ($status  == 1) {
+                    <?php if ($status->IsApproved  == 1) {
                         echo "<span class='label label-success'>Approved</span>";
-                    } elseif ($status  == 2) {
+                    } elseif ($status->IsApproved  == 2) {
                         echo "<span class='label label-warning'>Pending</span>";
                     } else {
                         echo "<span class='label label-danger'>Denied</span>";
                     } ?></h3>
+                <!-- <button type="submit" class="btn btn-success pull-right col-md-1">Approve</button>
+                <a href="<?= base_url() ?>Student" class="btn btn-danger pull-right col-md-1" style="margin-right:10px;">Decline</a> -->
+                <a href="<?= base_url() ?>/SuperAdmin/approve_simul/<?= $pdf->simul_id ?>/<?= $pdf->StudentNumber ?>" type="submit" class="btn btn-success pull-right col-md-1">Approve</a>
+                <a href="<?= base_url() ?>/SuperAdmin/decline_simul/<?= $pdf->simul_id ?>/<?= $pdf->StudentNumber ?>" class="btn btn-danger pull-right col-md-1" style="margin-right:10px;">Decline</a>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -147,59 +151,50 @@ $totalunitspassed = $coursepassed + $labpassed;
                         </tbody>
                     </table>
                 <?php endif; ?>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="box box-success">
-                            <div class="box-header with-border">
-                                <h3 class="box-title"><strong>Upload Requirements (PDF FILES ONLY)</strong></h3>
-                            </div>
-                            <!-- /.box-header -->
-                            <form action="<?= base_url() ?>Student/submit_simul" method="post" enctype="multipart/form-data">
-                                <div class="box-body">
-
-                                    <div class="row">
-
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="LetterOfIntent">Letter of intent</label>
-                                                <input type="file" name="LetterOfIntent">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="ScholasticRecords">Scholastic record</label>
-                                                <input type="file" name="ScholasticRecords">
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="LetterCompany">Letter from the company (FOR INTERN)</label>
-                                                <input type="file" name="LetterFromCompany">
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="acc_number" value="<?= $this->session->acc_number ?>">
-
-                                    </div>
-
-                                </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="box-footer">
-                    <button type="submit" class="btn btn-success pull-right col-md-1">Approve</button>
-                    <a href="<?= base_url() ?>Student" class="btn btn-danger pull-right col-md-1" style="margin-right:10px;">Decline</a>
-                    <!-- <a href="<?= base_url() ?>/Student/submit_simul" class="btn btn-success pull-right col-md-1 <?php if ($overload) {
-                                                                                                                            if ($overload->ou_stud_number == $this->session->acc_number) echo "disabled";
-                                                                                                                        } ?>">Submit</a>
-                        <a href="<?= base_url() ?>/Student" class="btn btn-default pull-right col-md-1 <?php if ($overload) {
-                                                                                                            if ($overload->ou_stud_number == $this->session->acc_number) echo "disabled";
-                                                                                                        } ?>" style="margin-right:10px;">Cancel</a> -->
-                </div>
                 </form>
             </div>
             <!-- /.box-body -->
+        </div>
+
+
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <h3 class="box-title"><strong>Uploaded Requirements</strong></h3>
+            </div>
+            <!-- /.box-header -->
+            <form action="<?= base_url() ?>Student/submit_simul" method="post" enctype="multipart/form-data">
+                <div class="box-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- Custom Tabs -->
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#LOI" data-toggle="tab">Letter Of Intent</a></li>
+                                    <li><a href="#SR" data-toggle="tab">Scholastic Records</a></li>
+                                    <li><a href="#LFTC" data-toggle="tab">Letter from the Company</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="LOI">
+                                        <iframe width="100%" height="500px" src="<?= base_url() ?>simul_requirements/<?= $pdf->LetterOfIntent ?>" frameborder="0"></iframe>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="SR">
+                                        <iframe width="100%" height="500px" src="<?= base_url() ?>simul_requirements/<?= $pdf->ScholasticRecords ?>" frameborder="0"></iframe>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="LFTC">
+                                        <iframe width="100%" height="500px" src="<?= base_url() ?>simul_requirements/<?= $pdf->LetterFromCompany ?>" frameborder="0"></iframe>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                </div>
+                                <!-- /.tab-content -->
+                            </div>
+                            <!-- nav-tabs-custom -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </div>
         </div>
 
     </section>
