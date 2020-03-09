@@ -68,10 +68,10 @@ class Mobile_model extends CI_Model
     public function fetchCurriculum($curriculum_code)
     {
         $this->db->select('*');
-        $this->db->where(array('courses_tbl_v2.curriculum_code' => $curriculum_code));
+        $this->db->where(array('curriculum_tbl.curriculum_code' => $curriculum_code));
         $this->db->from('curriculum_tbl');
-        $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_id = curriculum_tbl.laboratory_id');
-        $this->db->join('courses_tbl_v2', 'courses_tbl_v2.course_id = curriculum_tbl.course_id');
+        $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = curriculum_tbl.laboratory_code', 'left');
+        $this->db->join('courses_tbl_v2', 'courses_tbl_v2.course_code = curriculum_tbl.course_code', 'left');
         $this->db->order_by('courses_tbl_v2.course_code', 'ASC');
         $query = $this->db->get();
         return $query->result();

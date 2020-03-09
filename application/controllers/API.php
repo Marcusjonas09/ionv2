@@ -48,13 +48,10 @@ class API extends CI_Controller
 	}
 
 	public function fetchStudProgress($curriculum_code, $stud_number)
-	// public function fetchStudProgress()
 	{
 		// $curriculum_code = file_get_contents("php://input");
-		$curr = $this->Mobile_model->fetch_curriculum($curriculum_code);
+		$curr = $this->Mobile_model->fetchCurriculum($curriculum_code);
 		$grades = $this->Mobile_model->fetchProgress($stud_number);
-		// $curr = $this->Mobile_model->fetch_curriculum("BSITWMA2015");
-		// $grades = $this->Mobile_model->fetchProgress("201610185");
 
 		$totalunits = 0.0;
 		$totalunitspassed = 0.0;
