@@ -417,15 +417,17 @@ class Mobile_model extends CI_Model
             array_push($allcourse_array, $all_course->cc_course);
         }
 
-        $this->db->select('course_code');
-        $this->db->where(array(
-            'courses_tbl_v2.curriculum_code' => $curriculum_code,
-        ));
-        $this->db->where_not_in('course_code', $allcourse_array);
-        $this->db->from('courses_tbl_v2');
-        $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = courses_tbl_v2.laboratory_code', 'LEFT');
+        // fetch courses related to specific curriculum
+
+        $this->db->select('courses_tbl_v2.course_code');
+        $this->db->where(array('curriculum_tbl.curriculum_code' => $curriculum_code));
+        $this->db->where_not_in('courses_tbl_v2.course_code', $allcourse_array);
+        $this->db->from('curriculum_tbl');
+        $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = curriculum_tbl.laboratory_code', 'left');
+        $this->db->join('courses_tbl_v2', 'courses_tbl_v2.course_code = curriculum_tbl.course_code', 'left');
         $this->db->order_by('courses_tbl_v2.course_code', 'ASC');
         $query = $this->db->get();
+
         $untaken_courses = $query->result();
 
         $untaken_in_offering = array();
