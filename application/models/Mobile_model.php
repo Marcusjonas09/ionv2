@@ -327,7 +327,7 @@ class Mobile_model extends CI_Model
         $this->db->distinct();
         $this->db->select('cc_course');
         $this->db->from('course_card_tbl');
-        $this->db->where(array('cc_stud_number' => $this->session->acc_number));
+        $this->db->where(array('cc_stud_number' => $stud_number));
         $this->db->order_by('cc_course', 'ASC');
         $query = $this->db->get();
 
@@ -341,7 +341,7 @@ class Mobile_model extends CI_Model
         // fetch courses related to specific curriculum
 
         $this->db->select('courses_tbl_v2.course_code');
-        $this->db->where(array('curriculum_tbl.curriculum_code' => $this->session->Curriculum_code));
+        $this->db->where(array('curriculum_tbl.curriculum_code' => $curriculum_code));
         $this->db->where_not_in('courses_tbl_v2.course_code', $allcourse_array);
         $this->db->from('curriculum_tbl');
         $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = curriculum_tbl.laboratory_code', 'left');
@@ -364,8 +364,8 @@ class Mobile_model extends CI_Model
             $this->db->distinct();
             $this->db->select('offering_course_code,offering_course_slot');
             $this->db->where(array(
-                'offering_year' => $this->session->curr_year,
-                'offering_term' => $this->session->curr_term,
+                'offering_year' => $curr_year,
+                'offering_term' => $curr_term,
             ));
             $this->db->where_in('offering_course_code', $untaken_in_offering);
             $this->db->from('offering_tbl');
