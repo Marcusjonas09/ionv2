@@ -322,13 +322,12 @@ class Mobile_model extends CI_Model
 
     public function suggest_what_to_petition($curriculum_code, $stud_number, $curr_term, $curr_year)
     {
-
         //fetch untaken courses
 
         $this->db->distinct();
         $this->db->select('cc_course');
         $this->db->from('course_card_tbl');
-        $this->db->where(array('cc_stud_number' => $stud_number));
+        $this->db->where(array('cc_stud_number' => $this->session->acc_number));
         $this->db->order_by('cc_course', 'ASC');
         $query = $this->db->get();
 
@@ -339,56 +338,62 @@ class Mobile_model extends CI_Model
             array_push($allcourse_array, $all_course->cc_course);
         }
 
-        $this->db->select('course_code');
-        $this->db->where(array(
-            'courses_tbl_v2.curriculum_code' => $curriculum_code,
-        ));
-        $this->db->where_not_in('course_code', $allcourse_array);
-        $this->db->from('courses_tbl_v2');
-        $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = courses_tbl_v2.laboratory_code', 'LEFT');
+        // fetch courses related to specific curriculum
+
+        $this->db->select('courses_tbl_v2.course_code');
+        $this->db->where(array('curriculum_tbl.curriculum_code' => $this->session->Curriculum_code));
+        $this->db->where_not_in('courses_tbl_v2.course_code', $allcourse_array);
+        $this->db->from('curriculum_tbl');
+        $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = curriculum_tbl.laboratory_code', 'left');
+        $this->db->join('courses_tbl_v2', 'courses_tbl_v2.course_code = curriculum_tbl.course_code', 'left');
         $this->db->order_by('courses_tbl_v2.course_code', 'ASC');
         $query = $this->db->get();
+
+
         $untaken_courses = $query->result();
 
         $untaken_in_offering = array();
         foreach ($untaken_courses as $untaken_course) {
             array_push($untaken_in_offering, $untaken_course->course_code);
         }
+
         if ($untaken_in_offering) {
+
             //fetch untaken courses in offering table
+
             $this->db->distinct();
             $this->db->select('offering_course_code,offering_course_slot');
             $this->db->where(array(
-                'offering_year' => $curr_year,
-                'offering_term' => $curr_term,
-                // 'offering_course_slot >' => 0
+                'offering_year' => $this->session->curr_year,
+                'offering_term' => $this->session->curr_term,
             ));
             $this->db->where_in('offering_course_code', $untaken_in_offering);
             $this->db->from('offering_tbl');
+
             $query = $this->db->get();
-
             $suggestions = $query->result();
-
             $suggestion = array();
+
             foreach ($suggestions as $suggest) {
-                $sample = 0;
+                $CourseSuggestions = 0;
                 foreach ($suggestions as $suggest_inner) {
                     if ($suggest_inner->offering_course_code == $suggest->offering_course_code) {
-                        $sample += $suggest_inner->offering_course_slot;
+                        $CourseSuggestions += $suggest_inner->offering_course_slot;
                     }
                 }
-                if ($sample) {
-                    $sample = 0;
+                if ($CourseSuggestions) {
+                    $CourseSuggestions = 0;
                 } else {
                     array_push($suggestion, $suggest->offering_course_code);
                 }
             }
 
+            //fetch course details of suggested courses
+
             $this->db->select('*');
             $this->db->from('courses_tbl_v2');
             $this->db->where_in('course_code', $suggestion);
             $query = $this->db->get();
-
             return $query->result();
         }
         return $query->result();
