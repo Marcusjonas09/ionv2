@@ -169,41 +169,78 @@ $totalunitspassed = $coursepassed + $labpassed;
                             </div>
                             <!-- /.box-header -->
                             <form action="<?= base_url() ?>Student/submit_simul" method="post" enctype="multipart/form-data">
-                                <div class="box-body">
+                                <?php if (empty($simul)) : ?>
+                                    <div class="box-body">
 
-                                    <div class="row">
+                                        <div class="row">
 
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="LetterOfIntent">Letter of intent</label>
-                                                <?php if (empty($simul)) : ?>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="LetterOfIntent">Letter of intent</label>
+
                                                     <input required type="file" name="LetterOfIntent">
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
 
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="ScholasticRecords">Scholastic record</label>
-                                                <?php if (empty($simul)) : ?>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="ScholasticRecords">Scholastic record</label>
+
                                                     <input required type="file" name="ScholasticRecords">
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
 
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="LetterCompany">Letter from the company (FOR INTERN)</label>
-                                                <?php if (empty($simul)) : ?>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="LetterCompany">Letter from the company (FOR INTERN)</label>
+
                                                     <input type="file" name="LetterFromCompany">
-                                                <?php endif; ?>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="acc_number" value="<?= $this->session->acc_number ?>">
 
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="acc_number" value="<?= $this->session->acc_number ?>">
+
+                                        </div>
+                                    </div>
+                                <?php else : ?>
+                                    <!-- /////////////////////// -->
+                                    <div class="box-body">
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <!-- Custom Tabs -->
+                                                <div class="nav-tabs-custom">
+                                                    <ul class="nav nav-tabs">
+                                                        <li class="active"><a href="#LOI" data-toggle="tab">Letter Of Intent</a></li>
+                                                        <li><a href="#SR" data-toggle="tab">Scholastic Records</a></li>
+                                                        <li><a href="#LFTC" data-toggle="tab">Letter from the Company</a></li>
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        <div class="tab-pane active" id="LOI">
+                                                            <iframe width="100%" height="500px" src="<?= base_url() ?>simul_requirements/<?= $simul->LetterOfIntent ?>" frameborder="0"></iframe>
+                                                        </div>
+                                                        <!-- /.tab-pane -->
+                                                        <div class="tab-pane" id="SR">
+                                                            <iframe width="100%" height="500px" src="<?= base_url() ?>simul_requirements/<?= $simul->ScholasticRecords ?>" frameborder="0"></iframe>
+                                                        </div>
+                                                        <!-- /.tab-pane -->
+                                                        <div class="tab-pane" id="LFTC">
+                                                            <iframe width="100%" height="500px" src="<?= base_url() ?>simul_requirements/<?= $simul->LetterFromCompany ?>" frameborder="0"></iframe>
+                                                        </div>
+                                                        <!-- /.tab-pane -->
+                                                    </div>
+                                                    <!-- /.tab-content -->
+                                                </div>
+                                                <!-- nav-tabs-custom -->
+                                            </div>
+                                            <!-- /.col -->
+                                        </div>
                                     </div>
 
-                                </div>
+                                <?php endif; ?>
+                                <!-- /////////////////////// -->
                         </div>
                     </div>
                 </div>
