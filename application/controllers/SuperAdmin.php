@@ -1202,7 +1202,7 @@ class SuperAdmin extends CI_Controller
     public function logout()
     {
         session_destroy();
-        $this->index();
+        redirect('Admin');
     }
 
     // =======================================================================================
@@ -2012,10 +2012,6 @@ class SuperAdmin extends CI_Controller
 
     public function create_faculty()
     {
-        // echo '<pre>';
-        // print_r($_POST);
-        // echo '</pre>';
-        // die();
         $this->form_validation->set_rules('acc_number', 'Student number', 'required|strip_tags|is_unique[accounts_tbl.acc_number]');
         $this->form_validation->set_rules('acc_fname', 'First Name', 'required|strip_tags');
         $this->form_validation->set_rules('acc_mname', 'Middle Name', 'required|strip_tags');
@@ -2032,6 +2028,7 @@ class SuperAdmin extends CI_Controller
         } else {
             $program = array(
                 'acc_number' => $this->input->post('acc_number'),
+                'acc_password' => sha1('itamaraw'),
                 'acc_fname' => $this->input->post('acc_fname'),
                 'acc_mname' => $this->input->post('acc_mname'),
                 'acc_lname' => $this->input->post('acc_lname'),

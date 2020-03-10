@@ -17,7 +17,7 @@ if ($this->session->access == 'student') {
       redirect('Student/Dashboard');
 } else if ($this->session->access == 'superadmin' || $this->session->access == 'admin') {
 } else {
-      redirect('SuperAdmin');
+      redirect('Admin');
 }
 
 ?>

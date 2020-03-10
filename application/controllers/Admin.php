@@ -97,7 +97,7 @@ class Admin extends CI_Controller
 	public function logout()
 	{
 		session_destroy();
-		$this->index();
+		redirect('SuperAdmin/');
 	}
 
 	// // =======================================================================================

@@ -3,11 +3,11 @@ if (!$this->session->login) {
     session_destroy();
 }
 if ($this->session->access == 'admin') {
-    redirect('Admin/dashboard');
+    redirect('SuperAdmin/dashboard');
 } else if ($this->session->access == 'student') {
     redirect('Student/dashboard');
 } else if ($this->session->access == 'superadmin') {
-    redirect('SuperAdmin/school_parameters');
+    redirect('SuperAdmin/admin');
 } else {
 }
 ?>
