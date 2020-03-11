@@ -235,6 +235,18 @@ class SuperAdmin_model extends CI_Model
     // FACULTY
     // =======================================================================================
 
+    public function fetch_last_faculty_number()
+    {
+        $this->db->select('acc_number');
+        $this->db->from('accounts_tbl');
+        $this->db->where(array(
+            'acc_access_level' => 2
+        ));
+        $this->db->order_by('acc_number', 'desc');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function fetch_all_faculty()
     {
         $this->db->select('*');
@@ -1714,8 +1726,6 @@ class SuperAdmin_model extends CI_Model
 
     public function fetch_last_student_number()
     {
-        // $current = substr($this->session->curr_year, 0, 4) . ($this->session->curr_term < 3 ? $this->session->curr_term + 1 : 1);
-
         $this->db->select('acc_number');
         $this->db->from('accounts_tbl');
         $this->db->where(array(

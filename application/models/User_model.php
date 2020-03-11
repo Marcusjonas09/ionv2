@@ -26,6 +26,7 @@ class User_model extends CI_Model
                 $this->session->set_userdata('Curriculum_code', $user->curriculum_code);
                 $this->session->set_userdata('curr_term', $settings->school_term);
                 $this->session->set_userdata('curr_year', $settings->school_year);
+                $this->session->set_userdata('remaining_units', $settings->school_year);
                 $this->session->set_userdata('access', 'student');
             } else {
                 $this->session->set_userdata('login', false);

@@ -42,9 +42,41 @@ class Student extends CI_Controller
 
 	public function login()
 	{
+
+		$totalunits = 0.0;
+		$totalunitspassed = 0.0;
+		$course_units = 0.0;
+		$lab_units = 0.0;
+		$coursepassed = 0.0;
+		$labpassed = 0.0;
+
+		$curriculum = $this->Dashboard_model->fetch_curriculum();
+		$progress = $this->Dashboard_model->fetchProgress();
+		$curr = json_decode(json_encode($curriculum));
+		$grades = json_decode(json_encode($progress));
+
+		foreach ($curr as $unit) {
+			$course_units += $unit->course_units;
+			$lab_units += $unit->laboratory_units;
+			foreach ($grades as $grade) {
+				if ($unit->course_code == $grade->cc_course && ($grade->cc_status == "finished" || $grade->cc_status == "credited") && $grade->cc_final >= 1.0) {
+					$coursepassed += $unit->course_units;
+				}
+				if (strtoupper($unit->laboratory_code) == strtoupper($grade->cc_course) && ($grade->cc_final > 1.0 && $grade->cc_final <= 4.0)) {
+					$labpassed += $unit->laboratory_units;
+				}
+			}
+		}
+
+		$totalunits = $course_units + $lab_units;
+		$totalunitspassed = $coursepassed + $labpassed;
+
+		$remaining_units = $totalunits - $totalunitspassed;
+
+		$this->session->set_userdata('remaining_units', $remaining_units);
 		$data = array(
 			'acc_number' => strip_tags($this->input->post('acc_number')), //$_POST['username]
-			'acc_password' => sha1(strip_tags($this->input->post('acc_password')))
+			'acc_password' => sha1(strip_tags($this->input->post('acc_password'))),
 		);
 
 		$this->User_model->login_student($data);
@@ -560,47 +592,59 @@ class Student extends CI_Controller
 	// =======================================================================================
 
 	//SIMUL REQUEST LINK
+	// public function simulRequest()
+	// {
+	// 	$this->load->view('includes_student/student_header');
+
+	// 	$this->load->view('includes_student/student_topnav');
+	// 	$this->load->view('includes_student/student_sidebar');
+
+	// 	$data['curr'] = $this->Dashboard_model->fetch_curriculum();
+	// 	$data['grades'] = $this->Dashboard_model->fetchProgress();
+	// 	// $data['courses'] = $this->CourseCard_model->fetch_courses();
+	// 	$data['offerings'] = $this->Dashboard_model->fetchOffering();
+	// 	$data['cor'] = $this->CourseCard_model->fetch_current_COR();
+
+	// 	$this->load->view('content_student/student_simul', $data);
+
+	// 	$this->load->view('includes_student/student_contentFooter');
+	// 	$this->load->view('includes_student/student_rightnav');
+	// 	$this->load->view('includes_student/student_footer');
+	// }
+
 	public function simulRequest()
 	{
-		$this->load->view('includes_student/student_header');
+		if ($this->session->userdata('remaining_units') < 18) {
 
-		$this->load->view('includes_student/student_topnav');
-		$this->load->view('includes_student/student_sidebar');
+			$this->load->view('includes_student/student_header');
+			$this->load->view('includes_student/student_topnav');
+			$this->load->view('includes_student/student_sidebar');
 
-		$data['curr'] = $this->Dashboard_model->fetch_curriculum();
-		$data['grades'] = $this->Dashboard_model->fetchProgress();
-		// $data['courses'] = $this->CourseCard_model->fetch_courses();
-		$data['offerings'] = $this->Dashboard_model->fetchOffering();
-		$data['cor'] = $this->CourseCard_model->fetch_current_COR();
+			$data['curr'] = $this->Dashboard_model->fetch_curriculum();
+			$data['grades'] = $this->Dashboard_model->fetchProgress();
+			// $data['courses'] = $this->CourseCard_model->fetch_courses();
+			$data['offerings'] = $this->Dashboard_model->fetchOffering();
+			$data['cor'] = $this->CourseCard_model->fetch_current_COR();
+			$data['status'] = $this->Simul_model->fetch_simul_status($this->session->acc_number);
+			$data['simul'] = $this->Simul_model->fetch_simul_student($this->session->acc_number, $this->session->curr_term, $this->session->curr_year);
+			// $this->dd($data['status']);
 
-		$this->load->view('content_student/student_simul', $data);
+			$this->load->view('content_student/student_simul', $data);
 
-		$this->load->view('includes_student/student_contentFooter');
-		$this->load->view('includes_student/student_rightnav');
-		$this->load->view('includes_student/student_footer');
-	}
+			$this->load->view('includes_student/student_contentFooter');
+			$this->load->view('includes_student/student_rightnav');
+			$this->load->view('includes_student/student_footer');
+		} else {
+			$this->load->view('includes_student/student_header');
+			$this->load->view('includes_student/student_topnav');
+			$this->load->view('includes_student/student_sidebar');
 
-	public function sample_simul()
-	{
-		$this->load->view('includes_student/student_header');
+			$this->load->view('content_student/not_qualified');
 
-		$this->load->view('includes_student/student_topnav');
-		$this->load->view('includes_student/student_sidebar');
-
-		$data['curr'] = $this->Dashboard_model->fetch_curriculum();
-		$data['grades'] = $this->Dashboard_model->fetchProgress();
-		// $data['courses'] = $this->CourseCard_model->fetch_courses();
-		$data['offerings'] = $this->Dashboard_model->fetchOffering();
-		$data['cor'] = $this->CourseCard_model->fetch_current_COR();
-		$data['status'] = $this->Simul_model->fetch_simul_status($this->session->acc_number);
-		$data['simul'] = $this->Simul_model->fetch_simul_student($this->session->acc_number, $this->session->curr_term, $this->session->curr_year);
-		// $this->dd($data['status']);
-
-		$this->load->view('content_student/student_simul', $data);
-
-		$this->load->view('includes_student/student_contentFooter');
-		$this->load->view('includes_student/student_rightnav');
-		$this->load->view('includes_student/student_footer');
+			$this->load->view('includes_student/student_contentFooter');
+			$this->load->view('includes_student/student_rightnav');
+			$this->load->view('includes_student/student_footer');
+		}
 	}
 
 	public function submit_simul()
@@ -610,7 +654,7 @@ class Student extends CI_Controller
 		// $this->form_validation->set_rules('ScholasticRecords', 'Scholastic Records', 'required');
 		// $this->form_validation->set_rules('LetterFromCompany', 'Letter From the Company', 'required');
 		// if ($this->form_validation->run() == FALSE) {
-		$this->sample_simul();
+		$this->simulRequest();
 		// } else {
 		$uploaded = $this->upload_requirement();
 
@@ -638,7 +682,7 @@ class Student extends CI_Controller
 
 		$this->load->library('upload', $config);
 		$LetterOfIntent = "";
-		$ScholasticRescords = "";
+		$ScholasticRecords = "";
 		$LetterFromCompany = "";
 		if ($this->upload->do_upload('LetterOfIntent')) {
 			$data = array('upload_data' => $this->upload->data());
@@ -973,7 +1017,9 @@ class Student extends CI_Controller
 		$totalunits = $course_units + $lab_units;
 		$totalunitspassed = $coursepassed + $labpassed;
 
-		if (($totalunits - $totalunitspassed) <= 18) {
+		$remaining_units = $totalunits - $totalunitspassed;
+
+		if (($remaining_units) <= 18) {
 			redirect('Student/simulRequest');
 		} else {
 			$this->load->view('content_student/not_qualified');

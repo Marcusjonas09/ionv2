@@ -1287,23 +1287,12 @@ class SuperAdmin extends CI_Controller
     public function generate_stud_number()
     {
         $current_sy = $this->SuperAdmin_model->fetch_current();
-
         $curr_year = $current_sy->school_year;
         $curr_term = $current_sy->school_term;
-
         $result = $this->SuperAdmin_model->fetch_last_student_number();
-        // $current_term = substr($curr_year, 0, 4) . $curr_term;
-
-        // $result = (object) array(
-        //     'acc_number' => 201920185
-        // );
-
         $current_prefix = substr($curr_year, 0, 4) . $curr_term; // YYYYT
-
         $last_entry = $result->acc_number; // YYYYTXXXXX
-
         $last_prefix = substr($last_entry, 0, 5); // YYYYT
-
         // IF NEW STUDENT
         if ($curr_term < 3) {
             $stud_prefix = (substr($curr_year, 0, 4) . ($curr_term + 1));
@@ -1316,14 +1305,36 @@ class SuperAdmin extends CI_Controller
         } else if ($last_prefix < $current_prefix) {
             $assigned = ($stud_prefix * 10000) + 1;
         } else {
-            $assigned  = 'error';
+            $assigned  = 0;
         }
-
         return $assigned;
-        // $this->dd($assigned);
-        // die();
     }
 
+    public function generate_faculty_number()
+    {
+        $current_sy = $this->SuperAdmin_model->fetch_current();
+        $curr_year = $current_sy->school_year;
+        $curr_term = $current_sy->school_term;
+        $result = $this->SuperAdmin_model->fetch_last_faculty_number();
+        $current_prefix = substr($curr_year, 0, 4) . $curr_term; // YYYYT
+        $last_entry = $result->acc_number; // YYYYTXXXXX
+        $last_prefix = substr($last_entry, 0, 5); // YYYYT
+        // IF NEW STUDENT
+        if ($curr_term < 3) {
+            $stud_prefix = (substr($curr_year, 0, 4) . ($curr_term + 1));
+        } else {
+            $stud_prefix = ((substr($curr_year, 0, 4) + 1) . 1);
+        }
+
+        if ($last_prefix == $current_prefix) {
+            $assigned = $last_entry + 1;
+        } else if ($last_prefix < $current_prefix) {
+            $assigned = ($stud_prefix * 10000) + 1;
+        } else {
+            $assigned  = 0;
+        }
+        return $assigned;
+    }
 
     public function add_student($message = null)
     {
@@ -1425,10 +1436,6 @@ class SuperAdmin extends CI_Controller
 
     public function create_student()
     {
-        // $this->dd($_POST);
-        // $this->dd(substr($current_sy->school_year, 0, 4) . ($current_sy->school_term < 3 ? $current_sy->school_term + 1 : 1) . $last_number);
-        // $this->form_validation->set_rules('acc_number', 'Student number', 'required|strip_tags|is_unique[accounts_tbl.acc_number]');
-
         $this->form_validation->set_rules('acc_fname', 'First Name', 'required|strip_tags');
         $this->form_validation->set_rules('acc_mname', 'Middle Name', 'required|strip_tags');
         $this->form_validation->set_rules('acc_lname', 'Last Name', 'required|strip_tags');
@@ -2012,7 +2019,7 @@ class SuperAdmin extends CI_Controller
 
     public function create_faculty()
     {
-        $this->form_validation->set_rules('acc_number', 'Student number', 'required|strip_tags|is_unique[accounts_tbl.acc_number]');
+        // $this->form_validation->set_rules('acc_number', 'Student number', 'required|strip_tags|is_unique[accounts_tbl.acc_number]');
         $this->form_validation->set_rules('acc_fname', 'First Name', 'required|strip_tags');
         $this->form_validation->set_rules('acc_mname', 'Middle Name', 'required|strip_tags');
         $this->form_validation->set_rules('acc_lname', 'Last Name', 'required|strip_tags');
@@ -2026,8 +2033,10 @@ class SuperAdmin extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->add_faculty();
         } else {
+            $facultyNumber = $this->generate_faculty_number();
             $program = array(
-                'acc_number' => $this->input->post('acc_number'),
+                'acc_number' => $facultyNumber,
+                'acc_username' => $facultyNumber,
                 'acc_password' => sha1('itamaraw'),
                 'acc_fname' => $this->input->post('acc_fname'),
                 'acc_mname' => $this->input->post('acc_mname'),

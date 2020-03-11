@@ -64,7 +64,7 @@
        <!--=======================================================================================-->
        <!--=======================================================================================-->
 
-       <li class="treeview <?= in_array($this->uri->segment(2), array('petitions', 'check_units', 'check_graduating')) ? ' active' : ''; ?>">
+       <li class="treeview <?= in_array($this->uri->segment(2), array('petitions', 'check_units', 'check_graduating', 'underload_request', 'overload_request')) ? ' active' : ''; ?>">
          <a href="#">
            <i class="fa fa-share"></i> <span>Services</span>
            <span class="pull-right-container">
@@ -72,11 +72,17 @@
            </span>
          </a>
          <ul class="treeview-menu">
+
            <li><a href="http://ofes.feutech.edu.ph/" target="_blank"><i class="fa fa-file-text-o"></i> <span>Online Faculty Evaluation</span></a></li>
+
            <li><a href="http://opac.feutech.edu.ph/" target="_blank"><i class="fa fa-file-text-o"></i> <span>Online Public Access Catalogue</span></a></li>
+
            <li><a href="http://fcis.feutech.edu.ph/" target="_blank"><i class="fa fa-file-text-o"></i> <span>Online Fitness Reservation</span></a></li>
+
            <li><a style="color:<?= $this->uri->segment(2) == 'petitions' ? 'white' : ''; ?>;" href="<?= base_url() ?>Student/petitions"><i class="fa fa-file-text-o"></i> <span>Petition Course</span></a></li>
-           <li><a style="color:<?= $this->uri->segment(2) == 'check_units' ? 'white' : ''; ?>;" href="<?= base_url() ?>Student/check_units/<?= $this->session->acc_number ?>/<?= $this->session->curr_year ?>/<?= $this->session->curr_term ?>"><i class="fa fa-file-text-o"></i> <span>Overload / Underload</span></a></li>
+
+           <li><a style="color:<?= ($this->uri->segment(2) == 'check_units' || $this->uri->segment(2) == 'underload_request' || $this->uri->segment(2) == 'overload_request') ? 'white' : ''; ?>;" href="<?= base_url() ?>Student/check_units/<?= $this->session->acc_number ?>/<?= $this->session->curr_year ?>/<?= $this->session->curr_term ?>"><i class="fa fa-file-text-o"></i> <span>Overload / Underload</span></a></li>
+
            <li><a style="color:<?= $this->uri->segment(2) == 'check_graduating' ? 'white' : ''; ?>;" href="<?= base_url() ?>Student/check_graduating"><i class="fa fa-file-text-o"></i> <span>Request for Simultaneous</span></a></li>
 
            <!-- <li><a href="<?= base_url() ?>Student/maintenance"><i class="fa fa-file-text-o"></i> <span>Overload / Underload</span></a></li>
