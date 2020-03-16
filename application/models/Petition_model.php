@@ -204,8 +204,6 @@ class Petition_model extends CI_Model
             $this->db->where('petition_unique', $petition_unique);
             $this->db->update('petitions_tbl');
         }
-
-        // return true;
     }
 
     public function check_number_of_petitioners($petition_unique)

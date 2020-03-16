@@ -249,6 +249,16 @@ class API extends CI_Controller
 		echo json_encode($data);
 	}
 
+	public function sign_petition($stud_number, $course_code, $petition_unique)
+	{
+		$this->Mobile_model->signPetition($stud_number, $course_code, $petition_unique);
+	}
+
+	public function withdraw_petition($stud_number, $petition_unique)
+	{
+		$this->Mobile_model->withdrawPetition($stud_number, $petition_unique);
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	// ACADEMICS FUNCTIONS
 	///////////////////////////////////////////////////////////////////////////////////////////
@@ -313,7 +323,7 @@ class API extends CI_Controller
 	{
 		$petition_unique = $petition_code . time();
 
-		$result = $this->Courseflow_model->check_if_existing_petition($petition_code);
+		$result = $this->Mobile_model->check_if_existing_petition($petition_code);
 
 		$petition_details = array(
 			'course_code' => $petition_code,

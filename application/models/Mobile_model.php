@@ -269,7 +269,49 @@ class Mobile_model extends CI_Model
             'date_submitted' => time()
         );
         $this->db->insert('petitioners_tbl', $petitioner);
+
+        $this->db->select('petitioner_count');
+        $this->db->from('petitions_tbl');
+        $this->db->where('petition_unique', $petition_unique);
+        $query = $this->db->get();
+        $current_count = $query->result();
+
+        $this->db->set('petitioner_count', $current_count[0]->petitioner_count + 1);
+        $this->db->where('petition_unique', $petition_unique);
+        $this->db->update('petitions_tbl');
     }
+
+    public function withdrawPetition($stud_number, $petition_unique)
+    {
+        $petitioner = array(
+            'stud_number' => $stud_number,
+            'petition_unique' => $petition_unique,
+        );
+
+        $this->db->delete('petitioners_tbl', $petitioner);
+
+        $this->db->select('petitioner_count');
+        $this->db->from('petitions_tbl');
+        $this->db->where('petition_unique', $petition_unique);
+        $query = $this->db->get();
+        $current_count = $query->result();
+        if ($current_count[0]->petitioner_count > 0) {
+            $this->db->set('petitioner_count', $current_count[0]->petitioner_count - 1);
+            $this->db->where('petition_unique', $petition_unique);
+            $this->db->update('petitions_tbl');
+        }
+    }
+
+    // public function signPetition($stud_number, $course_code, $petition_unique)
+    // {
+    //     $petitioner = array(
+    //         'stud_number' => $stud_number,
+    //         'course_code' => $course_code,
+    //         'petition_unique' => $petition_unique,
+    //         'date_submitted' => time()
+    //     );
+    //     $this->db->insert('petitioners_tbl', $petitioner);
+    // }
 
     public function submitPetition($petition_details)
     {
