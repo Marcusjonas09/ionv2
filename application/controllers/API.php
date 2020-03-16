@@ -21,6 +21,11 @@ class API extends CI_Controller
 	// LOGIN FUNCTIONS
 	///////////////////////////////////////////////////////////////////////////////////////////
 
+	public function get_settings()
+	{
+		echo json_encode($this->Mobile_model->get_settings());
+	}d
+
 	public function MobileLogin()
 	{
 		$credentials = json_decode(file_get_contents("php://input"));

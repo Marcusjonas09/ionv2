@@ -12,6 +12,15 @@ class Mobile_model extends CI_Model
     // LOGIN FUNCTIONS
     ///////////////////////////////////////////////////////////////////////////////////////////
 
+    public function get_settings()
+    {
+        $this->db->order_by('settings_tbl.settings_ID', 'DESC');
+        $settings_query = $this->db->get('settings_tbl');
+        $settings = $settings_query->row();
+
+        return $settings;
+    }
+
     public function mobilelogin($user, $pass)
     {
         $this->db->where(array('acc_username' => $user, 'acc_password' => sha1($pass)));
@@ -24,14 +33,6 @@ class Mobile_model extends CI_Model
 
         if ($query->num_rows() > 0) {
             if ($user->acc_access_level == 3) {
-                // $credentials = array(
-                //     'login' => true,
-                //     'acc_status' => $user->acc_status,
-                //     'acc_number' => $user->acc_number,
-                //     'Firstname' => $user->acc_fname,
-                //     'Lastname' => $user->acc_lname,
-                //     'Curriculum_code' => $user->curriculum_code
-                // );
                 $credentials = array(
                     'login' => true,
                     'acc_status' => $user->acc_status,
