@@ -326,6 +326,17 @@ class Mobile_model extends CI_Model
     {
         $this->db->insert('petitions_tbl', $petition_details);
         $this->db->insert('petitioners_tbl', $petition_details);
+
+        $this->db->select('petitioner_count');
+        $this->db->from('petitions_tbl');
+        $this->db->where('petition_unique', $petition_details['petition_unique']);
+        $query = $this->db->get();
+        $current_count = $query->result();
+
+        $this->db->set('petitioner_count', $current_count[0]->petitioner_count + 1);
+        $this->db->where('petition_unique', $petition_details['petition_unique']);
+        $this->db->update('petitions_tbl');
+        return true;
     }
 
     // public function check_petition($course_code)

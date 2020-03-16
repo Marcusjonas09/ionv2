@@ -207,8 +207,35 @@ class API extends CI_Controller
 	public function submitPetition()
 	{
 		$course_code = file_get_contents("php://input");
-		$data = $this->Mobile_model->submitPetition($course_code);
-		echo json_encode($data);
+		$petition_unique = $course_code . time();
+
+		$result = $this->Mobile_model->check_if_existing_petition($course_code);
+
+		$petition_details = array(
+			'course_code' => $course_code,
+			'petition_unique' => $petition_unique,
+			'stud_number' => $this->session->acc_number,
+			'date_submitted' => time()
+		);
+		if ($result) {
+			if ($this->Mobile_model->submitPetition($petition_details)) {
+				$message = array(
+					'message' => 'Petition created successfully!',
+					'status' => TRUE,
+				);
+			} else {
+				$message = array(
+					'message' => 'Failed to create petition.',
+					'status' => FALSE,
+				);
+			}
+		} else {
+			$message = array(
+				'message' => 'Failed to create petition.',
+				'status' => FALSE,
+			);
+		}
+		echo json_encode($message);
 	}
 
 	public function suggest_what_to_petition($curriculum_code, $stud_number, $curr_term, $curr_year)
