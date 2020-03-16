@@ -204,35 +204,41 @@ class API extends CI_Controller
 		echo json_encode($data);
 	}
 
-	public function submitPetition()
+	// public function submitPetition()
+	// {
+	// 	$course_code = file_get_contents("php://input");
+	// 	$data = $this->Mobile_model->submitPetition($course_code);
+	// 	echo json_encode($data);
+	// }
+
+	public function submitPetition($stud_number, $course_code)
 	{
-		$course_code = file_get_contents("php://input");
 		$petition_unique = $course_code . time();
 
-		$result = $this->Mobile_model->check_if_existing_petition($course_code);
+		$result = $this->Courseflow_model->check_if_existing_petition($course_code);
 
 		$petition_details = array(
 			'course_code' => $course_code,
 			'petition_unique' => $petition_unique,
-			'stud_number' => $this->session->acc_number,
+			'stud_number' => $stud_number,
 			'date_submitted' => time()
 		);
 		if ($result) {
-			if ($this->Mobile_model->submitPetition($petition_details)) {
+			if ($this->Petition_model->submitPetition($petition_details)) {
 				$message = array(
-					'message' => 'Petition created successfully!',
 					'status' => TRUE,
+					'message' => "Petition created successfully!"
 				);
 			} else {
 				$message = array(
-					'message' => 'Failed to create petition.',
 					'status' => FALSE,
+					'message' => "Failed to create petition."
 				);
 			}
 		} else {
 			$message = array(
-				'message' => 'Failed to create petition.',
 				'status' => FALSE,
+				'message' => "Failed to create petition."
 			);
 		}
 		echo json_encode($message);
