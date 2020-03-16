@@ -259,6 +259,11 @@ class API extends CI_Controller
 		$this->Mobile_model->withdrawPetition($stud_number, $petition_unique);
 	}
 
+	public function check_if_you_petitioned($petition_unique)
+	{
+		echo json_encode($this->Mobile_model->check_if_you_petitioned($petition_unique));
+	}
+
 	///////////////////////////////////////////////////////////////////////////////////////////
 	// ACADEMICS FUNCTIONS
 	///////////////////////////////////////////////////////////////////////////////////////////

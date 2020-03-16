@@ -302,6 +302,15 @@ class Mobile_model extends CI_Model
         }
     }
 
+    public function check_if_you_petitioned($petition_unique)
+    {
+        $this->db->select('*');
+        $this->db->where(array('petition_unique' => $petition_unique, 'stud_number' => $this->session->acc_number));
+        $this->db->from('petitioners_tbl');
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
     // public function signPetition($stud_number, $course_code, $petition_unique)
     // {
     //     $petitioner = array(
