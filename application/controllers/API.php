@@ -263,12 +263,6 @@ class API extends CI_Controller
 		echo json_encode($data);
 	}
 
-	// public function signPetition($stud_number, $course_code, $petition_unique)
-	// {
-	// 	$data = $this->Mobile_model->signPetition($stud_number, $course_code, $petition_unique);
-	// 	echo json_encode($data);
-	// }
-
 	public function fetch_faculty()
 	{
 		$data = $this->Mobile_model->fetch_faculty();

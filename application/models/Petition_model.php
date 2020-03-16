@@ -181,8 +181,6 @@ class Petition_model extends CI_Model
         $this->db->set('petitioner_count', $current_count[0]->petitioner_count + 1);
         $this->db->where('petition_unique', $petition_unique);
         $this->db->update('petitions_tbl');
-
-        // return true;
     }
 
     public function withdrawPetition($stud_number, $petition_unique)
