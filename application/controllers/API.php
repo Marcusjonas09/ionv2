@@ -24,7 +24,7 @@ class API extends CI_Controller
 	public function get_settings()
 	{
 		echo json_encode($this->Mobile_model->get_settings());
-	}d
+	}
 
 	public function MobileLogin()
 	{
@@ -311,19 +311,49 @@ class API extends CI_Controller
 
 	public function createPetition($stud_number, $petition_code)
 	{
-		$result = $this->Mobile_model->check_petition($petition_code);
 		$petition_unique = $petition_code . time();
+
+		$result = $this->Courseflow_model->check_if_existing_petition($petition_code);
+
 		$petition_details = array(
 			'course_code' => $petition_code,
 			'petition_unique' => $petition_unique,
 			'stud_number' => $stud_number,
 			'date_submitted' => time()
 		);
+
 		if ($result) {
 			$data = $this->Mobile_model->submitPetition($petition_details);
 			echo json_encode($data);
 		}
+
+		// if ($result) {
+		// 	if ($this->Petition_model->submitPetition($petition_details)) {
+		// 		$success = "Petition created successfully!";
+		// 		$this->petitions($success, null);
+		// 	} else {
+		// 		$error = "Failed to create petition.";
+		// 		$this->petitions(null, $error);
+		// 	}
+		// } else {
+		// 	$error = "Failed to create petition.";
+		// 	$this->petitions(null, $error);
+		// }
+		// $result = $this->Mobile_model->check_petition($petition_code);
+		// $petition_unique = $petition_code . time();
+		// $petition_details = array(
+		// 	'course_code' => $petition_code,
+		// 	'petition_unique' => $petition_unique,
+		// 	'stud_number' => $stud_number,
+		// 	'date_submitted' => time()
+		// );
+		// if ($result) {
+		// 	$data = $this->Mobile_model->submitPetition($petition_details);
+		// 	echo json_encode($data);
+		// }
 	}
+
+
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	// OTHER FUNCTIONS

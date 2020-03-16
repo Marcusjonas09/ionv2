@@ -277,20 +277,66 @@ class Mobile_model extends CI_Model
         $this->db->insert('petitioners_tbl', $petition_details);
     }
 
-    public function check_petition($course_code)
+    // public function check_petition($course_code)
+    // {
+    //     $conditions = array(
+    //         'course_code' => $course_code
+    //     );
+    //     $query = $this->db->get_where('petitions_tbl', $conditions);
+    //     $petition_count = $query->num_rows();
+
+    //     if ($petition_count > 0) {
+    //         return false;
+    //     } else {
+    //         return true;
+    //     }
+    // }
+
+    public function check_if_existing_petition($course_code)
     {
-        $conditions = array(
-            'course_code' => $course_code
-        );
-        $query = $this->db->get_where('petitions_tbl', $conditions);
+        $this->db->select('petition_unique');
+        $this->db->where(array(
+            'course_code' => $course_code,
+            'petition_status' => 2
+        ));
+        $this->db->from('petitions_tbl');
+        $query = $this->db->get();
         $petition_count = $query->num_rows();
 
         if ($petition_count > 0) {
-            return false;
+
+            $petition_unique = $query->result();
+
+            $available_petitions = $this->check_if_full($petition_unique);
+            //suggest petition
+            if ($available_petitions) {
+                //suggest petition
+                return false;
+            } else {
+                //create petitions
+                return true;
+            }
         } else {
             return true;
         }
     }
+
+    public function check_if_full($petition_unique)
+    {
+        $available_petitions = array();
+        foreach ($petition_unique as $petition) {
+            $this->db->select('*');
+            $this->db->where(array('petition_unique' => $petition->petition_unique));
+            $this->db->from('petitioners_tbl');
+            $query = $this->db->get();
+            $petitioners = $query->num_rows();
+            if ($petitioners < 40) {
+                array_push($available_petitions, $petition->petition_unique);
+            }
+        }
+        return $available_petitions;
+    }
+
 
     public function fetchMyPetitions($stud_number)
     {

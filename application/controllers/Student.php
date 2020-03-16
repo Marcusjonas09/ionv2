@@ -768,16 +768,6 @@ class Student extends CI_Controller
 
 		$result = $this->Courseflow_model->check_if_existing_petition($course_code);
 
-		// if(already petitioned){
-		//     if(course full){
-		//         create new petition
-		//     }else{
-		//         suggest to sign the existing petition
-		//     }
-		// }else{
-		//     create new petition
-		// }
-
 		$petition_details = array(
 			'course_code' => $course_code,
 			'petition_unique' => $petition_unique,
