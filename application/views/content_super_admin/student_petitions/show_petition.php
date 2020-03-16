@@ -125,7 +125,7 @@
         </div>
 
         <div class="col-md-6">
-            <div class="box box-success">
+            <!-- <div class="box box-success">
 
                 <div class="box-header">
                     <h3 class="box-title"><strong>Schedule</strong></h3>
@@ -212,6 +212,32 @@
 
                     <?php endif; ?>
                 </div>
+            </div> -->
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><strong>Class Schedule</strong></h3>
+                    <button class="btn btn-success pull-right" data-toggle="modal" data-target="#addSchedModal">Add Schedule</button>
+                </div>
+                <div class="box-body">
+                    <table class="table table-striped text-center" data-page-length='10'>
+                        <thead class="bg-success" style="background-color:#00a65a; color:white;">
+                            <th class="text-center col-md-3">DAY</th>
+                            <th class="text-center col-md-3">TIME</th>
+                            <th class="text-center col-md-3">ROOM</th>
+                            <th class="text-center col-md-3">ACTION</th>
+                        </thead>
+                        <tbody id="class_sched_table_body">
+                            <!-- <?php foreach ($class_scheds as $class_sched) : ?>
+                                <tr>
+                                    <td><?= $class_sched->class_day ?></td>
+                                    <td><?= date('h:i A', strtotime($class_sched->class_start_time)) . ' - ' . date('h:i A', strtotime($class_sched->class_end_time)) ?></td>
+                                    <td><?= $class_sched->class_room ?></td>
+                                    <td><button class="btn btn-danger" onclick="delete_sched('<?= $class->class_id ?>','<?= $class_sched->cs_id ?>')"><i class="fa fa-trash"></i></button></td>
+                                </tr>
+                            <?php endforeach; ?> -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -219,3 +245,67 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="addSchedModal" tabindex="-1" role="dialog" aria-labelledby="addSchedLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addSchedLabel">Add Schedule</h4>
+            </div>
+            <form action="<?= base_url() ?>SuperAdmin/add_sched" method="post">
+                <div class="modal-body">
+                    <div class="form-group col-md-6">
+                        <label for="laboratory_code">Day:</label>
+                        <select class="form-control" name="class_day" id="class_sched_day">
+                            <option value="">--</option>
+                            <option value="M">Monday</option>
+                            <option value="T">Tuesday</option>
+                            <option value="W">Wednesday</option>
+                            <option value="TH">Thursday</option>
+                            <option value="F">Friday</option>
+                            <option value="S">Saturday</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>Room:</label>
+                        <div class="form-group">
+                            <input class="form-control" type="text" name="class_room" id="class_room">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>Start Time:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control timepicker" name="class_start_time" id="class_start_time">
+                            <div class="input-group-addon">
+                                <i class="fa fa-clock-o"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>End Time:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control timepicker" name="class_end_time" id="class_end_time">
+                            <div class="input-group-addon">
+                                <i class="fa fa-clock-o"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <input type="hidden" name="class_id" value="<?= $class->class_id ?>">
+                    <input type="hidden" name="class_sched" value="<?= $class->class_sched ?>"> -->
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success col-md-2 pull-right">Submit</button>
+                    <button type="button" class="btn btn-default col-md-2 pull-right" style="margin-right:10px;" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

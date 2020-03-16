@@ -129,37 +129,43 @@
               <th>Action</th>
             </thead>
             <tbody>
-              <?php foreach ($petitions_available as $petition_available) : ?>
-                <?php if ($petition_available->petition_status == 2) : ?>
-                  <tr>
-                    <td>
-                      <strong><?= $petition_available->course_code ?></strong>
-                      <?php foreach ($courses as $course) : ?>
-                        <?php if ($petition_available->course_code == $course->course_code) : ?>
-                          </p><small><?= $course->course_title ?></small></p>
-                        <?php endif; ?>
-                      <?php endforeach; ?>
-                    </td>
+              <?php if ($petitions_available != 0) : ?>
+                <?php foreach ($petitions_available as $petition_available) : ?>
+                  <?php if ($petition_available->petition_status == 2) : ?>
+                    <tr>
+                      <td>
+                        <strong><?= $petition_available->course_code ?></strong>
+                        <?php foreach ($courses as $course) : ?>
+                          <?php if ($petition_available->course_code == $course->course_code) : ?>
+                            </p><small><?= $course->course_title ?></small></p>
+                          <?php endif; ?>
+                        <?php endforeach; ?>
+                      </td>
 
-                    <td>
-                      <?= $petition_available->petitioner_count . '/40' ?>
-                    </td>
+                      <td>
+                        <?= $petition_available->petitioner_count . '/40' ?>
+                      </td>
 
-                    <td>
-                      <?php if ($petition_available->petition_status == 1) {
-                        echo "<span class='label label-success col-md-12'>Approved</span>";
-                      } elseif ($petition_available->petition_status == 2) {
-                        echo "<span class='label label-warning col-md-12'>Pending</span>";
-                      } else {
-                        echo "<span class='label label-danger col-md-12'>Denied</span>";
-                      } ?>
-                    </td>
-                    <td>
-                      <a href="<?= base_url() ?>Student/petitionView/<?= $petition_available->petition_ID ?>/<?= $petition_available->petition_unique ?>" class="btn btn-warning btn-sm rounded"><i class="fa fa-eye"></i></a>
-                    </td>
-                  </tr>
-                <?php endif; ?>
-              <?php endforeach; ?>
+                      <td>
+                        <?php if ($petition_available->petition_status == 1) {
+                          echo "<span class='label label-success col-md-12'>Approved</span>";
+                        } elseif ($petition_available->petition_status == 2) {
+                          echo "<span class='label label-warning col-md-12'>Pending</span>";
+                        } else {
+                          echo "<span class='label label-danger col-md-12'>Denied</span>";
+                        } ?>
+                      </td>
+                      <td>
+                        <a href="<?= base_url() ?>Student/petitionView/<?= $petition_available->petition_ID ?>/<?= $petition_available->petition_unique ?>" class="btn btn-warning btn-sm rounded"><i class="fa fa-eye"></i></a>
+                      </td>
+                    </tr>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+              <?php else : ?>
+                <tr>
+                  <td class="text-center" colspan="4">No Suggestions Available</td>
+                </tr>
+              <?php endif; ?>
             </tbody>
           </table>
           <!-- <div class="col-md-6"><?= $this->pagination->create_links(); ?></div> -->

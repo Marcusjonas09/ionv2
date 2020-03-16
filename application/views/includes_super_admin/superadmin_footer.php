@@ -285,6 +285,41 @@
 
 
     $(document).ready(function() {
+        $.ajax({
+            url: '<?php echo base_url() ?>SuperAdmin/fetch_lab_code',
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                course_code: $('#class_course_code').val()
+            },
+            success: function(data) {
+                $('.lab_code').val(data.laboratory_code);
+                if (data.laboratory_code != 'none') {
+                    $('#lab_instructor_edit').prop("disabled", false)
+                } else {
+                    $('#lab_instructor_edit').prop("disabled", true)
+                }
+            }
+        });
+        $('#class_course_code').change(function() {
+            $.ajax({
+                url: '<?php echo base_url() ?>SuperAdmin/fetch_lab_code',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    course_code: $('#class_course_code').val()
+                },
+                success: function(data) {
+                    $('.lab_code').val(data.laboratory_code);
+                    if (data.laboratory_code != 'none') {
+                        $('#lab_instructor').prop("disabled", false)
+                    } else {
+                        $('#lab_instructor').prop("disabled", true)
+                    }
+
+                }
+            });
+        });
 
         $('.datatables').DataTable({
             'paging': true,
@@ -597,6 +632,7 @@
                         petitionUnique: petition_unique,
                         petitionSection: petition_section
                     }).done(function(data) {
+                        alert(data);
                         var obj = JSON.parse(data);
                         if (obj.context == "success") {
                             Swal.fire(
@@ -792,9 +828,6 @@
 
                 return date;
             }
-
-
-
 
             $('#editname').val(event.title);
             $('#editdescription').val(event.description);

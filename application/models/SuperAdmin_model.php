@@ -1353,8 +1353,20 @@ class SuperAdmin_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('classes_tbl');
+        $this->db->order_by('class_sched', 'ASC');
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function fetch_lab_code($course_code)
+    {
+        $this->db->select('laboratory_code');
+        $this->db->where(array(
+            'course_code' => $course_code
+        ));
+        $this->db->from('courses_tbl_v2');
+        $query = $this->db->get();
+        return $query->row();
     }
 
     // public function fetch_all_class_sched()
@@ -1387,6 +1399,7 @@ class SuperAdmin_model extends CI_Model
             'class_start_time' => $data['class_start_time'],
             'class_end_time' => $data['class_end_time'],
             'class_sched' => $data['class_sched'],
+            'class_type' => $data['class_type'],
             'school_year' => $data['school_year'],
             'school_term' => $data['school_term']
         );

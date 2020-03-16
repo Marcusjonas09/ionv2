@@ -42,6 +42,7 @@
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Laboratory Code:</label>
                                 <select class="form-control js-example-basic-single" name="laboratory_code" id="laboratory_code">
+                                    <option value="none">none</option>
                                     <?php foreach ($laboratories as $laboratory) : ?>
                                         <option <?php if ($laboratory->laboratory_code == $course->laboratory_code) {
                                                     echo "selected";

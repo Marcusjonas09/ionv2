@@ -29,7 +29,7 @@
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Course Code:</label>
-                                <select disabled class="form-control js-example-basic-single" name="course_code" id="class_course_code">
+                                <select disabled class="form-control js-example-basic-single" name="class_code" id="class_course_code">
                                     <option value="">--</option>
                                     <?php foreach ($courses as $course) : ?>
                                         <option <?php if ($course->course_code == $class->class_code) {
@@ -40,8 +40,38 @@
                             </div>
 
                             <div class="form-group col-md-6">
+                                <label for="lab_code">Lab Code:</label>
+                                <input disabled class="form-control lab_code" type="text">
+                                <input type="hidden" class="lab_code" name="laboratory_code">
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="laboratory_code">Lecture Instructor:</label>
+                                <select class="form-control js-example-basic-single" name="lec_instructor" id="lec_instructor">
+                                    <option value="">--</option>
+                                    <?php foreach ($faculties as $faculty) : ?>
+                                        <option <?php if ($faculty->acc_number == $class->class_faculty) {
+                                                    echo "selected";
+                                                } ?> value="<?= $faculty->acc_number ?>"><?= $faculty->acc_lname . ' - ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="laboratory_code">Laboratory Instructor:</label>
+                                <select class="form-control js-example-basic-single" name="lab_instructor" id="lab_instructor_edit">
+                                    <option value="">--</option>
+                                    <?php foreach ($faculties as $faculty) : ?>
+                                        <option <?php if ($faculty->acc_number == $class->class_lab_faculty) {
+                                                    echo "selected";
+                                                } ?> value="<?= $faculty->acc_number ?>"><?= $faculty->acc_lname . ' - ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6">
                                 <label for="laboratory_code">Section:</label>
-                                <select disabled class="form-control js-example-basic-single" name="section_code" id="class_section_code">
+                                <select class="form-control js-example-basic-single" name="section_code" id="class_section_code">
                                     <option value="">--</option>
                                     <?php foreach ($sections as $section) : ?>
                                         <option <?php if ($section->section_code == $class->class_section) {
@@ -52,21 +82,8 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label for="laboratory_code">Faculty:</label>
-                                <select class="form-control js-example-basic-single" name="faculty_id" id="class_faculty_id">
-                                    <option value="0">--</option>
-                                    <?php foreach ($faculties as $faculty) : ?>
-                                        <option <?php if ($faculty->acc_number == $class->class_faculty) {
-                                                    echo "selected";
-                                                } ?> value="<?= $faculty->acc_number ?>"><?= $faculty->acc_lname . ', ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <div class="form-group col-md-6">
                                 <label for="class_capacity">Max Slots:</label>
-                                <input type="number" value="<?= $class->class_capacity ?>" name="class_capacity" id="class_capacity" placeholder="Slot" class="form-control">
+                                <input type="number" name="class_capacity" id="class_capacity" placeholder="Slot" class="form-control" value="<?= $class->class_capacity ?>">
                             </div>
 
                             <input type="hidden" name="class_id" id="class_id" value="<?= $class->class_id ?>">
@@ -88,9 +105,10 @@
                 <div class="box-body">
                     <table class="table table-striped text-center" data-page-length='10'>
                         <thead class="bg-success" style="background-color:#00a65a; color:white;">
-                            <th class="text-center col-md-3">DAY</th>
+                            <th class="text-center col-md-2">DAY</th>
                             <th class="text-center col-md-3">TIME</th>
-                            <th class="text-center col-md-3">ROOM</th>
+                            <th class="text-center col-md-2">ROOM</th>
+                            <th class="text-center col-md-2">TYPE</th>
                             <th class="text-center col-md-3">ACTION</th>
                         </thead>
                         <tbody id="class_sched_table_body">
@@ -101,6 +119,7 @@
 
                                     <td><?= date('h:i A', strtotime($class_sched->class_start_time)) . ' - ' . date('h:i A', strtotime($class_sched->class_end_time)) ?></td>
                                     <td><?= $class_sched->class_room ?></td>
+                                    <td><?= $class_sched->class_type ?></td>
                                     <td><button class="btn btn-danger" onclick="delete_sched('<?= $class->class_id ?>','<?= $class_sched->cs_id ?>')"><i class="fa fa-trash"></i></button></td>
                                 </tr>
                             <?php endforeach; ?>
@@ -124,10 +143,9 @@
             </div>
             <form action="<?= base_url() ?>SuperAdmin/add_sched" method="post">
                 <div class="modal-body">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label for="laboratory_code">Day:</label>
                         <select class="form-control" name="class_day" id="class_sched_day">
-                            <option value="">--</option>
                             <option value="M">Monday</option>
                             <option value="T">Tuesday</option>
                             <option value="W">Wednesday</option>
@@ -137,10 +155,20 @@
                         </select>
                     </div>
 
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label>Room:</label>
                         <div class="form-group">
                             <input class="form-control" type="text" name="class_room" id="class_room">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Type:</label>
+                        <div class="form-group">
+                            <select class="form-control" name="class_type" id="class_type">
+                                <option value="Lecture">Lecture</option>
+                                <option value="Laboratory">Laboratory</option>
+                            </select>
                         </div>
                     </div>
 

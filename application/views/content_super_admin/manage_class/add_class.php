@@ -39,6 +39,32 @@
                             </div>
 
                             <div class="form-group col-md-6">
+                                <label for="lab_code">Lab Code:</label>
+                                <input disabled class="form-control lab_code" type="text">
+                                <input type="hidden" class="lab_code" name="laboratory_code">
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="laboratory_code">Lecture Instructor:</label>
+                                <select class="form-control js-example-basic-single" name="lec_instructor" id="lec_instructor">
+                                    <option value="">--</option>
+                                    <?php foreach ($faculties as $faculty) : ?>
+                                        <option value="<?= $faculty->acc_number ?>"><?= $faculty->acc_lname . ' - ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="laboratory_code">Laboratory Instructor:</label>
+                                <select disabled class="form-control js-example-basic-single" name="lab_instructor" id="lab_instructor">
+                                    <option value="">--</option>
+                                    <?php foreach ($faculties as $faculty) : ?>
+                                        <option value="<?= $faculty->acc_number ?>"><?= $faculty->acc_lname . ' - ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6">
                                 <label for="laboratory_code">Section:</label>
                                 <select class="form-control js-example-basic-single" name="section_code" id="class_section_code">
                                     <option value="">--</option>
@@ -49,21 +75,11 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label for="laboratory_code">Faculty:</label>
-                                <select class="form-control js-example-basic-single" name="faculty_id" id="class_faculty_id">
-                                    <option value="">--</option>
-                                    <?php foreach ($faculties as $faculty) : ?>
-                                        <option value="<?= $faculty->acc_number ?>"><?= $faculty->acc_lname . ', ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <div class="form-group col-md-6">
                                 <label for="class_capacity">Max Slots:</label>
                                 <input type="number" name="class_capacity" id="class_capacity" placeholder="Slot" class="form-control">
                             </div>
                         </div>
+
                     </div>
                     <div class="box-footer">
                         <input class="btn btn-success pull-right" type="submit" value="Create" />

@@ -749,7 +749,6 @@ class Student extends CI_Controller
 		$data['petition_suggestions'] = $this->Courseflow_model->suggest_what_to_petition();
 		$data['petitions_available'] = $this->Courseflow_model->suggested_petitions_available();
 		$data['petitioners'] = $this->Petition_model->fetchAllPetitioners();
-
 		$data['success_msg'] = $success;
 		$data['error_msg'] = $error;
 

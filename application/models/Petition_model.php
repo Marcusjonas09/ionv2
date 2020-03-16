@@ -38,10 +38,22 @@ class Petition_model extends CI_Model
 
     public function approve_petition($petition_unique)
     {
-        $this->db->set('petition_status', 1);
-        $this->db->set('date_processed', time());
-        $this->db->where('petition_unique', $petition_unique);
-        $this->db->update('petitions_tbl');
+        // $this->db->set('petition_status', 1);
+        // $this->db->set('date_processed', time());
+        // $this->db->where('petition_unique', $petition_unique);
+        // $this->db->update('petitions_tbl');
+
+        $q = $this->db->get_where('petitions_tbl', array('petition_unique' => $petition_unique));
+
+        $course_details = $q->row();
+        $this->dd($course_details);
+        $course = array(
+            'class_code' => $course_details->course_code,
+            'school_year' => $this->session->curr_year,
+            'school_term' => $this->session->curr_term
+        );
+
+        $this->db->insert('classes_tbl', $course);
     }
 
     public function decline_petition($petition_unique)

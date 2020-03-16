@@ -1015,6 +1015,11 @@ class SuperAdmin extends CI_Controller
         $data['petitioners'] = $this->Petition_model->fetchPetitioners($petition_unique);
         $data['courses'] = $this->Curriculum_model->fetchCoursesAdmin();
         $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
+
+        // $data['class'] = $this->SuperAdmin_model->fetch_class($id);
+        // $class_sched = $data['class']->class_code . $data['class']->class_section;
+        // $data['class_scheds'] = $this->SuperAdmin_model->fetch_class_sched($class_sched);
+        // $data['message'] = $message;
         $this->load->view('includes_super_admin/superadmin_header');
 
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -1316,24 +1321,13 @@ class SuperAdmin extends CI_Controller
         $curr_year = $current_sy->school_year;
         $curr_term = $current_sy->school_term;
         $result = $this->SuperAdmin_model->fetch_last_faculty_number();
+
         $current_prefix = substr($curr_year, 0, 4) . $curr_term; // YYYYT
         $last_entry = $result->acc_number; // YYYYTXXXXX
-        $last_prefix = substr($last_entry, 0, 5); // YYYYT
-        // IF NEW STUDENT
-        if ($curr_term < 3) {
-            $stud_prefix = (substr($curr_year, 0, 4) . ($curr_term + 1));
-        } else {
-            $stud_prefix = ((substr($curr_year, 0, 4) + 1) . 1);
-        }
-
-        if ($last_prefix == $current_prefix) {
-            $assigned = $last_entry + 1;
-        } else if ($last_prefix < $current_prefix) {
-            $assigned = ($stud_prefix * 10000) + 1;
-        } else {
-            $assigned  = 0;
-        }
-        return $assigned;
+        $last_number = substr($last_entry, 5); // YYYYT
+        $generated = ($current_prefix * 1000) . ($last_number + 1);
+        // $this->dd($generated);
+        return $generated;
     }
 
     public function add_student($message = null)
@@ -1519,8 +1513,14 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_footer');
     }
 
+    public function fetch_lab_code()
+    {
+        echo json_encode($this->SuperAdmin_model->fetch_lab_code($this->input->post('course_code')));
+    }
+
     public function add_class($message = null)
     {
+        $data['labs'] = $this->SuperAdmin_model->fetch_all_laboratories();
         $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
         $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
         $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
@@ -1539,25 +1539,33 @@ class SuperAdmin extends CI_Controller
 
     public function create_class()
     {
+
         $this->form_validation->set_rules('class_code', 'Course Code', 'required|strip_tags');
         $this->form_validation->set_rules('section_code', 'Section Code', 'required|strip_tags');
-        $this->form_validation->set_rules('faculty_id', 'Faculty assignment', 'required|strip_tags');
+        $this->form_validation->set_rules('lec_instructor', 'Lecture Instructor', 'required|strip_tags');
+
         $this->form_validation->set_rules('class_capacity', 'Class capacity', 'required|strip_tags|trim');
 
         if ($this->form_validation->run() == FALSE) {
             $this->add_class();
         } else {
             $current_sy = $this->SuperAdmin_model->fetch_current();
+            $lab_code = $this->SuperAdmin_model->fetch_lab_code($this->input->post('class_code'));
+
             $class = array(
                 'class_code' => $this->input->post('class_code'),
+                'class_lab' => $lab_code->laboratory_code,
                 'class_section' => $this->input->post('section_code'),
-                'class_faculty' => $this->input->post('faculty_id'),
+                'class_faculty' => $this->input->post('lec_instructor'),
+                'class_lab_faculty' => ($this->input->post('laboratory_code') != '' && $this->input->post('laboratory_code') != 'none') ? $this->input->post('lab_instructor') : '',
                 'class_sched' => $this->input->post('class_code') . $this->input->post('section_code'),
                 'class_capacity' => $this->input->post('class_capacity'),
+                'class_slot' => $this->input->post('class_capacity'),
                 'school_year' => $current_sy->school_year,
                 'school_term' => $current_sy->school_term
             );
 
+            // $this->dd($class);
             if ($this->SuperAdmin_model->fetch_specific_class($class['class_sched']) > 0) {
                 $message = '
                 <div class="alert alert-warning alert-dismissible">
@@ -1606,12 +1614,20 @@ class SuperAdmin extends CI_Controller
 
     public function edit_class_function()
     {
+
+        // $this->dd($_POST);
+        if ($this->input->post('laboratory_code') != '' && $this->input->post('laboratory_code') != 'none') {
+            $this->form_validation->set_rules('lab_instructor', 'Laboratory Instructor', 'required|strip_tags');
+        }
+        $this->form_validation->set_rules('section_code', 'Section', 'required|strip_tags');
         $this->form_validation->set_rules('class_capacity', 'Class Capacity', 'required|strip_tags|trim|is_natural|less_than_equal_to[40]');
 
         $class_id = $this->input->post('class_id');
         $class_data = array(
-            'class_faculty' => $this->input->post('faculty_id'),
-            'class_capacity' => $this->input->post('class_capacity')
+            'class_faculty' => $this->input->post('lec_instructor'),
+            'class_lab_faculty' => $this->input->post('lab_instructor'),
+            'class_capacity' => $this->input->post('class_capacity'),
+            'class_section' => $this->input->post('section_code')
         );
 
         if ($this->form_validation->run() == FALSE) {
@@ -1666,8 +1682,9 @@ class SuperAdmin extends CI_Controller
 
     public function add_sched()
     {
-
-        $this->form_validation->set_rules('class_day', 'class day', 'required|strip_tags');
+        // $this->dd($_POST);
+        // $this->form_validation->set_rules('class_day', 'class day', 'required|strip_tags');
+        // $this->form_validation->set_rules('class_day', 'class day', 'required|strip_tags');
         $this->form_validation->set_rules('class_room', 'class day', 'required|strip_tags');
         $this->form_validation->set_rules('class_start_time', 'class day', 'required|strip_tags');
         $this->form_validation->set_rules('class_end_time', 'class day', 'required|strip_tags');
@@ -1681,6 +1698,7 @@ class SuperAdmin extends CI_Controller
             'class_end_time' => date('H:i', strtotime($this->input->post('class_end_time'))),
             'class_room' => $this->input->post('class_room'),
             'class_sched' => $this->input->post('class_sched'),
+            'class_type' => $this->input->post('class_type'),
             'school_year' => $current_sy->school_year,
             'school_term' => $current_sy->school_term
         );

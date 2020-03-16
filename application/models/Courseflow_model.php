@@ -84,45 +84,118 @@ class Courseflow_model extends CI_Model
             array_push($untaken_in_offering, $untaken_course->course_code);
         }
 
-        if ($untaken_in_offering) {
+        if (count($untaken_in_offering) > 0) {
 
             //fetch untaken courses in offering table
 
-            $this->db->distinct();
-            $this->db->select('offering_course_code,offering_course_slot');
-            $this->db->where(array(
-                'offering_year' => $this->session->curr_year,
-                'offering_term' => $this->session->curr_term,
-            ));
-            $this->db->where_in('offering_course_code', $untaken_in_offering);
-            $this->db->from('offering_tbl');
 
-            $query = $this->db->get();
-            $suggestions = $query->result();
-            $suggestion = array();
+            if ($this->session->curr_year <= 20192020 && $this->session->curr_term < 3) {
+                $this->db->distinct();
+                $this->db->select('offering_course_code,offering_course_slot');
+                $this->db->where(array(
+                    'offering_year' => $this->session->curr_year,
+                    'offering_term' => $this->session->curr_term,
+                ));
+                $this->db->where_in('offering_course_code', $untaken_in_offering);
+                $this->db->from('offering_tbl');
+                $query = $this->db->get();
 
-            foreach ($suggestions as $suggest) {
-                $CourseSuggestions = 0;
-                foreach ($suggestions as $suggest_inner) {
-                    if ($suggest_inner->offering_course_code == $suggest->offering_course_code) {
-                        $CourseSuggestions += $suggest_inner->offering_course_slot;
+                $suggestions = $query->result();
+                $suggestion = array();
+                // $this->dd($suggestions);
+                foreach ($suggestions as $suggest) {
+                    $sample = 0;
+
+                    foreach ($suggestions as $suggest_inner) {
+
+                        if ($suggest_inner->offering_course_code == $suggest->offering_course_code) {
+                            $sample += $suggest_inner->offering_course_slot;
+                        }
+                    }
+                    if ($sample) {
+                        $sample = 0;
+                    } else {
+                        array_push($suggestion, $suggest->offering_course_code);
                     }
                 }
-                if ($CourseSuggestions) {
-                    $CourseSuggestions = 0;
-                } else {
-                    array_push($suggestion, $suggest->offering_course_code);
+            } else {
+
+                $this->db->select('*');
+                $this->db->where(array(
+                    'school_year' => $this->session->curr_year,
+                    'school_term' => $this->session->curr_term
+                ));
+                $this->db->where_in('class_code', $untaken_in_offering);
+                $this->db->from('classes_tbl');
+
+                $query = $this->db->get();
+                $all_classes = $query->result();
+
+                $classes = array();
+                $day = "";
+                $time = "";
+                $room = "";
+                foreach ($all_classes as $class) {
+                    $class_scheds = $this->fetchScheds($class->class_sched, $this->session->curr_year, $this->session->curr_year);
+                    foreach ($class_scheds as $class_sched) {
+                        $day .= ' ' . $class_sched->class_day . ' /';
+                        $time .= ' ' . date('H:i:s', strtotime($class_sched->class_start_time)) . '-' . date('H:i:s', strtotime($class_sched->class_end_time)) . ' /';
+                        $room .= ' ' . $class_sched->class_room . ' /';
+                    }
+                    array_push($classes, array(
+                        'class_code' => $class->class_code,
+                        'class_section' => $class->class_section,
+                        'class_faculty' => $class->class_faculty,
+                        'class_sched' => $class->class_sched,
+                        'class_capacity' => $class->class_capacity,
+                        'school_year' => $class->school_year,
+                        'school_term' => $class->school_term,
+                        'school_term' => $class->school_term,
+                        'school_term' => $class->school_term,
+                        'sched_day' => substr($day, 0, -1),
+                        'sched_time' => substr($time, 0, -1),
+                        'sched_room' => substr($room, 0, -1),
+                    ));
+                    $day = "";
+                    $time = "";
+                    $room = "";
+                }
+                $suggestions = $classes;
+                $suggestion = array();
+
+                foreach ($suggestions as $suggest) {
+                    array_push($suggestion, $suggest['class_code']);
                 }
             }
 
             //fetch course details of suggested courses
+            if (count($suggestion) > 0) {
+                $this->db->select('*');
+                $this->db->from('courses_tbl_v2');
+                $this->db->where_in('course_code', $suggestion);
+                $query = $this->db->get();
+                $course_suggestions = $query->result();
+                // return $query->result();
+            } else {
+                $course_suggestions = 0;
+                // return "No suggestions!";
+            }
 
-            $this->db->select('*');
-            $this->db->from('courses_tbl_v2');
-            $this->db->where_in('course_code', $suggestion);
-            $query = $this->db->get();
-            return $query->result();
+            return $course_suggestions;
         }
+        return $query->result();
+    }
+
+    public function fetchScheds($class_sched, $year, $term)
+    {
+        $this->db->select('*');
+        $this->db->from('class_schedule_tbl');
+        $this->db->where(array(
+            'class_sched' => $class_sched,
+            'school_year' => $year,
+            'school_term' => $term
+        ));
+        $query = $this->db->get();
         return $query->result();
     }
 
@@ -163,54 +236,143 @@ class Courseflow_model extends CI_Model
         foreach ($untaken_courses as $untaken_course) {
             array_push($untaken_in_offering, $untaken_course->course_code);
         }
+
         if ($untaken_in_offering) {
             //fetch untaken courses in offering table
-            $this->db->distinct();
-            $this->db->select('offering_course_code,offering_course_slot');
-            $this->db->where(array(
-                'offering_year' => $this->session->curr_year,
-                'offering_term' => $this->session->curr_term,
-                // 'offering_course_slot >' => 0
-            ));
-            $this->db->where_in('offering_course_code', $untaken_in_offering);
-            $this->db->from('offering_tbl');
-            $query = $this->db->get();
+            // $this->db->distinct();
+            // $this->db->select('offering_course_code,offering_course_slot');
+            // $this->db->where(array(
+            //     'offering_year' => $this->session->curr_year,
+            //     'offering_term' => $this->session->curr_term,
+            //     // 'offering_course_slot >' => 0
+            // ));
+            // $this->db->where_in('offering_course_code', $untaken_in_offering);
+            // $this->db->from('offering_tbl');
+            // $query = $this->db->get();
 
-            $suggestions = $query->result();
+            // $suggestions = $query->result();
 
-            $suggestion = array();
-            foreach ($suggestions as $suggest) {
-                $sample = 0;
-                foreach ($suggestions as $suggest_inner) {
-                    if ($suggest_inner->offering_course_code == $suggest->offering_course_code) {
-                        $sample += $suggest_inner->offering_course_slot;
+            // $suggestion = array();
+            // foreach ($suggestions as $suggest) {
+            //     $sample = 0;
+            //     foreach ($suggestions as $suggest_inner) {
+            //         if ($suggest_inner->offering_course_code == $suggest->offering_course_code) {
+            //             $sample += $suggest_inner->offering_course_slot;
+            //         }
+            //     }
+            //     if ($sample) {
+            //         $sample = 0;
+            //     } else {
+            //         array_push($suggestion, $suggest->offering_course_code);
+            //     }
+            // }
+
+            if ($this->session->curr_year <= 20192020 && $this->session->curr_term < 3) {
+                $this->db->distinct();
+                $this->db->select('offering_course_code,offering_course_slot');
+                $this->db->where(array(
+                    'offering_year' => $this->session->curr_year,
+                    'offering_term' => $this->session->curr_term,
+                ));
+                $this->db->where_in('offering_course_code', $untaken_in_offering);
+                $this->db->from('offering_tbl');
+                $query = $this->db->get();
+
+                $suggestions = $query->result();
+                $suggestion = array();
+                // $this->dd($suggestions);
+                foreach ($suggestions as $suggest) {
+                    $sample = 0;
+
+                    foreach ($suggestions as $suggest_inner) {
+
+                        if ($suggest_inner->offering_course_code == $suggest->offering_course_code) {
+                            $sample += $suggest_inner->offering_course_slot;
+                        }
+                    }
+                    if ($sample) {
+                        $sample = 0;
+                    } else {
+                        array_push($suggestion, $suggest->offering_course_code);
                     }
                 }
-                if ($sample) {
-                    $sample = 0;
-                } else {
-                    array_push($suggestion, $suggest->offering_course_code);
+            } else {
+
+                $this->db->select('*');
+                $this->db->where(array(
+                    'school_year' => $this->session->curr_year,
+                    'school_term' => $this->session->curr_term
+                ));
+                $this->db->where_in('class_code', $untaken_in_offering);
+                $this->db->from('classes_tbl');
+
+                $query = $this->db->get();
+                $all_classes = $query->result();
+
+                $classes = array();
+                $day = "";
+                $time = "";
+                $room = "";
+                foreach ($all_classes as $class) {
+                    $class_scheds = $this->fetchScheds($class->class_sched, $this->session->curr_year, $this->session->curr_year);
+                    foreach ($class_scheds as $class_sched) {
+                        $day .= ' ' . $class_sched->class_day . ' /';
+                        $time .= ' ' . date('H:i:s', strtotime($class_sched->class_start_time)) . '-' . date('H:i:s', strtotime($class_sched->class_end_time)) . ' /';
+                        $room .= ' ' . $class_sched->class_room . ' /';
+                    }
+                    array_push($classes, array(
+                        'class_code' => $class->class_code,
+                        'class_section' => $class->class_section,
+                        'class_faculty' => $class->class_faculty,
+                        'class_sched' => $class->class_sched,
+                        'class_capacity' => $class->class_capacity,
+                        'school_year' => $class->school_year,
+                        'school_term' => $class->school_term,
+                        'school_term' => $class->school_term,
+                        'school_term' => $class->school_term,
+                        'sched_day' => substr($day, 0, -1),
+                        'sched_time' => substr($time, 0, -1),
+                        'sched_room' => substr($room, 0, -1),
+                    ));
+                    $day = "";
+                    $time = "";
+                    $room = "";
+                }
+                $suggestions = $classes;
+                $suggestion = array();
+
+                foreach ($suggestions as $suggest) {
+                    array_push($suggestion, $suggest['class_code']);
                 }
             }
+
             $this->db->distinct();
             $this->db->select('petition_unique');
             $this->db->where(array('petitioners_tbl.stud_number' => $this->session->acc_number));
             $this->db->from('petitioners_tbl');
             $query = $this->db->get();
             $samples = $query->result();
+
+
             $myarr = array();
             foreach ($samples as $sample) {
                 array_push($myarr, $sample->petition_unique);
             }
 
-            $this->db->select('*');
-            $this->db->from('petitions_tbl');
-            if ($myarr) {
-                $this->db->where_not_in('petitions_tbl.petition_unique', $myarr);
+            if (count($suggestion) > 0) {
+                $this->db->select('*');
+                $this->db->from('petitions_tbl');
+                if ($myarr) {
+                    $this->db->where_not_in('petitions_tbl.petition_unique', $myarr);
+                }
+                $this->db->where_in('petitions_tbl.course_code', $suggestion);
+                $query = $this->db->get();
+                $course_suggestions = $query->result();
+                // return $query->result();
+            } else {
+                $course_suggestions = 0;
             }
-            $this->db->where_in('petitions_tbl.course_code', $suggestion);
-            $query = $this->db->get();
-            return $query->result();
+            return $course_suggestions;
         }
         return $query->result();
     }
@@ -289,5 +451,11 @@ class Courseflow_model extends CI_Model
     // SIMUL FUNCTIONS
     ///////////////////////////////////////////////////////////////////////////////////////////
 
-
+    public function dd($data)
+    {
+        echo "<pre>";
+        print_r($data);
+        echo "<pre>";
+        die();
+    }
 }
