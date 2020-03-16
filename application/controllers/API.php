@@ -215,7 +215,7 @@ class API extends CI_Controller
 	{
 		$petition_unique = $course_code . time();
 
-		$result = $this->Courseflow_model->check_if_existing_petition($course_code);
+		$result = $this->Mobile_model->check_if_existing_petition($course_code);
 
 		$petition_details = array(
 			'course_code' => $course_code,
@@ -238,7 +238,7 @@ class API extends CI_Controller
 		} else {
 			$message = array(
 				'status' => FALSE,
-				'message' => "Failed to create petition."
+				'message' => "Petition already exists!."
 			);
 		}
 		echo json_encode($message);
