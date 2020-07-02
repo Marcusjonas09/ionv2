@@ -29,13 +29,33 @@ class Dashboard_model extends CI_Model
         return $query->result();
     }
 
-    public function fetchOffering()
+    // public function fetchOffering()
+    // {
+    //     $this->db->select('*');
+    //     $this->db->where(array(
+    //         'offering_year' => $this->session->curr_year,
+    //         'offering_term' => $this->session->curr_term,
+    //     ));
+    //     $this->db->from('offering_tbl');
+    //     $query = $this->db->get();
+    //     return $query->result();
+    // }
+
+    public function fetchOffering($year, $term)
     {
         $this->db->select('*');
         $this->db->where(array(
-            'offering_year' => $this->session->curr_year,
-            'offering_term' => $this->session->curr_term,
+            'offering_year' => $year,
+            'offering_term' => $term,
         ));
+        $this->db->from('offering_tbl');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function fetchOfferings()
+    {
+        $this->db->select('*');
         $this->db->from('offering_tbl');
         $query = $this->db->get();
         return $query->result();

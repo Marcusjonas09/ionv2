@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="form-group col-md-6">
-                            <label for="curr_code">College:</label>
+                            <label for="curr_code">Program:</label>
                             <select class="form-control" name="assigned_program" id="assigned_program">
                                 <?php foreach ($programs as $program) : ?>
                                     <option <?php if ($program->program_code == $specialization->assigned_program) {
@@ -58,7 +58,7 @@
                 </div>
             </form>
         </div>
-        <div class="container-fluid col-md-3" style="padding-right:0px;">
+        <!-- <div class="container-fluid col-md-3" style="padding-right:0px;">
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title"><strong>Insert Multiple Entry</strong></h3>
@@ -75,7 +75,7 @@
                     <input class="btn btn-success pull-right" type="submit" value="Import" />
                 </div>
             </div>
-        </div>
+        </div> -->
 
 
 

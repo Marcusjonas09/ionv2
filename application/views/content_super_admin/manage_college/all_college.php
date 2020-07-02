@@ -33,19 +33,14 @@
 
                     <a class="btn btn-success pull-right" href="<?= base_url() ?>SuperAdmin/add_college">Add New Entry</a>
 
-                    <a class="btn btn-danger pull-right" style="margin-right:10px;" href="<?= base_url() ?>SuperAdmin/add_college">Delete Multiple</a>
+                    <!-- <a class="btn btn-danger pull-right" style="margin-right:10px;" href="<?= base_url() ?>SuperAdmin/add_college">Delete Multiple</a> -->
 
                 </div>
                 <div class="box-body">
                     <table class="datatables table table-striped text-center" data-page-length='10'>
                         <thead class="bg-success text-center" style="background-color:#00a65a; color:white;">
                             <th class="text-center col-md-1">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="check_all" id="check_all">
-                                    </label>
-                                </div>
-                                &nbsp#
+                                #
                             </th>
                             <th class="text-center col-md-2">Code</th>
                             <th class="text-center col-md-6">Description</th>
@@ -56,12 +51,12 @@
                             foreach ($colleges as $college) : ?>
                                 <tr>
                                     <td>
-                                        <div class="checkbox">
+                                        <!-- <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" name="">
                                             </label>
                                         </div>
-                                        &nbsp
+                                        &nbsp -->
                                         <?= $i++ ?>
                                     </td>
                                     <td>

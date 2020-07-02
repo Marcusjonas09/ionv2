@@ -31,19 +31,19 @@
                             <div class="col-md-6">
                                 <div class="form-group col-md-12">
                                     <label for="curr_code">First Name:</label>
-                                    <input class="form-control" type="text" name="acc_fname" id="acc_fname" placeholder="Enter first name">
+                                    <input class="form-control" type="text" name="acc_fname" id="acc_fname" placeholder="Enter first name" value="<?= set_value('acc_fname') ?>">
                                 </div>
                                 <div class="form-group col-md-12">
                                     <label for="curr_code">Middle Name:</label>
-                                    <input class="form-control" type="text" name="acc_mname" id="acc_mname" placeholder="Enter middle Name">
+                                    <input class="form-control" type="text" name="acc_mname" id="acc_mname" placeholder="Enter middle Name" value="<?= set_value('acc_mname') ?>">
                                 </div>
                                 <div class="form-group col-md-12">
                                     <label for="curr_code">Last Name:</label>
-                                    <input class="form-control" type="text" name="acc_lname" id="acc_lname" placeholder="Enter last name">
+                                    <input class="form-control" type="text" name="acc_lname" id="acc_lname" placeholder="Enter last name" value="<?= set_value('acc_lname') ?>">
                                 </div>
                                 <div class="form-group col-md-12">
                                     <label for="curr_code">Citizenship:</label>
-                                    <input class="form-control" type="text" name="acc_citizenship" id="acc_citizenship" placeholder="Enter citizenship">
+                                    <input class="form-control" type="text" name="acc_citizenship" id="acc_citizenship" placeholder="Enter citizenship" value="<?= set_value('acc_citizenship') ?>">
                                     <input type="hidden" name="acc_status" value="1">
                                     <input type="hidden" name="acc_access_level" value="2">
                                 </div>

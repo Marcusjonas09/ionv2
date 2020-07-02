@@ -3,6 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class CourseCard_model extends CI_Model
 {
+
     public function fetch_term()
     {
         $this->db->distinct();
@@ -23,6 +24,26 @@ class CourseCard_model extends CI_Model
         return $query->result();
     }
 
+    public function fetch_course_card($studnumber, $year, $term)
+    {
+        $query = $this->db->get_where('course_card_view', array(
+            'cc_stud_number' => $studnumber,
+            'cc_year' => $year,
+            'cc_term' => $term,
+            'cc_status' => 'finished',
+        ));
+        return $query->result();
+    }
+
+
+
+
+
+
+
+
+
+
     public function fetch_course_card_admin($stud_number)
     {
         $this->db->select('*');
@@ -39,39 +60,25 @@ class CourseCard_model extends CI_Model
         return $query->result();
     }
 
-    public function fetch_course_card($year, $term)
-    {
-        $this->db->select('*');
-        $this->db->where(array(
-            'course_card_tbl.cc_stud_number' => $this->session->acc_number,
-            'course_card_tbl.cc_year' => $year,
-            'course_card_tbl.cc_term' => $term,
-            'course_card_tbl.cc_status' => 'finished',
-        ));
-        $this->db->from('course_card_tbl');
-        $this->db->join('courses_tbl_v2', 'course_card_tbl.cc_course = courses_tbl_v2.course_code', 'LEFT');
-        $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = course_card_tbl.cc_course', 'LEFT');
-        $this->db->order_by('course_card_tbl.cc_course', 'ASC');
-        $query = $this->db->get();
-        return $query->result();
-    }
+    // public function fetch_course_card($year, $term)
+    // {
+    //     $this->db->select('*');
+    //     $this->db->where(array(
+    //         'course_card_tbl.cc_stud_number' => $this->session->acc_number,
+    //         'course_card_tbl.cc_year' => $year,
+    //         'course_card_tbl.cc_term' => $term,
+    //         'course_card_tbl.cc_status' => 'finished',
+    //     ));
+    //     $this->db->from('course_card_tbl');
+    //     $this->db->join('courses_tbl_v2', 'course_card_tbl.cc_course = courses_tbl_v2.course_code', 'LEFT');
+    //     $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = course_card_tbl.cc_course', 'LEFT');
+    //     $this->db->order_by('course_card_tbl.cc_course', 'ASC');
+    //     $query = $this->db->get();
+    //     return $query->result();
+    // }
 
     public function fetch_whole_course_card()
     {
-        // $this->db->select('*');
-        // $this->db->where(array(
-        //     'course_card_tbl.cc_stud_number' => $this->session->acc_number,
-        //     'course_card_tbl.cc_is_enrolled' => true
-        // ));
-        // $this->db->from('course_card_tbl');
-        // $this->db->join('courses_tbl_v2', 'course_card_tbl.cc_course = courses_tbl_v2.course_code', 'LEFT');
-        // $this->db->join('laboratory_tbl', 'laboratory_tbl.laboratory_code = course_card_tbl.cc_course', 'LEFT');
-        // $this->db->order_by('course_card_tbl.cc_course', 'ASC');
-        // $query = $this->db->get();
-        // return $query->result();
-
-
-
         $this->db->select('*');
         $this->db->where(array('course_card_tbl.cc_stud_number' => $this->session->acc_number));
         $this->db->from('course_card_tbl');
@@ -96,6 +103,8 @@ class CourseCard_model extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+
 
     public function fetch_courses()
     {

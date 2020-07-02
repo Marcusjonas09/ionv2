@@ -279,6 +279,8 @@ class API extends CI_Controller
 	public function signPetition($stud_number, $course_code, $petition_unique)
 	{
 		$this->Mobile_model->signPetition($stud_number, $course_code, $petition_unique);
+
+		// echo json_encode($stud_number);
 	}
 
 	public function withdrawPetition($stud_number, $petition_unique)
@@ -406,5 +408,24 @@ class API extends CI_Controller
 		$stud_number = file_get_contents("php://input");
 		$data = $this->Mobile_model->fetchAllNotifications($stud_number);
 		echo json_encode($data);
+	}
+
+	public function get_events()
+	{
+		// Our Start and End Dates
+		$start = $this->input->get("start");
+		$end = $this->input->get("end");
+
+		$startdt = new DateTime('now'); // setup a local datetime
+		$startdt->setTimestamp($start); // Set the date based on timestamp
+		$start_format = $startdt->format('Y-m-d');
+
+		$enddt = new DateTime('now'); // setup a local datetime
+		$enddt->setTimestamp($end); // Set the date based on timestamp
+		$end_format = $enddt->format('Y-m-d');
+
+		$events = $this->Calendar_model->get_events($start_format, $end_format);
+
+		echo json_encode($events);
 	}
 }

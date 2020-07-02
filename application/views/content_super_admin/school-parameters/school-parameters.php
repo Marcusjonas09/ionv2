@@ -28,24 +28,22 @@
                     <h3 class="box-title"><strong>Current School Year</strong></h3>
                 </div>
                 <!-- /.box-header -->
-                <form action="<?= base_url() ?>Student/changepass" method="post">
-                    <div class="box-body">
-                        <div class="form-group col-md-6">
-                            <label>School Year</label>
-                            <input type="text" disabled value="<?= $current_sy->school_year ?>" class="form-control">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label>School Term</label>
-                            <input type="text" disabled value="<?php if ($current_sy->school_term == 1) {
-                                                                    echo '1st Term';
-                                                                } else if ($current_sy->school_term == 2) {
-                                                                    echo '2nd Term';
-                                                                } else {
-                                                                    echo '3rd Term';
-                                                                } ?>" class="form-control">
-                        </div>
+                <div class="box-body">
+                    <div class="form-group col-md-6">
+                        <label>School Year</label>
+                        <input type="text" disabled value="<?= $current_sy->school_year ?>" class="form-control">
                     </div>
-                </form>
+                    <div class="form-group col-md-6">
+                        <label>School Term</label>
+                        <input type="text" disabled value="<?php if ($current_sy->school_term == 1) {
+                                                                echo '1st Term';
+                                                            } else if ($current_sy->school_term == 2) {
+                                                                echo '2nd Term';
+                                                            } else {
+                                                                echo '3rd Term';
+                                                            } ?>" class="form-control">
+                    </div>
+                </div>
                 <!-- /.box-body -->
             </div>
         </div>

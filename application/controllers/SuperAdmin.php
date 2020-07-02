@@ -37,6 +37,7 @@ class SuperAdmin extends CI_Controller
 
     public function dashboard() // | Display Dashboard |
     {
+        // $this->dd($_SESSION);
         $this->load->view('includes_super_admin/superadmin_header');
 
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -971,6 +972,7 @@ class SuperAdmin extends CI_Controller
         $petitionID = $this->input->post('petitionID');
         $petition_unique = $this->input->post('petitionUnique');
         $petition_section = $this->input->post('petitionSection');
+        $petition_sched = $this->input->post('petitionSched');
 
         $number_of_petitioners = $this->Petition_model->check_number_of_petitioners($petition_unique);
 
@@ -982,8 +984,8 @@ class SuperAdmin extends CI_Controller
             $message['context'] = 'success';
             $link = base_url() . "Student/petitionView/" . $petitionID . "/" . $petition_unique;
             $this->send_notifications($recipients, $notif_message, $link);
-            $this->Petition_model->approve_petition($petition_unique);
-            $this->Petition_model->add_petition_to_offering($petitionID, $petition_section);
+            $this->Petition_model->approve_petition($petition_unique, $petition_section, $petition_sched);
+            // $this->Petition_model->add_petition_to_offering($petitionID, $petition_section);
         } else {
             $message['message'] = 'Insufficient number of petitioners!';
             $message['context'] = 'failed';
@@ -1012,14 +1014,12 @@ class SuperAdmin extends CI_Controller
     public function show_petition($petition_ID, $petition_unique) // | Display Specific Student Account |
     {
         $data['petition'] = $this->Petition_model->fetchPetition($petition_ID);
+        $data['class_scheds'] = $this->SuperAdmin_model->fetch_petition_sched($petition_ID);
+        // $this->dd($data);
         $data['petitioners'] = $this->Petition_model->fetchPetitioners($petition_unique);
         $data['courses'] = $this->Curriculum_model->fetchCoursesAdmin();
         $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
 
-        // $data['class'] = $this->SuperAdmin_model->fetch_class($id);
-        // $class_sched = $data['class']->class_code . $data['class']->class_section;
-        // $data['class_scheds'] = $this->SuperAdmin_model->fetch_class_sched($class_sched);
-        // $data['message'] = $message;
         $this->load->view('includes_super_admin/superadmin_header');
 
         $this->load->view('includes_super_admin/superadmin_topnav');
@@ -1030,6 +1030,41 @@ class SuperAdmin extends CI_Controller
         $this->load->view('includes_super_admin/superadmin_contentFooter');
         $this->load->view('includes_super_admin/superadmin_rightnav');
         $this->load->view('includes_super_admin/superadmin_footer');
+    }
+
+    public function add_petition_sched()
+    {
+        // $this->dd($_POST);
+        $this->form_validation->set_rules('class_day', 'class day', 'required|strip_tags');
+        $this->form_validation->set_rules('class_room', 'class room', 'required|strip_tags');
+        $this->form_validation->set_rules('class_start_time', 'class start', 'required|strip_tags');
+        $this->form_validation->set_rules('class_end_time', 'class end', 'required|strip_tags');
+
+        $id = $this->input->post('petition_ID');
+        $petition_unique = $this->input->post('petition_unique');
+        $current_sy = $this->SuperAdmin_model->fetch_current();
+
+        $petiiton_sched = array(
+            'class_day' => $this->input->post('class_day'),
+            'class_start_time' => date('H:i', strtotime($this->input->post('class_start_time'))),
+            'class_end_time' => date('H:i', strtotime($this->input->post('class_end_time'))),
+            'class_room' => $this->input->post('class_room'),
+            'class_sched' => $this->input->post('class_sched'),
+            'class_type' => $this->input->post('class_type'),
+            'school_year' => $current_sy->school_year,
+            'school_term' => $current_sy->school_term,
+            'petition_ID' => $this->input->post('petition_ID')
+        );
+
+        // $this->dd($petiiton_sched);
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->show_petition($id, $petition_unique);
+        } else {
+            $message = $this->SuperAdmin_model->add_sched($petiiton_sched);
+            $this->session->set_flashdata('petition_message', $message);
+            redirect('SuperAdmin/show_petition/' . $id . '/' . $petition_unique);
+        }
     }
 
     public function save_sched()
@@ -1179,13 +1214,15 @@ class SuperAdmin extends CI_Controller
                     redirect('SuperAdmin');
                 }
             } else {
-                $error['error'] = "Your Account has been blocked. Please contact your administrator for details";
+                $error['error'] = "Your Account is blocked. Please contact your administrator for details";
                 $this->load->view('UserAuth/login-admin', $error);
             }
         } else {
             $error['error'] = "Invalid login credentials";
             $this->load->view('UserAuth/login-admin', $error);
         }
+
+
 
         // if ($this->session->login) {
         //     if ($this->session->acc_status) {
@@ -1543,7 +1580,6 @@ class SuperAdmin extends CI_Controller
         $this->form_validation->set_rules('class_code', 'Course Code', 'required|strip_tags');
         $this->form_validation->set_rules('section_code', 'Section Code', 'required|strip_tags');
         $this->form_validation->set_rules('lec_instructor', 'Lecture Instructor', 'required|strip_tags');
-
         $this->form_validation->set_rules('class_capacity', 'Class capacity', 'required|strip_tags|trim');
 
         if ($this->form_validation->run() == FALSE) {
@@ -1593,11 +1629,15 @@ class SuperAdmin extends CI_Controller
 
     public function edit_class($id, $message = null)
     {
+        // $this->dd($_POST);
         $data['courses'] = $this->SuperAdmin_model->fetch_all_courses();
         $data['sections'] = $this->SuperAdmin_model->fetch_all_sections();
         $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
         $data['class'] = $this->SuperAdmin_model->fetch_class($id);
+
         $class_sched = $data['class']->class_code . $data['class']->class_section;
+
+
         $data['class_scheds'] = $this->SuperAdmin_model->fetch_class_sched($class_sched);
         $data['message'] = $message;
 
@@ -1614,7 +1654,6 @@ class SuperAdmin extends CI_Controller
 
     public function edit_class_function()
     {
-
         // $this->dd($_POST);
         if ($this->input->post('laboratory_code') != '' && $this->input->post('laboratory_code') != 'none') {
             $this->form_validation->set_rules('lab_instructor', 'Laboratory Instructor', 'required|strip_tags');
@@ -1682,12 +1721,10 @@ class SuperAdmin extends CI_Controller
 
     public function add_sched()
     {
-        // $this->dd($_POST);
-        // $this->form_validation->set_rules('class_day', 'class day', 'required|strip_tags');
-        // $this->form_validation->set_rules('class_day', 'class day', 'required|strip_tags');
-        $this->form_validation->set_rules('class_room', 'class day', 'required|strip_tags');
-        $this->form_validation->set_rules('class_start_time', 'class day', 'required|strip_tags');
-        $this->form_validation->set_rules('class_end_time', 'class day', 'required|strip_tags');
+        $this->form_validation->set_rules('class_day', 'class day', 'required|strip_tags');
+        $this->form_validation->set_rules('class_room', 'class room', 'required|strip_tags');
+        $this->form_validation->set_rules('class_start_time', 'class start', 'required|strip_tags');
+        $this->form_validation->set_rules('class_end_time', 'class end', 'required|strip_tags');
 
         $id = $this->input->post('class_id');
         $current_sy = $this->SuperAdmin_model->fetch_current();
@@ -1711,6 +1748,8 @@ class SuperAdmin extends CI_Controller
         }
     }
 
+
+
     public function delete_sched($class_id, $cs_id)
     {
         if (!$this->SuperAdmin_model->delete_sched($cs_id)) {
@@ -1733,6 +1772,77 @@ class SuperAdmin extends CI_Controller
         ';
             $this->edit_class($class_id, $message);
         }
+    }
+
+    public function delete_petition_sched()
+    {
+
+        $response = array(
+            'status' => 'error',
+            'message' => 'error',
+        );
+        if (isset($_POST['petition_id']) && isset($_POST['cs_id'])) {
+            if (!$this->SuperAdmin_model->delete_sched($_POST['cs_id'])) {
+                $this->SuperAdmin_model->delete_sched($_POST['cs_id']);
+                $message = '
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Success!</h4>
+            <p>Record successfully deleted!</p>
+        </div>
+        ';
+                $response = array(
+                    'status' => 'success',
+                    'title' => 'Success',
+                    'icon' => 'success',
+                    'message' => $message,
+                );
+            } else {
+                $message = '
+        <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+            <p>Failed to delete record!</p>
+        </div>
+        ';
+                $response = array(
+                    'status' => 'success',
+                    'title' => 'Error',
+                    'icon' => 'error',
+                    'message' => $message,
+                );
+            }
+        }
+
+        echo json_encode($response);
+    }
+
+    public function show_sections_available()
+    {
+        $response = array(
+            'status' => 'error',
+            'message' => 'Invalid Request',
+        );
+
+        if (isset($_POST['course_code'])) {
+            $available_sections = $this->SuperAdmin_model->show_sections_available($_POST['course_code'], 20192020, 1);
+            $class_sections = '';
+            foreach ($available_sections as $section) {
+                $class_sections .= '<option value="' . $section->section_code . '">' . $section->section_code . '</option>';
+            }
+            $response = array(
+                'status' => 'success',
+                'message' => 'Invalid Request',
+                'data' => $class_sections,
+            );
+        }
+
+        echo json_encode($response);
+    }
+
+    public function sample()
+    {
+        // $this->dd();
     }
 
     // =======================================================================================
@@ -1945,8 +2055,6 @@ class SuperAdmin extends CI_Controller
     public function faculties($success_msg = null, $fail_msg = null)
     {
         $data['faculties'] = $this->SuperAdmin_model->fetch_all_faculty();
-        // print_r($data);
-        // die();
         $data['success_msg'] = $success_msg;
         $data['fail_msg'] = $fail_msg;
 
@@ -2078,16 +2186,39 @@ class SuperAdmin extends CI_Controller
         }
     }
 
-    // public function delete_program($id)
-    // {
+    public function block_account()
+    {
+        $response = array(
+            'status' => false,
+            'message' => 'request failed!'
+        );
 
-    //     if (!$this->SuperAdmin_model->delete_program($id)) {
-    //         $this->SuperAdmin_model->delete_program($id);
-    //         $this->program("Record successfully deleted!", null);
-    //     } else {
-    //         $this->program(null, "Failed to delete Record!");
-    //     }
-    // }
+        if ($this->SuperAdmin_model->block_account($_POST['acc_id'])) {
+            $response = array(
+                'status' => true,
+                'message' => 'success',
+            );
+        }
+
+        echo json_encode($response);
+    }
+
+    public function unblock_account()
+    {
+        $response = array(
+            'status' => false,
+            'message' => 'request failed!'
+        );
+
+        if ($this->SuperAdmin_model->unblock_account($_POST['acc_id'])) {
+            $response = array(
+                'status' => true,
+                'message' => 'success',
+            );
+        }
+
+        echo json_encode($response);
+    }
 
     // =======================================================================================
     // END OF faculty
@@ -2240,8 +2371,7 @@ class SuperAdmin extends CI_Controller
     public function program($success_msg = null, $fail_msg = null)
     {
         $data['programs'] = $this->SuperAdmin_model->fetch_all_program();
-        // print_r($data);
-        // die();
+        // $this->dd($data);
         $data['success_msg'] = $success_msg;
         $data['fail_msg'] = $fail_msg;
 

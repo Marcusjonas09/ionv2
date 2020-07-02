@@ -38,6 +38,12 @@
                                     <td class="text-center"><?= strtoupper($faculty->acc_program) ?></td>
                                     <td class="text-center">
                                         <a href="<?= base_url() ?>SuperAdmin/edit_faculty/<?= $faculty->acc_id ?>" class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                                        <?php if ($faculty->acc_status) : ?>
+                                            <button onclick="block_account('<?= $faculty->acc_id ?>')" class="btn btn-danger"><span class="fa fa-ban"></span></button>
+                                        <?php else : ?>
+                                            <button onclick="unblock_account('<?= $faculty->acc_id ?>')" class="btn btn-success"><span class="fa fa-check"></span></button>
+                                        <?php endif; ?>
+
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

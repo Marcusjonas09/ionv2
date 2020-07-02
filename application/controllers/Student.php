@@ -128,19 +128,16 @@ class Student extends CI_Controller
 
 	public function dashboard()
 	{
-
 		// $this->dd($data);
 		$this->load->view('includes_student/student_header');
 		$this->load->view('includes_student/student_topnav');
 		$this->load->view('includes_student/student_sidebar');
 
-		$data['curr'] = $this->Student_model->fetch_curriculum();
+		// $data['cor'] = $this->CourseCard_model->fetch_current_COR();
+		$data['curr'] = $this->Curriculum_model->get_curriculum($this->session->Curriculum_code);
 		$data['grades'] = $this->Dashboard_model->fetchProgress();
-		// $data['courses'] = $this->CourseCard_model->fetch_courses();
-		$data['offerings'] = $this->Dashboard_model->fetchOffering();
-		$data['cor'] = $this->CourseCard_model->fetch_current_COR();
-
-
+		$data['offerings'] = $this->Dashboard_model->fetchOffering($this->session->curr_year, $this->session->curr_term);
+		$data['cor'] = $this->COR_model->fetch_cor($this->session->acc_number, $this->session->curr_year, $this->session->curr_term);
 
 		$this->load->view('content_student/student_dashboard', $data);
 
@@ -240,12 +237,17 @@ class Student extends CI_Controller
 		$this->load->view('includes_student/student_sidebar');
 
 		$data['account'] = $this->Account_model->view_user($this->session->acc_number);
-		$data['curr'] = $this->Academics_model->fetch_curriculum_student();
+
+		$data['curr'] = $this->Curriculum_model->get_curriculum($this->session->Curriculum_code);
+
 		$data['grades'] = $this->Academics_model->fetch_progress_student();
-		// $data['courses'] = $this->CourseCard_model->fetch_courses();
-		$data['offerings'] = $this->Dashboard_model->fetchOffering();
-		$data['cor'] = $this->CourseCard_model->fetch_current_COR();
+
+		$data['offerings'] = $this->Dashboard_model->fetchOffering($this->session->curr_year, $this->session->curr_term);
+
+		$data['cor'] = $this->COR_model->fetch_cor($this->session->acc_number, $this->session->curr_year, $this->session->curr_term);
+
 		$data['success'] = $success;
+
 		$data['error'] = $error;
 
 		$this->load->view('content_student/student_profile', $data);
@@ -298,8 +300,7 @@ class Student extends CI_Controller
 		$this->load->view('includes_student/student_topnav');
 		$this->load->view('includes_student/student_sidebar');
 
-		$data['curr'] = $this->Academics_model->fetch_curriculum_student();
-		// $data['curr'] = $this->Academics_model->fetch_sample();
+		$data['curr'] = $this->Curriculum_model->get_curriculum($this->session->Curriculum_code);
 		$data['grades'] = $this->Academics_model->fetch_progress_student();
 
 		$this->load->view('content_student/student_curriculum', $data);
@@ -307,14 +308,6 @@ class Student extends CI_Controller
 		$this->load->view('includes_student/student_contentFooter');
 		$this->load->view('includes_student/student_rightnav');
 		$this->load->view('includes_student/student_footer');
-	}
-
-	public function sample()
-	{
-		echo "<pre>";
-		print_r($this->Academics_model->fetch_sample());
-		echo "</pre>";
-		die();
 	}
 
 	// =======================================================================================
@@ -335,7 +328,7 @@ class Student extends CI_Controller
 		$year = $this->input->post('school_year');
 		$data['terms'] = $this->CourseCard_model->fetch_term();
 		$data['years'] = $this->CourseCard_model->fetch_year();
-		$data['course_card'] = $this->CourseCard_model->fetch_course_card($year, $term);
+		$data['course_card'] = $this->CourseCard_model->fetch_course_card($this->session->acc_number, $year, $term);
 		// $data['courses'] = $this->CourseCard_model->fetch_courses();
 
 		// echo json_encode($data);
@@ -361,17 +354,15 @@ class Student extends CI_Controller
 
 		$this->load->view('includes_student/student_topnav');
 		$this->load->view('includes_student/student_sidebar');
-
 		$term = $this->input->post('school_term');
 		$year = $this->input->post('school_year');
 		$data['terms'] = $this->COR_model->fetch_term();
 		$data['years'] = $this->COR_model->fetch_year();
-		$data['cor'] = $this->COR_model->fetch_course_card($year, $term);
-		// $data['courses'] = $this->COR_model->fetch_courses();
-		$data['offerings'] = $this->COR_model->fetchOffering($year, $term);
-
-		// echo json_encode($data);
-
+		// $this->dd($data);
+		$data['cor'] = $this->COR_model->fetch_cor($this->session->acc_number, $year, $term);
+		// $data['offerings'] = $this->Dashboard_model->fetchOffering($year, $term);
+		$data['offerings'] = $this->Academics_model->fetchOffering($year, $term);
+		// $data['offerings'] = $this->Dashboard_model->fetchOfferings();
 		$this->load->view('content_student/student_COR', $data);
 
 		$this->load->view('includes_student/student_contentFooter');
@@ -483,7 +474,7 @@ class Student extends CI_Controller
 		$this->load->view('includes_student/student_topnav');
 		$this->load->view('includes_student/student_sidebar');
 
-		$data['offerings'] = $this->Dashboard_model->fetchOffering();
+		$data['offerings'] = $this->Dashboard_model->fetchOffering($_SESSION['curr_year'], $_SESSION['curr_term']);
 		$data['cor'] = $this->CourseCard_model->fetch_current_COR();
 
 		$this->load->view('content_student/student_revision', $data);
@@ -507,11 +498,14 @@ class Student extends CI_Controller
 		$this->load->view('includes_student/student_topnav');
 		$this->load->view('includes_student/student_sidebar');
 
-		$data['curr'] = $this->Dashboard_model->fetch_curriculum();
+		// $data['curr'] = $this->Dashboard_model->fetch_curriculum();
+		$data['curr'] = $this->Curriculum_model->get_curriculum($this->session->Curriculum_code);
+
+
 		$data['grades'] = $this->Dashboard_model->fetchProgress();
 		$data['cor'] = $this->CourseCard_model->fetch_course_card_admin($this->session->acc_number);
 		// $data['courses'] = $this->CourseCard_model->fetch_courses();
-		$data['offerings'] = $this->Dashboard_model->fetchOffering();
+		$data['offerings'] = $this->Dashboard_model->fetchOffering($_SESSION['curr_year'], $_SESSION['curr_term']);
 		$data['underload'] = $this->Overload_underload_model->fetch_underload($this->session->acc_number, $this->session->curr_term, $this->session->curr_year);
 
 		$this->load->view('content_student/student_underload', $data);
@@ -552,11 +546,12 @@ class Student extends CI_Controller
 		$this->load->view('includes_student/student_topnav');
 		$this->load->view('includes_student/student_sidebar');
 
-		$data['curr'] = $this->Dashboard_model->fetch_curriculum();
+		// $data['curr'] = $this->Dashboard_model->fetch_curriculum();
+		$data['curr'] = $this->Curriculum_model->get_curriculum($this->session->Curriculum_code);
 		$data['grades'] = $this->Dashboard_model->fetchProgress();
 		$data['cor'] = $this->CourseCard_model->fetch_course_card_admin($this->session->acc_number);
 		// $data['courses'] = $this->CourseCard_model->fetch_courses();
-		$data['offerings'] = $this->Dashboard_model->fetchOffering();
+		$data['offerings'] = $this->Dashboard_model->fetchOffering($_SESSION['curr_year'], $_SESSION['curr_term']);
 		$data['overload'] = $this->Overload_underload_model->fetch_overload($this->session->acc_number, $this->session->curr_term, $this->session->curr_year);
 
 		$this->load->view('content_student/student_overload', $data);
@@ -620,10 +615,11 @@ class Student extends CI_Controller
 			$this->load->view('includes_student/student_topnav');
 			$this->load->view('includes_student/student_sidebar');
 
-			$data['curr'] = $this->Dashboard_model->fetch_curriculum();
+			// $data['curr'] = $this->Dashboard_model->fetch_curriculum();
+			$data['curr'] = $this->Curriculum_model->get_curriculum($this->session->Curriculum_code);
 			$data['grades'] = $this->Dashboard_model->fetchProgress();
 			// $data['courses'] = $this->CourseCard_model->fetch_courses();
-			$data['offerings'] = $this->Dashboard_model->fetchOffering();
+			$data['offerings'] = $this->Dashboard_model->fetchOffering($_SESSION['curr_year'], $_SESSION['curr_term']);
 			$data['cor'] = $this->CourseCard_model->fetch_current_COR();
 			$data['status'] = $this->Simul_model->fetch_simul_status($this->session->acc_number);
 			$data['simul'] = $this->Simul_model->fetch_simul_student($this->session->acc_number, $this->session->curr_term, $this->session->curr_year);
@@ -711,7 +707,7 @@ class Student extends CI_Controller
 	// PETITIONING MODULE
 	// =======================================================================================
 
-	public function petitions($success = null, $error = null)
+	public function petitions()
 	{
 		$this->load->view('includes_student/student_header');
 		$this->load->view('includes_student/student_topnav');
@@ -745,12 +741,16 @@ class Student extends CI_Controller
 		$this->pagination->initialize($config); // model function
 
 		$data['petitions'] = $this->Petition_model->fetchPetitions($per_page, $end_page);
+
 		$data['courses'] = $this->Petition_model->fetchCourses();
-		$data['petition_suggestions'] = $this->Courseflow_model->suggest_what_to_petition();
+
+		// $data['petition_suggestions'] = $this->Courseflow_model->suggest_what_to_petition();
+
+		$data['petition_suggestions'] = $this->Courseflow_model->suggest_what_to_petition_v2();
+		// $this->dd($rs);
+		// $this->dd($data['petition_suggestions']);
 		$data['petitions_available'] = $this->Courseflow_model->suggested_petitions_available();
 		$data['petitioners'] = $this->Petition_model->fetchAllPetitioners();
-		$data['success_msg'] = $success;
-		$data['error_msg'] = $error;
 
 		// echo json_encode($data);
 
@@ -774,17 +774,24 @@ class Student extends CI_Controller
 			'stud_number' => $this->session->acc_number,
 			'date_submitted' => time()
 		);
+
 		if ($result) {
 			if ($this->Petition_model->submitPetition($petition_details)) {
 				$success = "Petition created successfully!";
-				$this->petitions($success, null);
+				$this->session->set_flashdata('petition_message', $success);
+				redirect('Student/petitions');
+				// $this->petitions($success, null);
 			} else {
 				$error = "Failed to create petition.";
-				$this->petitions(null, $error);
+				$this->session->set_flashdata('petition_message', $error);
+				redirect('Student/petitions');
+				// $this->petitions(null, $error);
 			}
 		} else {
 			$error = "Failed to create petition.";
-			$this->petitions(null, $error);
+			$this->session->set_flashdata('petition_message', $error);
+			redirect('Student/petitions');
+			// $this->petitions(null, $error);
 		}
 	}
 
@@ -798,6 +805,8 @@ class Student extends CI_Controller
 		$data['petition'] = $this->Petition_model->fetchPetition($petitionID);
 		$data['petitioners'] = $this->Petition_model->fetchPetitioners($petition_unique);
 		$data['courses'] = $this->Petition_model->fetchCourses();
+		$data['petition_sched'] = $this->Petition_model->fetch_petition_class_sched($petitionID);
+
 		$data['check_if_you_petitioned'] = $this->Petition_model->check_if_you_petitioned($petition_unique);
 
 		$this->load->view('content_student/student_petitionView', $data);
@@ -982,7 +991,7 @@ class Student extends CI_Controller
 		$coursepassed = 0.0;
 		$labpassed = 0.0;
 
-		$curriculum = $this->Dashboard_model->fetch_curriculum();
+		$curriculum = $this->Curriculum_model->get_curriculum($this->session->Curriculum_code);
 		$progress = $this->Dashboard_model->fetchProgress();
 		$curr = json_decode(json_encode($curriculum));
 		$grades = json_decode(json_encode($progress));
@@ -1004,6 +1013,7 @@ class Student extends CI_Controller
 		$totalunitspassed = $coursepassed + $labpassed;
 
 		$remaining_units = $totalunits - $totalunitspassed;
+		$this->session->set_userdata('remaining_units', $remaining_units);
 
 		if (($remaining_units) <= 18) {
 			redirect('Student/simulRequest');

@@ -311,17 +311,6 @@ class Mobile_model extends CI_Model
         return $query->num_rows();
     }
 
-    // public function signPetition($stud_number, $course_code, $petition_unique)
-    // {
-    //     $petitioner = array(
-    //         'stud_number' => $stud_number,
-    //         'course_code' => $course_code,
-    //         'petition_unique' => $petition_unique,
-    //         'date_submitted' => time()
-    //     );
-    //     $this->db->insert('petitioners_tbl', $petitioner);
-    // }
-
     public function submitPetition($petition_details)
     {
         $this->db->insert('petitions_tbl', $petition_details);
@@ -697,6 +686,8 @@ class Mobile_model extends CI_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    
 
     ///////////////////////////////////////////////////////////////////////////////////////////
     // END

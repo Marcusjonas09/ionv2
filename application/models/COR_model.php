@@ -23,6 +23,16 @@ class COR_model extends CI_Model
         return $query->result();
     }
 
+    public function fetch_cor($studnumber, $year, $term)
+    {
+        $query = $this->db->get_where('course_card_view', array(
+            'cc_stud_number' => $studnumber,
+            'cc_year' => $year,
+            'cc_term' => $term
+        ));
+        return $query->result();
+    }
+
     public function fetch_course_card($year, $term)
     {
         $this->db->select('*');

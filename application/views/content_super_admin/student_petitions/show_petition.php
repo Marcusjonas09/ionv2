@@ -13,25 +13,44 @@
 
     <!-- Main content -->
     <section class="content container-fluid">
-        <div class="col-md-6">
-            <div class="box box-success">
-                <div class="box-header">
-                    <h4><strong id='petition_status_badge'>Petition Status:
-                            <?php if ($petition->petition_status == 1) {
-                                echo "<span class='label label-success'>Approved</span>";
-                            } elseif ($petition->petition_status == 2) {
-                                echo "<span class='label label-warning'>Pending</span>";
-                            } else {
-                                echo "<span class='label label-danger'>Denied</span>";
-                            } ?></strong></h4>
+
+        <?php if (validation_errors()) : ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+                        <?= validation_errors() ?>
+                    </div>
                 </div>
-                <div class="box-body">
-                    <div class="container-fluid col-md-12">
+            </div>
+        <?php endif; ?>
+        <?php if (isset($_SESSION['petition_message'])) : ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $_SESSION['petition_message'] ?>
+                </div>
+            </div>
+        <?php endif; ?>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="box box-success">
+                    <div class="box-header">
+                        <h4><strong id='petition_status_badge'>Petition Status:
+                                <?php if ($petition->petition_status == 1) {
+                                    echo "<span class='label label-success'>Approved</span>";
+                                } elseif ($petition->petition_status == 2) {
+                                    echo "<span class='label label-warning'>Pending</span>";
+                                } else {
+                                    echo "<span class='label label-danger'>Denied</span>";
+                                } ?></strong></h4>
+                    </div>
+                    <div class="box-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Course Code: </label>
-                                    <input id="offering_course_code" readonly type="text" class="form-control" value="<?= $petition->course_code ?>">
+                                    <input id="petition_code" readonly type="text" class="form-control" value="<?= $petition->course_code ?>">
                                 </div>
                             </div>
 
@@ -46,7 +65,6 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Section</label>
-                                    <!-- <input id="offering_course_section" type="text" class="form-control" placeholder="Course section"> -->
                                     <select class="form-control" name="petition_section" id="petition_section">
                                         <?php foreach ($sections as $section) : ?>
                                             <option value="<?= $section->section_code ?>"><?= $section->section_code ?></option>
@@ -92,155 +110,66 @@
                                                                                                                                                                                                         } ?>" style="margin-right:10px;"><span class="fa fa-ban"></span>&nbsp Decline</a> -->
                     </div>
                 </div>
-            </div>
-
-            <div class="box box-success">
-                <div class="box-header">
-                    <h3 class="box-title"><strong>Petitioners</strong></h3>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <th>#</th>
-                            <th>Student Number</th>
-                            <th>Student Name</th>
-                        </thead>
-                        <tbody>
-                            <?php $i = 1; ?>
-                            <?php foreach ($petitioners as $petitioner) : ?>
-                                <tr>
-                                    <td><?= $i ?></td>
-                                    <td><?= $petitioner->stud_number ?></td>
-                                    <td><?= $petitioner->acc_fname . ' ' . $petitioner->acc_lname ?></td>
-                                </tr>
-                                <?php $i++; ?>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
-
-        <div class="col-md-6">
-            <!-- <div class="box box-success">
-
-                <div class="box-header">
-                    <h3 class="box-title"><strong>Schedule</strong></h3>
-                </div>
-
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Faculty</label>
-                                <input <?php if ($petition->petition_status == 1 || $petition->petition_status == 0) {
-                                            echo "readonly";
-                                        } ?> type="text" class="form-control" placeholder="Faculty" value="TBA">
-                            </div>
-                        </div>
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><strong>Class Schedules</strong></h3>
+                        <button class="btn btn-success pull-right col-md-2" data-toggle="modal" data-target="#addSchedModal">Add Schedule</button>
                     </div>
-                    <table class="table table-striped table-bordered">
-                        <thead style="background-color:#00a65a; color:white;">
-                            <th class="text-center col-md-2">Day</th>
-                            <th class="col-md-7">Time</th>
-                            <th class="col-md-3">Room</th>
-                        </thead>
-                        <tbody id="sched_table_body">
-                        </tbody>
-                    </table>
-                    <?php if ($petition->petition_status == 2) : ?>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Day</label>
-                                    <select id="sched_day" id="" class="form-control">
-                                        <option value="M">Monday</option>
-                                        <option value="T">Tuesday</option>
-                                        <option value="W">Wednesday</option>
-                                        <option value="TH">Thursday</option>
-                                        <option value="F">Friday</option>
-                                        <option value="S">Saturday</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Start Time</label>
-                                    <div class="input-group">
-                                        <input id="start_time" type="text" value="" class="form-control timepicker">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-clock-o"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Room</label>
-                                    <input id="room" type="text" class="form-control" placeholder="Room" value="TBA">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>End Time</label>
-                                    <div class="input-group">
-                                        <input id="end_time" type="text" value="" class="form-control timepicker">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-clock-o"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group pull-right">
-                                    <button id="save_sched" class="btn btn-success">Save Schedule</button>
-                                </div>
-                                <div class="form-group pull-right">
-                                    <button id="add_sched" style="margin-right:10px;" class="btn btn-primary">Add Schedule</button>
-                                </div>
-                            </div>
-                        </div>
-
-                    <?php endif; ?>
-                </div>
-            </div> -->
-            <div class="box box-success">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><strong>Class Schedule</strong></h3>
-                    <button class="btn btn-success pull-right" data-toggle="modal" data-target="#addSchedModal">Add Schedule</button>
-                </div>
-                <div class="box-body">
-                    <table class="table table-striped text-center" data-page-length='10'>
-                        <thead class="bg-success" style="background-color:#00a65a; color:white;">
-                            <th class="text-center col-md-3">DAY</th>
-                            <th class="text-center col-md-3">TIME</th>
-                            <th class="text-center col-md-3">ROOM</th>
-                            <th class="text-center col-md-3">ACTION</th>
-                        </thead>
-                        <tbody id="class_sched_table_body">
-                            <!-- <?php foreach ($class_scheds as $class_sched) : ?>
-                                <tr>
-                                    <td><?= $class_sched->class_day ?></td>
-                                    <td><?= date('h:i A', strtotime($class_sched->class_start_time)) . ' - ' . date('h:i A', strtotime($class_sched->class_end_time)) ?></td>
-                                    <td><?= $class_sched->class_room ?></td>
-                                    <td><button class="btn btn-danger" onclick="delete_sched('<?= $class->class_id ?>','<?= $class_sched->cs_id ?>')"><i class="fa fa-trash"></i></button></td>
-                                </tr>
-                            <?php endforeach; ?> -->
-                        </tbody>
-                    </table>
+                    <div class="box-body">
+                        <table class="table table-striped text-center" data-page-length='10'>
+                            <thead class="bg-success" style="background-color:#00a65a; color:white;">
+                                <th class="text-center col-md-2">DAY</th>
+                                <th class="text-center col-md-3">TIME</th>
+                                <th class="text-center col-md-2">ROOM</th>
+                                <th class="text-center col-md-2">TYPE</th>
+                                <th class="text-center col-md-3">ACTION</th>
+                            </thead>
+                            <tbody id="class_sched_table_body">
+                                <?php foreach ($class_scheds as $class_sched) : ?>
+                                    <tr>
+                                        <td><?= $class_sched->class_day ?></td>
+                                        <td><?= date('h:i A', strtotime($class_sched->class_start_time)) . ' - ' . date('h:i A', strtotime($class_sched->class_end_time)) ?></td>
+                                        <td><?= $class_sched->class_room ?></td>
+                                        <td><?= $class_sched->class_type ?></td>
+                                        <td><button class="btn btn-danger" onclick="delete_petition_sched('<?= $class_sched->petition_ID ?>','<?= $class_sched->cs_id ?>','<?= $this->uri->segment(4) ?>')"><i class="fa fa-trash"></i></button></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="box box-success">
+                    <div class="box-header">
+                        <h3 class="box-title"><strong>Petitioners</strong></h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <th>#</th>
+                                <th>Student Number</th>
+                                <th>Student Name</th>
+                            </thead>
+                            <tbody>
+                                <?php $i = 1; ?>
+                                <?php foreach ($petitioners as $petitioner) : ?>
+                                    <tr>
+                                        <td><?= $i ?></td>
+                                        <td><?= $petitioner->stud_number ?></td>
+                                        <td><?= $petitioner->acc_fname . ' ' . $petitioner->acc_lname ?></td>
+                                    </tr>
+                                    <?php $i++; ?>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
         </div>
-
     </section>
     <!-- /.content -->
 </div>
@@ -255,32 +184,41 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="addSchedLabel">Add Schedule</h4>
             </div>
-            <form action="<?= base_url() ?>SuperAdmin/add_sched" method="post">
+            <form action="<?= base_url() ?>SuperAdmin/add_petition_sched" method="post">
                 <div class="modal-body">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label for="laboratory_code">Day:</label>
                         <select class="form-control" name="class_day" id="class_sched_day">
-                            <option value="">--</option>
-                            <option value="M">Monday</option>
-                            <option value="T">Tuesday</option>
-                            <option value="W">Wednesday</option>
-                            <option value="TH">Thursday</option>
-                            <option value="F">Friday</option>
-                            <option value="S">Saturday</option>
+                            <option value="M" <?= set_select('class_day', 'M', TRUE) ?>>Monday</option>
+                            <option value="T" <?= set_select('class_day', 'T') ?>>Tuesday</option>
+                            <option value="W" <?= set_select('class_day', 'W') ?>>Wednesday</option>
+                            <option value="TH" <?= set_select('class_day', 'TH') ?>>Thursday</option>
+                            <option value="F" <?= set_select('class_day', 'F') ?>>Friday</option>
+                            <option value="S" <?= set_select('class_day', 'S') ?>>Saturday</option>
                         </select>
                     </div>
 
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label>Room:</label>
                         <div class="form-group">
-                            <input class="form-control" type="text" name="class_room" id="class_room">
+                            <input value="<?= set_value('class_room') ?>" class="form-control" type="text" name="class_room" id="class_room">
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Type:</label>
+                        <div class="form-group">
+                            <select class="form-control" name="class_type" id="class_type">
+                                <option <?= set_select('class_type', 'Lecture', TRUE) ?> value="Lecture">Lecture</option>
+                                <option <?= set_select('class_type', 'Laboratory') ?> value="Laboratory">Laboratory</option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="form-group col-md-6">
                         <label>Start Time:</label>
                         <div class="input-group">
-                            <input type="text" class="form-control timepicker" name="class_start_time" id="class_start_time">
+                            <input type="text" value="<?= set_value('class_start_time') ?>" class="form-control timepicker" name="class_start_time" id="class_start_time">
                             <div class="input-group-addon">
                                 <i class="fa fa-clock-o"></i>
                             </div>
@@ -290,15 +228,16 @@
                     <div class="form-group col-md-6">
                         <label>End Time:</label>
                         <div class="input-group">
-                            <input type="text" class="form-control timepicker" name="class_end_time" id="class_end_time">
+                            <input type="text" value="<?= set_value('class_end_time') ?>" class="form-control timepicker" name="class_end_time" id="class_end_time">
                             <div class="input-group-addon">
                                 <i class="fa fa-clock-o"></i>
                             </div>
                         </div>
                     </div>
 
-                    <!-- <input type="hidden" name="class_id" value="<?= $class->class_id ?>">
-                    <input type="hidden" name="class_sched" value="<?= $class->class_sched ?>"> -->
+                    <input type="hidden" name="class_sched" value="<?= $petition->course_code . $petition->petition_section ?>">
+                    <input type="hidden" name="petition_ID" value="<?= $petition->petition_ID ?>">
+                    <input type="hidden" name="petition_unique" value="<?= $petition->petition_unique ?>">
                 </div>
 
                 <div class="modal-footer">

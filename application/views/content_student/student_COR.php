@@ -85,7 +85,7 @@
                                             } ?>
                                         </td>
                                         <?php foreach ($offerings as $offering) : ?>
-                                            <?php if ($record->cc_course == $offering->offering_course_code && $record->cc_section == $offering->offering_course_section) : ?>
+                                            <?php if (trim($record->cc_course) == trim($offering->offering_course_code) && trim($record->cc_section) == trim($offering->offering_course_section)) : ?>
                                                 <td class="text-center"><?= $offering->offering_course_day ?></td>
                                                 <td class="text-center"><?= $offering->offering_course_time ?></td>
                                             <?php endif; ?>

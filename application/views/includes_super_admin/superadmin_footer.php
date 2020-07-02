@@ -40,6 +40,88 @@
 <script type="text/javascript">
     var baselink = "<?= base_url() ?>";
 
+    function block_account(acc_id) {
+        Swal.fire({
+            title: 'Are you sure you want to BLOCK this account?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Block'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: '<?php echo base_url() ?>SuperAdmin/block_account',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {
+                        acc_id: acc_id
+                    },
+                    success: function(data) {
+                        if (data.status) {
+                            Swal.fire({
+                                title: 'Success',
+                                icon: 'success',
+                                text: data.message,
+                                timer: 1100
+                            }).then(() => {
+                                window.location.replace(baselink + "SuperAdmin/faculties/");
+                            })
+
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                icon: 'warning',
+                                text: data.message
+                            })
+                        }
+                    }
+                });
+            }
+        })
+    }
+
+
+    function unblock_account(acc_id) {
+        Swal.fire({
+            title: 'Are you sure you want to UNBLOCK this account?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Block'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: '<?php echo base_url() ?>SuperAdmin/unblock_account',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {
+                        acc_id: acc_id
+                    },
+                    success: function(data) {
+                        if (data.status) {
+                            Swal.fire({
+                                title: 'Success',
+                                icon: 'success',
+                                text: data.message,
+                                timer: 1100
+                            }).then(() => {
+                                window.location.replace(baselink + "SuperAdmin/faculties/");
+                            })
+                        } else {
+                            Swal.fire({
+                                title: 'error',
+                                icon: 'warning',
+                                text: data.message
+                            })
+                        }
+                    }
+                });
+            }
+        })
+    }
+
     function delete_program(id) {
         Swal.fire({
             title: 'Are you sure?',
@@ -264,6 +346,51 @@
         })
     }
 
+    function delete_petition_sched(petition_id, cs_id, petition_unique) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            $.ajax({
+                url: '<?php echo base_url() ?>SuperAdmin/delete_petition_sched',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    petition_id: petition_id,
+                    cs_id: cs_id,
+
+                },
+                dataType: 'JSON',
+                success: function(data) {
+                    if (data.status == 'success') {
+                        swal.fire(data.title, {
+                            icon: data.icon,
+                            buttons: false,
+                            timer: 1100,
+                        }).then((value) => {
+                            window.location.replace(baselink + "SuperAdmin/show_petition/" + petition_id + "/" + petition_unique)
+                        });
+
+                    } else {
+                        swal.fire("Invalid Request", {
+                            icon: 'error',
+                            buttons: false,
+                            timer: 1100,
+                        }).then((value) => {
+                            window.location.replace(baselink + "SuperAdmin/show_petition/" + petition_id + "/" + petition_unique)
+                        });
+                    }
+                }
+            });
+
+        })
+    }
+
     function edit_class() {
         var class_id = $("#class_id").val();
         var class_faculty_id = $("#class_faculty_id").val();
@@ -276,6 +403,7 @@
             cancelButtonColor: '#d33',
             confirmButtonText: 'Save!'
         }).then((result) => {
+
             if (result.value) {
                 window.location.replace(baselink + "SuperAdmin/edit_class_function/" + class_id + "/" + class_faculty_id)
             }
@@ -317,6 +445,20 @@
                         $('#lab_instructor').prop("disabled", true)
                     }
 
+                }
+            });
+
+            $.ajax({
+                url: '<?php echo base_url() ?>SuperAdmin/show_sections_available',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    course_code: $('#class_course_code').val()
+                },
+                success: function(data) {
+                    console.log(data.data);
+                    $('#class_section_code').children('option:not(:first)').remove();
+                    $("#class_section_code").append(data.data);
                 }
             });
         });
@@ -603,7 +745,6 @@
         });
     }, 1000);
 
-
     $('.timepicker').timepicker({
         showInputs: false
     });
@@ -611,10 +752,6 @@
     // =======================================================================================
     // petitioning module
     // =======================================================================================
-
-    var petition_ID = $("#petition_ID").val();
-    var petition_unique = $("#petition_unique").val();
-    var petition_section = $("#petition_section").val();
 
     $("#approve_petition").click(function() {
         Swal.fire({
@@ -627,46 +764,57 @@
             confirmButtonText: 'Approve!'
         }).then((result) => {
             if (result.value) {
-                $.post("<?= base_url() ?>SuperAdmin/approve_petition", {
+                var petition_ID = $("#petition_ID").val();
+                var petition_unique = $("#petition_unique").val();
+                var petition_code = $("#petition_code").val();
+                var petition_section = $("#petition_section").val();
+
+                $.ajax({
+                    url: '<?= base_url() ?>SuperAdmin/approve_petition',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {
                         petitionID: petition_ID,
                         petitionUnique: petition_unique,
-                        petitionSection: petition_section
-                    }).done(function(data) {
-                        alert(data);
-                        var obj = JSON.parse(data);
-                        if (obj.context == "success") {
+                        petitionSection: petition_section,
+                        petitionSched: petition_code + petition_section
+                    },
+                    success: function(data) {
+                        if (data.context == "success") {
                             Swal.fire(
                                 'Success!',
-                                obj.message,
+                                data.message,
                                 'success'
                             )
+                            $.ajax({
+                                url: '<?= base_url() ?>SuperAdmin/fetch_updated_petition_status',
+                                method: 'POST',
+                                dataType: 'json',
+                                data: {
+                                    petitionUnique: petition_unique
+                                },
+                                success: function(data) {
+                                    $('#petition_status_badge').text('');
+                                    if (data.petition_status == 1) {
+                                        $("#petition_status_badge").append("Petition Status: <span class='label label-success'>Approved</span>");
+                                    } else if (data.petition_status == 2) {
+                                        $("#petition_status_badge").append("Petition Status: <span class='label label-warning'>Pending</span>");
+                                    } else {
+                                        $("#petition_status_badge").append("Petition Status: <span class='label label-danger'>Denied</span>");
+                                    }
+                                }
+                            });
                         } else {
                             Swal.fire(
                                 'Error!',
-                                obj.message,
+                                data.message,
                                 'error'
                             )
                         }
-                        $.post("<?= base_url() ?>SuperAdmin/fetch_updated_petition_status", {
-                            petitionUnique: petition_unique
-                        }).done(function(data) {
-                            var obj = JSON.parse(data);
-                            $('#petition_status_badge').text('');
-                            if (obj.petition_status == 1) {
-                                $("#petition_status_badge").append("Petition Status: <span class='label label-success'>Approved</span>");
-                            } else if (obj.petition_status == 2) {
-                                $("#petition_status_badge").append("Petition Status: <span class='label label-warning'>Pending</span>");
-                            } else {
-                                $("#petition_status_badge").append("Petition Status: <span class='label label-danger'>Denied</span>");
-                            }
-                        });
-                    })
-                    .fail(function() {
-                        Swal.fire(
-                            'Failed to process petition, Please check your network connection!',
-                            'error'
-                        )
-                    });
+
+
+                    }
+                });
             }
         })
     });
@@ -682,9 +830,13 @@
             confirmButtonText: 'Decline!'
         }).then((result) => {
             if (result.value) {
+                var petition_ID = $("#petition_ID").val();
+                var petition_unique = $("#petition_unique").val();
+                var petition_section = $("#petition_section").val();
                 $.post("<?= base_url() ?>SuperAdmin/decline_petition", {
                         petitionID: petition_ID,
-                        petitionUnique: petition_unique
+                        petitionUnique: petition_unique,
+                        petitionSection: petition_section
                     }).done(function(data) {
                         var obj = JSON.parse(data);
                         if (obj.context == "success") {

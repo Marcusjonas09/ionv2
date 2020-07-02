@@ -15,6 +15,15 @@ class Petition_model extends CI_Model
     // ADMIN FUNCTIONS
     // =======================================================================================
 
+    public function fetch_current()
+    {
+        $this->db->select('*');
+        $this->db->from('settings_tbl');
+        $this->db->order_by('settings_ID', 'DESC');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function add_petition_to_offering($petition_ID, $petition_section)
     {
         $q = $this->db->get_where('petitions_tbl', $petition_ID);
@@ -36,21 +45,25 @@ class Petition_model extends CI_Model
         return $query->num_rows();
     }
 
-    public function approve_petition($petition_unique)
+    public function approve_petition($petition_unique, $petition_section, $petition_sched)
     {
-        // $this->db->set('petition_status', 1);
-        // $this->db->set('date_processed', time());
-        // $this->db->where('petition_unique', $petition_unique);
-        // $this->db->update('petitions_tbl');
+        $this->db->set('petition_status', 1);
+        $this->db->set('date_processed', time());
+        $this->db->set('petition_section', $petition_section);
+        // $this->db->set('schedule', $$petition_sched);
+        $this->db->where('petition_unique', $petition_unique);
+        $this->db->update('petitions_tbl');
 
         $q = $this->db->get_where('petitions_tbl', array('petition_unique' => $petition_unique));
 
         $course_details = $q->row();
-        $this->dd($course_details);
+
         $course = array(
             'class_code' => $course_details->course_code,
-            'school_year' => $this->session->curr_year,
-            'school_term' => $this->session->curr_term
+            'class_section' => $petition_section,
+            'class_sched' => $petition_sched,
+            'school_year' => $this->fetch_current()->school_year,
+            'school_term' => $this->fetch_current()->school_term
         );
 
         $this->db->insert('classes_tbl', $course);
@@ -80,7 +93,6 @@ class Petition_model extends CI_Model
         $this->db->select('*');
         $this->db->order_by('petitions_tbl.date_submitted', 'DESC');
         $this->db->where(array(
-            // 'petitions_tbl.stud_number' => $this->session->acc_number,
             'petitioners_tbl.stud_number' => $this->session->acc_number
         ));
         $this->db->join('petitioners_tbl', 'petitioners_tbl.petition_unique = petitions_tbl.petition_unique', 'LEFT');
@@ -228,5 +240,11 @@ class Petition_model extends CI_Model
         $this->db->select('petition_status');
         $query = $this->db->get_where('petitions_tbl', array('petition_unique' => $petition_unique));
         return $query->row();
+    }
+
+    public function fetch_petition_class_sched($petition_ID)
+    {
+        $query = $this->db->get_where('petition_class_schedule', array('petition_ID' => $petition_ID));
+        return $query->result();
     }
 }

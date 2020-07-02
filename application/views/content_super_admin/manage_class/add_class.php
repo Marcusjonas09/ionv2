@@ -31,9 +31,10 @@
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Course Code:</label>
                                 <select class="form-control js-example-basic-single" name="class_code" id="class_course_code">
-                                    <option value="">--</option>
+                                    <option value="" <?= set_select('class_code', '', TRUE) ?>>--</option>
+
                                     <?php foreach ($courses as $course) : ?>
-                                        <option value="<?= $course->course_code ?>"><?= $course->course_code . ' - ' . $course->course_title ?></option>
+                                        <option value="<?= $course->course_code ?>" <?= set_select('class_code',  $course->course_code) ?>><?= $course->course_code . ' - ' . $course->course_title ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -47,9 +48,9 @@
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Lecture Instructor:</label>
                                 <select class="form-control js-example-basic-single" name="lec_instructor" id="lec_instructor">
-                                    <option value="">--</option>
+                                    <option value="" <?= set_select('lec_instructor', '', TRUE) ?>>--</option>
                                     <?php foreach ($faculties as $faculty) : ?>
-                                        <option value="<?= $faculty->acc_number ?>"><?= $faculty->acc_lname . ' - ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?></option>
+                                        <option value="<?= $faculty->acc_number ?>" <?= set_select('lec_instructor', $faculty->acc_number) ?>><?= $faculty->acc_lname . ' - ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -57,9 +58,9 @@
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Laboratory Instructor:</label>
                                 <select disabled class="form-control js-example-basic-single" name="lab_instructor" id="lab_instructor">
-                                    <option value="">--</option>
+                                    <option value="" <?= set_select('lab_instructor', '', TRUE) ?>>--</option>
                                     <?php foreach ($faculties as $faculty) : ?>
-                                        <option value="<?= $faculty->acc_number ?>"><?= $faculty->acc_lname . ' - ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?></option>
+                                        <option value="<?= $faculty->acc_number ?>" <?= set_select('lab_instructor', $faculty->acc_number) ?>><?= $faculty->acc_lname . ' - ' . $faculty->acc_fname . ' ' . $faculty->acc_mname ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -67,16 +68,16 @@
                             <div class="form-group col-md-6">
                                 <label for="laboratory_code">Section:</label>
                                 <select class="form-control js-example-basic-single" name="section_code" id="class_section_code">
-                                    <option value="">--</option>
+                                    <option value="" <?= set_select('section_code', '', TRUE) ?>>--</option>
                                     <?php foreach ($sections as $section) : ?>
-                                        <option value="<?= $section->section_code ?>"><?= $section->section_code ?></option>
+                                        <option value="<?= $section->section_code ?>" <?= set_select('section_code', $section->section_code) ?>><?= $section->section_code ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
 
                             <div class="form-group col-md-6">
                                 <label for="class_capacity">Max Slots:</label>
-                                <input type="number" name="class_capacity" id="class_capacity" placeholder="Slot" class="form-control">
+                                <input type="number" value="<?= set_value('class_capacity') ?>" name="class_capacity" id="class_capacity" placeholder="Slot" class="form-control">
                             </div>
                         </div>
 

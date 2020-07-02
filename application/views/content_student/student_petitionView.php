@@ -10,21 +10,20 @@
     <!-- Main content -->
     <section class="content container-fluid">
         <!-- Table showing all petitions related to this student account -->
-
-        <div class="col-md-7">
-            <div class="box box-success">
-                <div class="box-header">
-                    <h4><strong>Petition Status: </strong>
-                        <?php if ($petition->petition_status == 1) {
-                            echo "<span class='label label-success'>Approved</span>";
-                        } elseif ($petition->petition_status == 2) {
-                            echo "<span class='label label-warning'>Pending</span>";
-                        } else {
-                            echo "<span class='label label-danger'>Denied</span>";
-                        } ?></h4>
-                </div>
-                <div class="box-body">
-                    <div class="container-fluid col-md-12">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="box box-success">
+                    <div class="box-header">
+                        <h4><strong>Petition Status: </strong>
+                            <?php if ($petition->petition_status == 1) {
+                                echo "<span class='label label-success'>Approved</span>";
+                            } elseif ($petition->petition_status == 2) {
+                                echo "<span class='label label-warning'>Pending</span>";
+                            } else {
+                                echo "<span class='label label-danger'>Denied</span>";
+                            } ?></h4>
+                    </div>
+                    <div class="box-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -81,73 +80,75 @@
                         <?php endif; ?>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="col-md-5">
-            <div class="box box-success">
-                <div class="box-header">
-                    <h3 class="box-title"><strong>Schedule</strong></h3>
-                </div>
-                <div class="container-fluid">
-                    <table class="table">
-                        <thead style="background-color:#00a65a; color:white;">
-                            <th class="text-center">Day</th>
-                            <th>Time</th>
-                            <th>Room</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="col-md-2 text-center">T</td>
-                                <td class="col-md-7">7:00 - 9:00</td>
-                                <td class="col-md-3">F1201</td>
-                            </tr>
-                        </tbody>
-                    </table>
 
-                    <div class="row">
-                        <div class="col">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Faculty</label>
-                                    <input readonly type="text" class="form-control" placeholder="Faculty">
+                <div class="box box-success">
+                    <div class="box-header">
+                        <h3 class="box-title"><strong>Class Schedules</strong></h3>
+                    </div>
+                    <div class="container-fluid">
+                        <table class="table table-striped text-center" data-page-length='10'>
+                            <thead class="bg-success" style="background-color:#00a65a; color:white;">
+                                <th class="text-center col-md-2">DAY</th>
+                                <th class="text-center col-md-3">TIME</th>
+                                <th class="text-center col-md-2">ROOM</th>
+                                <th class="text-center col-md-2">TYPE</th>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($petition_sched as $sched) : ?>
+                                    <tr>
+                                        <td><?= $sched->class_day ?></td>
+                                        <td><?= date('h:i A', strtotime($sched->class_start_time)) . ' - ' . date('h:i A', strtotime($sched->class_end_time)) ?></td>
+                                        <td><?= $sched->class_room ?></td>
+                                        <td><?= $sched->class_type ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Faculty</label>
+                                        <input readonly type="text" class="form-control" placeholder="Faculty">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-md-7">
-            <div class="box box-success">
-                <div class="box-header">
-                    <h3 class="box-title"><strong>Petitioners</strong></h3>
+            <div class="col-md-4">
+                <div class="box box-success">
+                    <div class="box-header">
+                        <h3 class="box-title"><strong>Petitioners</strong></h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <th>#</th>
+                                <th>Student Number</th>
+                                <th>Student Name</th>
+                            </thead>
+                            <tbody>
+                                <?php $i = 1; ?>
+                                <?php foreach ($petitioners as $petitioner) : ?>
+                                    <tr>
+                                        <td><?= $i ?></td>
+                                        <td><?= $petitioner->stud_number ?></td>
+                                        <td><?= $petitioner->acc_fname . ' ' . $petitioner->acc_lname ?></td>
+                                    </tr>
+                                    <?php $i++; ?>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
                 </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <th>#</th>
-                            <th>Student Number</th>
-                            <th>Student Name</th>
-                        </thead>
-                        <tbody>
-                            <?php $i = 1; ?>
-                            <?php foreach ($petitioners as $petitioner) : ?>
-                                <tr>
-                                    <td><?= $i ?></td>
-                                    <td><?= $petitioner->stud_number ?></td>
-                                    <td><?= $petitioner->acc_fname . ' ' . $petitioner->acc_lname ?></td>
-                                </tr>
-                                <?php $i++; ?>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.box-body -->
+                <!-- /.box -->
             </div>
-            <!-- /.box -->
         </div>
     </section>
     <!-- /.content -->

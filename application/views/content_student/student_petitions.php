@@ -9,16 +9,9 @@
 
   <!-- Main content -->
   <section class="content container-fluid">
-    <?php if (isset($success_msg)) : ?>
+    <?php if (isset($this->session->petition_message)) : ?>
       <div class="alert alert-success alert-dismissible" role="alert">
-        <p><?php echo $success_msg; ?></p>
-        <p><?php echo "Click on this box to dismiss."; ?></p>
-      </div>
-    <?php endif; ?>
-
-    <?php if (isset($error_msg)) : ?>
-      <div class="alert alert-warning alert-dismissible" role="alert">
-        <p><?php echo $error_msg; ?></p>
+        <p><?php echo $this->session->petition_message; ?></p>
         <p><?php echo "Click on this box to dismiss."; ?></p>
       </div>
     <?php endif; ?>
@@ -45,9 +38,7 @@
             <div class="form-group col-md-6">
               <select id="course_code" name="course_code" class="form-control js-example-basic-single">
                 <?php foreach ($petition_suggestions as $petition_suggestion) : ?>
-                  <?php if ($petition_suggestion->course_code) : ?>
-                    <option value="<?= $petition_suggestion->course_code ?>"><?= $petition_suggestion->course_code . " - " . $petition_suggestion->course_title ?></option>
-                  <?php endif; ?>
+                  <option value="<?= $petition_suggestion->offering_course_code ?>"><?= $petition_suggestion->offering_course_code . " - " . $petition_suggestion->course_title ?></option>
                 <?php endforeach; ?>
               </select>
             </div>

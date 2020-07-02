@@ -47,6 +47,106 @@ class Courseflow_model extends CI_Model
 
     // RECOMMEND WHAT TO PETITION
 
+    public function suggest_what_to_petition_v2()
+    {
+        $parallel_courses = array();
+        $courses_passed = array();
+        $untaken = array();
+        $curr_courses = array();
+        $approved_pending_petitions = array();
+
+        $parallel = $this->db->get_where('parallel_curriculum', array('curriculum_code' => $this->session->Curriculum_code))->result();
+
+        foreach ($parallel as $course) {
+            array_push($parallel_courses, $course->parallel_course);
+        }
+
+        $course_card_passed = $this->db->get_where('course_card_view', array(
+            'cc_stud_number' => $this->session->acc_number,
+            'cc_final > ' => 0.5,
+            'cc_final <= ' => 4.0,
+            'course_code !=' => null,
+        ))->result();
+
+        foreach ($course_card_passed as $course) {
+            array_push($courses_passed, $course->course_code);
+        }
+
+        $this->db->where_not_in('course_code', $courses_passed);
+        $untaken_failed_courses = $this->db->get_where('curriculum_view', array('curriculum_code' => $this->session->Curriculum_code))->result();
+
+        foreach ($untaken_failed_courses as $course) {
+            array_push($untaken,  $course->course_code);
+        }
+
+        $curr = $this->db->get_where('curriculum_view', array('curriculum_code' => $this->session->Curriculum_code))->result();
+
+        foreach ($curr as $course) {
+            array_push($curr_courses,  $course->course_code);
+        }
+
+        $this->db->distinct();
+        $this->db->select('course_code');
+        $mypetitions = $this->db->get_where('petitions_tbl', array(
+            'stud_number' => $this->session->acc_number,
+            'petition_status !=' => 0
+        ))->result();
+
+        foreach ($mypetitions as $petition) {
+            array_push($approved_pending_petitions,  $petition->course_code);
+        }
+
+        // return $approved_pending_petitions;
+
+        if ($this->session->curr_year <= 20192020 && $this->session->curr_term < 3) {
+            $this->db->distinct();
+            $this->db->select('offering_tbl.offering_course_code,offering_tbl.offering_year,offering_term, courses_tbl_v2.course_title,offering_tbl.offering_course_slot');
+            $this->db->where_in('offering_course_code', $untaken);
+            $this->db->where_not_in('offering_course_code', $parallel_courses);
+            $this->db->where_in('offering_course_code', $curr_courses);
+            if (!empty($approved_pending_petitions)) {
+                $this->db->where_not_in('offering_course_code', $approved_pending_petitions);
+            }
+            $this->db->join('courses_tbl_v2', 'courses_tbl_v2.course_code = offering_tbl.offering_course_code');
+            $suggestions = $this->db->get_where('offering_tbl', array(
+                'offering_year' => $this->session->curr_year,
+                'offering_term' => $this->session->curr_term,
+                // 'offering_course_slot ' => 0
+            ))->result();
+        } else {
+            $this->db->select('*');
+            $this->db->where(array(
+                'school_year' => $this->session->curr_year,
+                'school_term' => $this->session->curr_term
+            ));
+            // $this->db->where_in('class_code', $untaken_in_offering);
+            $this->db->where_in('class_code', $untaken);
+            $this->db->where_not_in('class_code', $parallel_courses);
+            $this->db->where_in('class_code', $curr_courses);
+            $suggestions = $this->db->from('classes_tbl');
+        }
+
+        $suggestion = array();
+
+        foreach ($suggestions as $suggest) {
+            $sample = 0;
+
+            foreach ($suggestions as $suggest_inner) {
+
+                if ($suggest_inner->offering_course_code == $suggest->offering_course_code) {
+                    $sample += $suggest_inner->offering_course_slot;
+                }
+            }
+            if ($sample) {
+                $sample = 0;
+            } else {
+                array_push($suggestion, $suggest);
+            }
+        }
+
+        return $suggestion;
+    }
+
     public function suggest_what_to_petition()
     {
         //fetch untaken courses
@@ -87,7 +187,6 @@ class Courseflow_model extends CI_Model
         if (count($untaken_in_offering) > 0) {
 
             //fetch untaken courses in offering table
-
 
             if ($this->session->curr_year <= 20192020 && $this->session->curr_term < 3) {
                 $this->db->distinct();

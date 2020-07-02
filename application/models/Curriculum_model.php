@@ -3,6 +3,39 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Curriculum_model extends CI_Model
 {
+
+    public function all_curriculum()
+    {
+        return $this->db->get('curriculum_tbl')->result();
+    }
+
+    public function get_curriculum($CurriculumCode)
+    {
+        return $this->db->get_where('curriculum_view', array('curriculum_code' => $CurriculumCode))->result();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //ADMIN FUNCTIONS
 
     public function show_curriculum($CurriculumCode)

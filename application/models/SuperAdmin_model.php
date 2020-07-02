@@ -1391,7 +1391,6 @@ class SuperAdmin_model extends CI_Model
         $end = $data['class_end_time'];
         $class_room = $data['class_room'];
         $class_day = $data['class_day'];
-        $class_sched = $data['class_sched'];
 
         $schedule = array(
             'class_room' => $data['class_room'],
@@ -1401,20 +1400,17 @@ class SuperAdmin_model extends CI_Model
             'class_sched' => $data['class_sched'],
             'class_type' => $data['class_type'],
             'school_year' => $data['school_year'],
-            'school_term' => $data['school_term']
+            'school_term' => $data['school_term'],
+            'petition_ID' => $data['petition_ID'],
         );
 
-        // $q2 = $this->db->get_where('class_schedule_tbl', array(
-        //     'class_room' => $class_room,
-        //     'class_day' => $class_day,
-        // ));
-
-        $q2 = $this->db->get_where('class_schedule_tbl');
-
-        // $q2 = $this->db->get_where('class_schedule_tbl');
+        $q2 = $this->db->get_where('class_schedule_tbl', array(
+            'school_year' => $this->fetch_current()->school_year,
+            'school_term' => $this->fetch_current()->school_term
+        ));
 
         $results = $q2->result();
-        // $current_class_scheds = $q3->result();
+
         if ($start < $end) {
 
             foreach ($results as $result) {
@@ -1439,20 +1435,14 @@ class SuperAdmin_model extends CI_Model
                 } else {
                 }
             }
-
-            // foreach ($current_class_scheds as $current_class_sched) {
-
-            //     if () {
-            //     } else {
-            //         $message = '
-            //     <div class="alert alert-warning alert-dismissible">
-            //         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            //         <h4><i class="icon fa fa-warning"></i>Warning!</h4>
-            //         <p>Conflict Schedule</p>
-            //     </div>
-            //     ';
-            //     }
-            // }
+        } else if ($start == $end) {
+            $message .= '
+                <div class="alert alert-warning alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <h4><i class="icon fa fa-warning"></i>Warning!</h4>
+                    <p>Start time cannot equal to the end time!</p>
+                </div>
+                ';
         } else {
             $message .= '
                 <div class="alert alert-warning alert-dismissible">
@@ -1528,6 +1518,39 @@ class SuperAdmin_model extends CI_Model
         $this->db->where(array('class_sched' => $class_sched));
         $this->db->from('class_schedule_tbl');
         $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function fetch_petition_sched($petition_ID)
+    {
+        $this->db->select('*');
+        $this->db->where(array('petition_ID' => $petition_ID));
+        $this->db->from('class_schedule_tbl');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function show_sections_available($class_code, $school_year, $school_term)
+    {
+        $this->db->distinct();
+        $this->db->select('class_section');
+        $this->db->where(array(
+            'class_code' => $class_code,
+            'school_year' => $school_year,
+            'school_term' => $school_term,
+        ));
+        $this->db->from('classes_tbl');
+        $result = $this->db->get()->result();
+
+        $sections_taken = array();
+
+        foreach ($result as $section) {
+            array_push($sections_taken, $section->class_section);
+        }
+
+        $this->db->where_not_in('section_code', $sections_taken);
+        $query = $this->db->get('sections_tbl');
+
         return $query->result();
     }
 
@@ -1712,6 +1735,24 @@ class SuperAdmin_model extends CI_Model
     {
         $query = $this->db->get_where('accounts_tbl', array('acc_access_level' => 2));
         return $query->num_rows();
+    }
+
+    public function block_account($acc_id)
+    {
+        $this->db->set(array('acc_status' => 0));
+        $this->db->where(array(
+            'acc_id' => $acc_id
+        ));
+        return $this->db->update('accounts_tbl');
+    }
+
+    public function unblock_account($acc_id)
+    {
+        $this->db->set(array('acc_status' => 1));
+        $this->db->where(array(
+            'acc_id' => $acc_id
+        ));
+        return $this->db->update('accounts_tbl');
     }
 
     public function edit_admin($id, $modules)
