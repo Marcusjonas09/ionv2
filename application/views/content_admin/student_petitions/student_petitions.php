@@ -3,7 +3,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            <strong>Course Petitions</strong>
+            <strong>Course Petitions sasdas</strong>
             <small>Administrator</small>
         </h1>
         <ol class="breadcrumb">
@@ -22,6 +22,7 @@
                 <li><a href="#Pending" data-toggle="tab"><strong>Pending</strong></a></li>
                 <li><a href="#Processed" data-toggle="tab"><strong>Processed</strong></a></li>
                 <li><a href="#All" data-toggle="tab"><strong>All Petitions</strong></a></li>
+                
             </ul>
             <div class="tab-content">
                 <div class="active tab-pane" id="Urgent">
@@ -51,28 +52,28 @@
                                         <td class="text-center">
                                             <?php $i = 0; ?>
                                             <?php foreach ($petitioners as $petitioner) {
-                                                        if ($petitioner->petition_unique == $petition->petition_unique) {
-                                                            $i++;
-                                                        }
-                                                    } ?>
+                                                if ($petitioner->petition_unique == $petition->petition_unique) {
+                                                    $i++;
+                                                }
+                                            } ?>
                                             <?= $i ?>
                                         </td>
                                         <td class="text-center"><?php if ($petition->petition_urgency == 1) {
-                                                                            echo "<span class='label label-warning'>Medium</span>";
-                                                                        } elseif ($petition->petition_urgency == 2) {
-                                                                            echo "<span class='label label-danger'>High</span>";
-                                                                        } else {
-                                                                            echo "<span class='label label-success'>Low</span>";
-                                                                        } ?>
+                                                                    echo "<span class='label label-warning'>Medium</span>";
+                                                                } elseif ($petition->petition_urgency == 2) {
+                                                                    echo "<span class='label label-danger'>High</span>";
+                                                                } else {
+                                                                    echo "<span class='label label-success'>Low</span>";
+                                                                } ?>
                                         </td>
                                         <td class="text-center">
                                             <?php if ($petition->petition_status == 1) {
-                                                        echo "<span class='label label-success'>Approved</span>";
-                                                    } elseif ($petition->petition_status == 2) {
-                                                        echo "<span class='label label-warning'>Pending</span>";
-                                                    } else {
-                                                        echo "<span class='label label-danger'>Denied</span>";
-                                                    } ?>
+                                                echo "<span class='label label-success'>Approved</span>";
+                                            } elseif ($petition->petition_status == 2) {
+                                                echo "<span class='label label-warning'>Pending</span>";
+                                            } else {
+                                                echo "<span class='label label-danger'>Denied</span>";
+                                            } ?>
                                         </td>
                                         <td class="text-center">
                                             <a href="<?= base_url() ?>Admin/show_petition/<?= $petition->petition_ID ?>/<?= $petition->petition_unique ?>" class="btn btn-warning btn-sm rounded"><i class="fa fa-eye"></i> View</a>
@@ -112,28 +113,28 @@
                                         <td class="text-center">
                                             <?php $i = 0; ?>
                                             <?php foreach ($petitioners as $petitioner) {
-                                                        if ($petitioner->petition_unique == $petition->petition_unique) {
-                                                            $i++;
-                                                        }
-                                                    } ?>
+                                                if ($petitioner->petition_unique == $petition->petition_unique) {
+                                                    $i++;
+                                                }
+                                            } ?>
                                             <?= $i ?>
                                         </td>
                                         <td class="text-center"><?php if ($petition->petition_urgency == 1) {
-                                                                            echo "<span class='label label-warning'>Medium</span>";
-                                                                        } elseif ($petition->petition_urgency == 2) {
-                                                                            echo "<span class='label label-danger'>High</span>";
-                                                                        } else {
-                                                                            echo "<span class='label label-success'>Low</span>";
-                                                                        } ?>
+                                                                    echo "<span class='label label-warning'>Medium</span>";
+                                                                } elseif ($petition->petition_urgency == 2) {
+                                                                    echo "<span class='label label-danger'>High</span>";
+                                                                } else {
+                                                                    echo "<span class='label label-success'>Low</span>";
+                                                                } ?>
                                         </td>
                                         <td class="text-center">
                                             <?php if ($petition->petition_status == 1) {
-                                                        echo "<span class='label label-success'>Approved</span>";
-                                                    } elseif ($petition->petition_status == 2) {
-                                                        echo "<span class='label label-warning'>Pending</span>";
-                                                    } else {
-                                                        echo "<span class='label label-danger'>Denied</span>";
-                                                    } ?>
+                                                echo "<span class='label label-success'>Approved</span>";
+                                            } elseif ($petition->petition_status == 2) {
+                                                echo "<span class='label label-warning'>Pending</span>";
+                                            } else {
+                                                echo "<span class='label label-danger'>Denied</span>";
+                                            } ?>
                                         </td>
                                         <td class="text-center">
                                             <a href="<?= base_url() ?>Admin/show_petition/<?= $petition->petition_ID ?>/<?= $petition->petition_unique ?>" class="btn btn-warning btn-sm rounded"><i class="fa fa-eye"></i> View</a>
@@ -173,28 +174,28 @@
                                         <td class="text-center">
                                             <?php $i = 0; ?>
                                             <?php foreach ($petitioners as $petitioner) {
-                                                        if ($petitioner->petition_unique == $petition->petition_unique) {
-                                                            $i++;
-                                                        }
-                                                    } ?>
+                                                if ($petitioner->petition_unique == $petition->petition_unique) {
+                                                    $i++;
+                                                }
+                                            } ?>
                                             <?= $i ?>
                                         </td>
                                         <td class="text-center"><?php if ($petition->petition_urgency == 1) {
-                                                                            echo "<span class='label label-warning'>Medium</span>";
-                                                                        } elseif ($petition->petition_urgency == 2) {
-                                                                            echo "<span class='label label-danger'>High</span>";
-                                                                        } else {
-                                                                            echo "<span class='label label-success'>Low</span>";
-                                                                        } ?>
+                                                                    echo "<span class='label label-warning'>Medium</span>";
+                                                                } elseif ($petition->petition_urgency == 2) {
+                                                                    echo "<span class='label label-danger'>High</span>";
+                                                                } else {
+                                                                    echo "<span class='label label-success'>Low</span>";
+                                                                } ?>
                                         </td>
                                         <td class="text-center">
                                             <?php if ($petition->petition_status == 1) {
-                                                        echo "<span class='label label-success'>Approved</span>";
-                                                    } elseif ($petition->petition_status == 2) {
-                                                        echo "<span class='label label-warning'>Pending</span>";
-                                                    } else {
-                                                        echo "<span class='label label-danger'>Denied</span>";
-                                                    } ?>
+                                                echo "<span class='label label-success'>Approved</span>";
+                                            } elseif ($petition->petition_status == 2) {
+                                                echo "<span class='label label-warning'>Pending</span>";
+                                            } else {
+                                                echo "<span class='label label-danger'>Denied</span>";
+                                            } ?>
                                         </td>
                                         <td class="text-center">
                                             <a href="<?= base_url() ?>Admin/show_petition/<?= $petition->petition_ID ?>/<?= $petition->petition_unique ?>" class="btn btn-warning btn-sm rounded"><i class="fa fa-eye"></i> View</a>
@@ -233,28 +234,28 @@
                                     <td class="text-center">
                                         <?php $i = 0; ?>
                                         <?php foreach ($petitioners as $petitioner) {
-                                                if ($petitioner->petition_unique == $petition->petition_unique) {
-                                                    $i++;
-                                                }
-                                            } ?>
+                                            if ($petitioner->petition_unique == $petition->petition_unique) {
+                                                $i++;
+                                            }
+                                        } ?>
                                         <?= $i ?>
                                     </td>
                                     <td class="text-center"><?php if ($petition->petition_urgency == 1) {
-                                                                    echo "<span class='label label-warning'>Medium</span>";
-                                                                } elseif ($petition->petition_urgency == 2) {
-                                                                    echo "<span class='label label-danger'>High</span>";
-                                                                } else {
-                                                                    echo "<span class='label label-success'>Low</span>";
-                                                                } ?>
+                                                                echo "<span class='label label-warning'>Medium</span>";
+                                                            } elseif ($petition->petition_urgency == 2) {
+                                                                echo "<span class='label label-danger'>High</span>";
+                                                            } else {
+                                                                echo "<span class='label label-success'>Low</span>";
+                                                            } ?>
                                     </td>
                                     <td class="text-center">
                                         <?php if ($petition->petition_status == 1) {
-                                                echo "<span class='label label-success'>Approved</span>";
-                                            } elseif ($petition->petition_status == 2) {
-                                                echo "<span class='label label-warning'>Pending</span>";
-                                            } else {
-                                                echo "<span class='label label-danger'>Denied</span>";
-                                            } ?>
+                                            echo "<span class='label label-success'>Approved</span>";
+                                        } elseif ($petition->petition_status == 2) {
+                                            echo "<span class='label label-warning'>Pending</span>";
+                                        } else {
+                                            echo "<span class='label label-danger'>Denied</span>";
+                                        } ?>
                                     </td>
                                     <td class="text-center">
                                         <a href="<?= base_url() ?>Admin/show_petition/<?= $petition->petition_ID ?>/<?= $petition->petition_unique ?>" class="btn btn-warning btn-sm rounded"><i class="fa fa-eye"></i> View</a>

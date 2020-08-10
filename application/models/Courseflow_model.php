@@ -445,32 +445,42 @@ class Courseflow_model extends CI_Model
                 }
             }
 
+
+
+            // select petitions that we do not want to be suggested
             $this->db->distinct();
-            $this->db->select('petition_unique');
-            $this->db->where(array('petitioners_tbl.stud_number' => $this->session->acc_number));
+            $this->db->select('petitioners_tbl.petition_unique,petitions_tbl.course_code,petitions_tbl.petition_status');
+            $this->db->where(array(
+                'petitioners_tbl.stud_number' => $this->session->acc_number,
+            ));
             $this->db->from('petitioners_tbl');
+            $this->db->join('petitions_tbl', 'petitions_tbl.petition_unique = petitioners_tbl.petition_unique');
             $query = $this->db->get();
             $samples = $query->result();
 
-
             $myarr = array();
             foreach ($samples as $sample) {
-                array_push($myarr, $sample->petition_unique);
+                array_push($myarr, $sample->course_code);
             }
+
+            // $this->dd($myarr);
 
             if (count($suggestion) > 0) {
                 $this->db->select('*');
                 $this->db->from('petitions_tbl');
                 if ($myarr) {
-                    $this->db->where_not_in('petitions_tbl.petition_unique', $myarr);
+                    $this->db->where_not_in('petitions_tbl.course_code', $myarr);
                 }
+                // $this->db->where(array(
+                //     'petitions_tbl.stud_number !=' => $this->session->acc_number,
+                // ));
                 $this->db->where_in('petitions_tbl.course_code', $suggestion);
                 $query = $this->db->get();
                 $course_suggestions = $query->result();
-                // return $query->result();
             } else {
                 $course_suggestions = 0;
             }
+            // $this->dd($course_suggestions);
             return $course_suggestions;
         }
         return $query->result();

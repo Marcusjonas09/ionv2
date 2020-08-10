@@ -215,6 +215,11 @@ class SuperAdmin extends CI_Controller
     // COURSE PETITIONING MODULE
     // =======================================================================================
 
+    public function set_petition_parameters()
+    {
+        $this->dd($_POST);
+    }
+
     public function course_petitions() // | Display Course Petitions |
     {
         $per_page = 10;

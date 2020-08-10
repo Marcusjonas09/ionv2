@@ -32,6 +32,8 @@ class Student extends CI_Controller
 
 		$this->load->helper('date');
 		$this->load->helper('text');
+
+		$this->session->keep_flashdata('message');
 	}
 
 	public function index()
@@ -741,18 +743,10 @@ class Student extends CI_Controller
 		$this->pagination->initialize($config); // model function
 
 		$data['petitions'] = $this->Petition_model->fetchPetitions($per_page, $end_page);
-
 		$data['courses'] = $this->Petition_model->fetchCourses();
-
-		// $data['petition_suggestions'] = $this->Courseflow_model->suggest_what_to_petition();
-
 		$data['petition_suggestions'] = $this->Courseflow_model->suggest_what_to_petition_v2();
-		// $this->dd($rs);
-		// $this->dd($data['petition_suggestions']);
 		$data['petitions_available'] = $this->Courseflow_model->suggested_petitions_available();
 		$data['petitioners'] = $this->Petition_model->fetchAllPetitioners();
-
-		// echo json_encode($data);
 
 		$this->load->view('content_student/student_petitions', $data);
 
@@ -825,8 +819,9 @@ class Student extends CI_Controller
 	public function withdraw_petition($stud_number, $petition_unique)
 	{
 		$this->Petition_model->withdrawPetition($stud_number, $petition_unique);
-		$success = "Petition withdrawn succesfully!";
-		$this->petitions($success, null);
+		$message = "Petition withdrawn succesfully!";
+		$this->session->set_flashdata('message', $message);
+		redirect('Student/petitions');
 	}
 
 	// =======================================================================================

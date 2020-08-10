@@ -9,12 +9,16 @@
 
   <!-- Main content -->
   <section class="content container-fluid">
-    <?php if (isset($this->session->petition_message)) : ?>
+
+
+    <?php if (isset($this->session->message)) : ?>
       <div class="alert alert-success alert-dismissible" role="alert">
-        <p><?php echo $this->session->petition_message; ?></p>
+        <p><?php echo $this->session->message; ?></p>
         <p><?php echo "Click on this box to dismiss."; ?></p>
       </div>
     <?php endif; ?>
+
+
     <div id="client" class='alert alert-success alert-dismissible' style='display:none;' role='alert'></div>
     <div class="box box-success col-md-12">
       <div class="box-header with-border">
@@ -36,14 +40,15 @@
           <div class="form-group">
             <label class="col-md-2 control-label">Course Code</label>
             <div class="form-group col-md-6">
-              <select id="course_code" name="course_code" class="form-control js-example-basic-single">
+              <select id="course_code" <?= (($petition_suggestions) ? "" : "disabled") ?> name="course_code" class="form-control js-example-basic-single">
                 <?php foreach ($petition_suggestions as $petition_suggestion) : ?>
                   <option value="<?= $petition_suggestion->offering_course_code ?>"><?= $petition_suggestion->offering_course_code . " - " . $petition_suggestion->course_title ?></option>
                 <?php endforeach; ?>
               </select>
             </div>
             <!-- id="submit_petition" -->
-            <button type="submit" class="btn btn-success" style="margin-left:10px;">Submit</button>
+
+            <button type="submit" <?= (($petition_suggestions) ? "" : "disabled") ?> class="btn btn-success" style="margin-left:10px;">Submit</button>
             <!-- </div> -->
           </div>
         </div>

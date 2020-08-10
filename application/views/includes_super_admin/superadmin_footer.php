@@ -36,8 +36,24 @@
 <script src="<?= base_url() ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
 <!-- SWAL JS -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<!-- date-range-picker -->
+<script src="<?= base_url() ?>bower_components/moment/min/moment.min.js"></script>
+<script src="<?= base_url() ?>bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- bootstrap time picker -->
+<script src="<?= base_url() ?>plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<!-- InputMask -->
+<script src="<?= base_url() ?>plugins/input-mask/jquery.inputmask.js"></script>
+<script src="<?= base_url() ?>plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="<?= base_url() ?>plugins/input-mask/jquery.inputmask.extensions.js"></script>
+
+
 
 <script type="text/javascript">
+    $('#petitionsched').daterangepicker({
+        timePicker: true,
+        timePickerIncrement: 30,
+        format: 'MM/DD/YYYY h:mm A'
+    })
     var baselink = "<?= base_url() ?>";
 
     function block_account(acc_id) {

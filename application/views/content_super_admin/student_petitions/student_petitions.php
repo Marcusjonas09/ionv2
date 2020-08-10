@@ -22,6 +22,7 @@
                 <li><a href="#Pending" data-toggle="tab"><strong>Pending</strong></a></li>
                 <li><a href="#Processed" data-toggle="tab"><strong>Processed</strong></a></li>
                 <li><a href="#All" data-toggle="tab"><strong>All Petitions</strong></a></li>
+                <li class="pull-right"><a href="#Settings" data-toggle="tab" class="text-muted"><span class="fa fa-gear"></span></a></li>
             </ul>
             <div class="tab-content">
                 <div class="active tab-pane" id="Urgent">
@@ -264,6 +265,44 @@
                         </tbody>
                     </table>
                     <div class="col-md-6"><?= $this->pagination->create_links(); ?></div>
+                </div>
+
+                <div class="tab-pane" id="Settings">
+                    <form action="<?= base_url() ?>SuperAdmin/set_petition_parameters" method="post">
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h3><strong>Petition Settings</strong></h3>
+                                <div class="form-group">
+                                    <label>Minimum petitioners for approval:</label>
+                                    <input type="number" min="0" max="50" class="form-control" id="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h3><strong>Petition schedule</strong></h3>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <label>Date and time range:</label>
+
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            <input name="petition_sched" type="text" class="form-control pull-right" id="petitionsched">
+                                        </div>
+                                        <!-- /.input group -->
+                                    </div>
+                                    <!-- /.form group -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary pull-right">Submit</button>
+                            </div>
+                        </div>
+
+                    </form>
                 </div>
             </div>
         </div>
